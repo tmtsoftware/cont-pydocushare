@@ -311,9 +311,26 @@ class DocuShare:
         
         self.__check_if_logged_in()
         url = self.url(Resource.Get, handle(hdl))
-        r = self.__session.get(url)
+        http_response = self.__session.get(url)
+        http_response.raise_for_status()
+
+        if self.__is_not_found_page(http_response):
+            raise Exception(f'{url} was not found.')
+        
         with open(path, 'wb') as f:
-            f.write(r.content)
+            f.write(http_response.content)
+
+    @staticmethod
+    def __is_not_found_page(http_response):
+        if not ('Content-Type' in http_response.headers and
+                http_response.headers['Content-Type'].startswith('text/html')):
+            return False
+
+        soup = BeautifulSoup(http_response.text, 'html.parser')
+        for h2s in soup.find_all('h2'):
+            if 'Not Found' in h2s.text.strip():
+                return True
+        return False
 
     @property
     def is_logged_in(self):
@@ -328,7 +345,7 @@ class DocuShare:
         session   = self.__session
     
         login_page = session.get(login_url)
-        soup = BeautifulSoup(login_page.content, 'html.parser')
+        soup = BeautifulSoup(login_page.text, 'html.parser')
         
         login_token_element = soup.find('input', {'name': 'login_token'})
         if not login_token_element:
@@ -414,7 +431,7 @@ class DocuShare:
     @staticmethod
     def __parse_document_property_page(document_property_url, session):
         document_property_page = session.get(document_property_url)
-        soup = BeautifulSoup(document_property_page.content, 'html.parser')
+        soup = BeautifulSoup(document_property_page.text, 'html.parser')
 
         title = None
         filename = None
@@ -437,7 +454,7 @@ class DocuShare:
     @staticmethod
     def __parse_document_history_page(document_history_url, session):
         document_history_page = session.get(document_history_url)
-        soup = BeautifulSoup(document_history_page.content, 'html.parser')
+        soup = BeautifulSoup(document_history_page.text, 'html.parser')
 
         propstable = soup.find('table', {'class': 'table_properties'})
 
