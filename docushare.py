@@ -102,12 +102,14 @@ class Handle:
 
         raise ValueError(f'"{handle_str}" is not a valid handle.')
 
-
     def __str__(self):
         return self.identifier
 
     def __eq__(self, obj):
         return isinstance(obj, Handle) and obj.type == self.type and obj.number == self.number
+
+    def __hash__(self):
+        return hash(self.identifier)
 
 class Resource(Enum):
     DSWEB      = auto()
@@ -144,6 +146,7 @@ class DocuShare:
         
         self.__base_url = base_url
         self.__session  = requests.Session()
+        self.__handle_properties = {}
 
     def url(self, resource = None, hdl = None):
         if not resource:
@@ -301,37 +304,6 @@ class DocuShare:
         if password == PasswordOption.USE_STORED:
             self.__set_password(entered_username, entered_password)
             
-    def download(self, hdl, path):
-        '''Download the given handle (Document or Version) as a file.
-
-        Parameters:
-        hdl (Handle): Handle to download.
-        path (path-like object): Destination file.
-        '''
-        
-        self.__check_if_logged_in()
-        url = self.url(Resource.Get, handle(hdl))
-        http_response = self.__session.get(url)
-        http_response.raise_for_status()
-
-        if self.__is_not_found_page(http_response):
-            raise Exception(f'{url} was not found.')
-        
-        with open(path, 'wb') as f:
-            f.write(http_response.content)
-
-    @staticmethod
-    def __is_not_found_page(http_response):
-        if not ('Content-Type' in http_response.headers and
-                http_response.headers['Content-Type'].startswith('text/html')):
-            return False
-
-        soup = BeautifulSoup(http_response.text, 'html.parser')
-        for h2s in soup.find_all('h2'):
-            if 'Not Found' in h2s.text.strip():
-                return True
-        return False
-
     @property
     def is_logged_in(self):
         return 'AmberUser' in self.__session.cookies.keys()
@@ -371,9 +343,7 @@ class DocuShare:
     def __challenge_response(password, login_token, challenge_js, js_interpreter):
         password_escaped = json.dumps(password)
         login_token_escaped = json.dumps(login_token)
-        
         challenge_js += f'\nconsole.log(obscure_string({password_escaped}, {login_token_escaped}))'
-
         response_bytes = subprocess.check_output(js_interpreter, input=challenge_js.encode())
         return response_bytes.decode().strip()
 
@@ -398,40 +368,111 @@ class DocuShare:
         except:
             pass
 
-    def get_document(self, handle_number):
+    def download(self, hdl, path):
+        '''Download the given handle (Document or Version) as a file.
+
+        Parameters:
+        hdl (Handle): Handle to download.
+        path (path-like object): Destination file.
+        '''
+        
         self.__check_if_logged_in()
+        url = self.url(Resource.Get, handle(hdl))
+        http_response = self.__session.get(url)
+        http_response.raise_for_status()
 
-        if isinstance(handle_number, int):
-            handle_number = f'{handle_number:05d}'
-        elif isinstance(handle_number, str):
-            m = re.match(r'^Document-([0-9]{5})$', handle_number)
-            if m:
-                handle_number = m.group(1)
-            elif re.match(r'^[0-9]{5}$', handle_number):
-                pass
-            else:
-                raise ValueException('"handle_number" must be a 5-digit number or Document-xxxxxx')
-        else:
-            raise TypeError('"handle_number" must be int or str.')
+        if self.__is_not_found_page(http_response):
+            raise Exception(f'{url} was not found.')
+        
+        with open(path, 'wb') as f:
+            f.write(http_response.content)
 
-        handle = f'Document-{handle_number}'
-        document_property_url = self._services_url(handle)
-        title, filename, document_control_number = self.__parse_document_property_page(document_property_url, self.__session)
+    def properties(self, hdl):
+        '''Open and read the contents of the property page of the given handle and return the properties as dict.
 
-        document_history_url = self._history_url(handle)
-        versions = self.__parse_document_history_page(document_history_url, self.__session)
-
-        return self.Document(docushare = self,
-                             handle_number = handle_number,
-                             title = title,
-                             filename = filename,
-                             document_control_number = document_control_number,
-                             versions = versions)
+        Parameters:
+        hdl (Handle): handle
+        '''
+        self.__check_if_logged_in()
+        hdl = handle(hdl)
+        url = self.url(Resource.Services, hdl)
+        http_response = self.__session.get(url)
+        http_response.raise_for_status()
+        return self.__parse_property_page(http_response.text, hdl.type)
 
     @staticmethod
-    def __parse_document_property_page(document_property_url, session):
-        document_property_page = session.get(document_property_url)
-        soup = BeautifulSoup(document_property_page.text, 'html.parser')
+    def __parse_property_page(html_text, handle_type):
+        properties = {}
+        
+        soup = BeautifulSoup(html_text, 'html.parser')
+        propstable = soup.find('table', {'class': 'propstable'})
+        for row in propstable.find_all('tr'):
+            cols = row.find_all('td')
+            field_name = cols[0].text.strip()
+            if field_name.endswith(':'):
+                field_name = field_name[:-1]
+
+            field_value = cols[1].text.strip()
+            properties[field_name] = field_value
+
+            if (handle_type == HandleType.Document or handle_type == HandleType.Version) and \
+               field_name == 'Title':
+                file_url = cols[1].find('a')['href']
+                filename = PurePosixPath(urlparse(file_url).path).name
+                properties['_filename'] = filename
+            
+            # TODO: parse user name
+
+        return properties
+
+    @staticmethod
+    def __is_not_found_page(http_response):
+        if not ('Content-Type' in http_response.headers and
+                http_response.headers['Content-Type'].startswith('text/html')):
+            return False
+
+        soup = BeautifulSoup(http_response.text, 'html.parser')
+        for h2s in soup.find_all('h2'):
+            if 'Not Found' in h2s.text.strip():
+                return True
+        return False
+
+    def __getitem__(self, hdl):
+        self.__check_if_logged_in()
+        
+        hdl = handle(hdl)
+        if hdl in self.__handle_properties:
+            return self.__handle_properties[hdl]
+        
+        if hdl.type == HandleType.Collection:
+            raise NotImplementedError()
+        elif hdl.type == HandleType.Document:
+            self.__handle_properties[hdl] = DocumentProperty(self, hdl)
+            return self.__handle_properties[hdl]
+        elif hdl.type == HandleType.Version:
+            self.__handle_properties[hdl] = VersionProperty(self, hdl)
+            return self.__handle_properties[hdl]
+        else:
+            assert False, 'code must not reach here'
+
+class DocumentProperty:
+    def __init__(self, docushare, hdl):
+        if not isinstance(docushare, DocuShare):
+            raise TypeError('docushare must be an instance of DocuShare')
+        if not isinstance(hdl, Handle):
+            raise TypeError('hdl must be an instance of Handle')
+        if hdl.type != HandleType.Document:
+            raise ValueError('handle type must be Document')
+        
+        self.__docushare = docushare
+        self.__hdl       = hdl
+        self.__title     = None
+        self.__filename  = None
+        self.__document_control_number = None
+
+    @staticmethod
+    def __parse_document_property_page(html_text):
+        soup = BeautifulSoup(html_text, 'html.parser')
 
         title = None
         filename = None
@@ -450,174 +491,138 @@ class DocuShare:
                 document_control_number = cols[1].text.strip()
 
         return title, filename, document_control_number
-
-    @staticmethod
-    def __parse_document_history_page(document_history_url, session):
-        document_history_page = session.get(document_history_url)
-        soup = BeautifulSoup(document_history_page.text, 'html.parser')
-
-        propstable = soup.find('table', {'class': 'table_properties'})
-
-        version_number_column = None
-        version_column = None
         
-        column_headers = propstable.find('thead').find_all('th')
-        for i in range(len(column_headers)):
-            column_name = column_headers[i].text.strip()
-            if '#' in column_name:
-                version_number_column = i
-            elif 'Version' in column_name:
-                version_column = i
 
-        if version_number_column is None:
-            raise Exception(f'Cannot find "#" column in {document_history_url}.')
-        if version_column is None:
-            raise Exception(f'Cannot find "Version" column in {document_history_url}.')
+    def __get_properties(self):
+        properties = self.docushare.properties(self.handle)
 
-        versions = []
-        for row in propstable.find_all('tr'):
-            cells = row.find_all('td')
-            if len(cells) > max(version_number_column, version_column):
-                version_number = cells[version_number_column].text.strip()
-                if re.match(r'^[0-9]+$', version_number):
-                    file_url = cells[version_number_column].find('a')['href']
-                    handle_number = re.search(r'Version-([0-9]{6})', file_url).group(1)
-                    filename = PurePosixPath(urlparse(file_url).path).name
-                    title = cells[version_column].find('a').text
+        self.__title = properties['Title']
+        self.__filename = properties['_filename']
+        self.__document_control_number = properties['Document Control Number']
 
-                    versions.append( DocuShare.Version( document = None,
-                                                        handle_number = handle_number,
-                                                        title = title,
-                                                        filename = filename,
-                                                        version_number = version_number ) )
+    @property
+    def docushare(self):
+        return self.__docushare
 
-        return versions
-                    
-    class Version:
-        def __init__(self, document, handle_number, title, filename, version_number):
-            self.__document       = document
-            self.__handle_number  = handle_number
-            self.__title          = title
-            self.__filename       = filename
-            self.__version_number = version_number
+    @property
+    def handle(self):
+        return self.__hdl
 
-        @property
-        def document(self):
-            return self.__document
+    @property
+    def title(self):
+        if self.__title is None:
+            self.__get_properties()
+        return self.__title
 
-        def set_document(self, document):
-            self.__document = document
+    @property
+    def filename(self):
+        if self.__filename is None:
+            self.__get_properties()
+        return self.__filename
 
-        @property
-        def handle_number(self):
-            return self.__handle_number
+    @property
+    def document_control_number(self):
+        if self.__document_control_number is None:
+            self.__get_properties()
+        return self.__document_control_number
 
-        @property
-        def handle(self):
-            return f'Version-{self.__handle_number}'
+    def __str__(self):
+        return f'handle: "{self.handle}", title: "{self.title}", filename: "{self.filename}", document_control_number: "{self.document_control_number}"'
 
-        @property
-        def title(self):
-            return self.__title
+    @property
+    def download_url(self):
+        return self.docushare.url(Resource.Get, self.handle)
 
-        @property
-        def filename(self):
-            return self.__filename
+    def download(self, path = None):
+        if path is None:
+            path = Path.cwd()
+        else:
+            path = Path(path)
+            
+        if path.is_dir():
+            path = path.joinpath(self.filename)
+            
+        self.docushare.download(self.handle, path)
+        return path
 
-        @property
-        def version_number(self):
-            return self.__version_number
 
-        @property
-        def download_url(self):
-            return self.__document.docushare._get_url(self.handle)
+class VersionProperty:
+    def __init__(self, docushare, hdl):
+        if not isinstance(docushare, DocuShare):
+            raise TypeError('docushare must be an instance of DocuShare')
+        if not isinstance(hdl, Handle):
+            raise TypeError('hdl must be an instance of Handle')
+        if hdl.type != HandleType.Version:
+            raise ValueError('handle type must be Version')
+        
+        self.__docushare = docushare
+        self.__hdl       = hdl
+        self.__title     = None
+        self.__filename  = None
+        self.__version_number = None
 
-        def __str__(self):
-            return f'handle: "{self.handle}", title: "{self.title}", filename: "{self.filename}", version_number: {self.version_number}'
+    def __get_properties(self):
+        properties = self.docushare.properties(self.handle)
 
-        def download(self, path = None):
-            if path is None:
-                path = Path.cwd()
-            else:
-                path = Path(path)
+        self.__title = properties['Title']
+        self.__filename = properties['_filename']
+        self.__version_number = int(properties['Version Number'])
 
-            if path.is_dir():
-                path = path.joinpath(self.__filename)
+    @property
+    def docushare(self):
+        return self.__docushare
 
-            return self.__document.docushare._download(self.handle, path)
+    @property
+    def handle(self):
+        return self.__hdl
 
-    class Document:
-        def __init__(self, docushare, handle_number, title, filename, document_control_number, versions):
-            self.__docushare        = docushare
-            self.__handle_number    = handle_number
-            self.__title            = title
-            self.__filename         = filename
-            self.__document_control_number = document_control_number
-            self.__versions         = versions
+    @property
+    def title(self):
+        if self.__title is None:
+            self.__get_properties()
+        return self.__title
 
-            for version in self.__versions:
-                version.set_document(self)
+    @property
+    def filename(self):
+        if self.__filename is None:
+            self.__get_properties()
+        return self.__filename
 
-        @property
-        def docushare(self):
-            return self.__docushare
+    @property
+    def version_number(self):
+        if self.__version_number is None:
+            self.__get_properties()
+        return self.__version_number
 
-        @property
-        def handle_number(self):
-            return self.__handle_number
+    def __str__(self):
+        return f'handle: "{self.handle}", title: "{self.title}", filename: "{self.filename}", version_number: {self.version_number}'
 
-        @property
-        def handle(self):
-            return f'Document-{self.__handle_number}'
+    @property
+    def download_url(self):
+        return self.docushare.url(Resource.Get, self.handle)
 
-        @property
-        def title(self):
-            return self.__title
-
-        @property
-        def filename(self):
-            return self.__filename
-
-        @property
-        def document_control_number(self):
-            return self.__document_control_number
-
-        @property
-        def versions(self):
-            return self.__versions
-      
-        @property
-        def download_url(self):
-            return self.__docushare._get_url(self.handle)
-
-        def __str__(self):
-            return f'handle: "{self.handle}", title: "{self.title}", filename: "{self.filename}", document_control_number: "{self.document_control_number}"'
-
-        def download(self, path = None):
-            if path is None:
-                path = Path.cwd()
-            else:
-                path = Path(path)
-
-            if path.is_dir():
-                path = path.joinpath(self.__filename)
-
-            return self.__docushare._download(self.handle, path)
-       
+    def download(self, path = None):
+        if path is None:
+            path = Path.cwd()
+        else:
+            path = Path(path)
+            
+        if path.is_dir():
+            path = path.joinpath(self.filename)
+            
+        self.docushare.download(self.handle, path)
+        return path
+    
 def main():
     docushare_url = input('Enter DocuShare URL: ')
     ds = DocuShare(docushare_url)
-    ds.login(username='tnakamoto', password=DocuShare.USE_STORED_PASSWORD)
+    ds.login(username='tnakamoto', password=PasswordOption.USE_STORED)
 
-    document = ds.get_document('Document-94736')
-    print(document)
-    print(document.handle)
-    print(document.download_url)
-
-    for version in document.versions:
-        print(version)
-        version.download()
-
+    #doc = ds['Document-94736']
+    doc = ds['Version-130224']
+    print(doc)
+    print(doc.download_url)
+    print(doc.download())
 
 if __name__ == "__main__":
     main()
