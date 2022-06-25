@@ -148,6 +148,18 @@ class DocuShare:
         self.__session  = requests.Session()
         self.__handle_properties = {}
 
+    def http_get(self, url):
+        print(f' GET: {url}')
+        return self.__session.get(url)
+
+    def http_post(self, url, data):
+        print(f'POST: {url}')
+        return self.__session.post(url, data = data)
+
+    @property
+    def cookies(self):
+        return self.__session.cookies
+
     def url(self, resource = None, hdl = None):
         if not resource:
             return self.__base_url
@@ -227,7 +239,7 @@ class DocuShare:
         if not isinstance(domain, str):
             raise TypeError('domain must be str')
 
-        self.__session.cookies.clear()
+        self.cookies.clear()
         
         if username is None:
             print(f'\nEnter your username for {self.__base_url}')
@@ -254,7 +266,7 @@ class DocuShare:
         # Note that, JSESSIONID is added to the cookies when the login page is
         # opened and it is saved as a part of self.__session.
         login_token, challenge_js_url = self.__open_and_parse_login_page()
-        challenge_js = self.__session.get(challenge_js_url).text
+        challenge_js = self.http_get(challenge_js_url).text
 
         # Get the challenge response.
         challenge_response = self.__challenge_response(
@@ -274,11 +286,11 @@ class DocuShare:
             'domain': domain,
             'Login': 'Login'
         }
-        self.__session.post(self.url(Resource.ApplyLogin), data = login_info)
+        self.http_post(self.url(Resource.ApplyLogin), data = login_info)
 
         # If the authentication is successful, 'AmberUser' is added to the
         # cookies.
-        if 'AmberUser' not in self.__session.cookies.keys():
+        if 'AmberUser' not in self.cookies.keys():
             if retry_count <= 1:
                 raise Exception(f'Failed to login at {login_url}')
             elif password == PasswordOption.USE_STORED:
@@ -306,7 +318,7 @@ class DocuShare:
             
     @property
     def is_logged_in(self):
-        return 'AmberUser' in self.__session.cookies.keys()
+        return 'AmberUser' in self.cookies.keys()
 
     def __check_if_logged_in(self):
         if not self.is_logged_in:
@@ -314,9 +326,7 @@ class DocuShare:
 
     def __open_and_parse_login_page(self):
         login_url = self.url(Resource.Login)
-        session   = self.__session
-    
-        login_page = session.get(login_url)
+        login_page = self.http_get(login_url)
         soup = BeautifulSoup(login_page.text, 'html.parser')
         
         login_token_element = soup.find('input', {'name': 'login_token'})
@@ -378,7 +388,7 @@ class DocuShare:
         
         self.__check_if_logged_in()
         url = self.url(Resource.Get, handle(hdl))
-        http_response = self.__session.get(url)
+        http_response = self.http_get(url)
         http_response.raise_for_status()
 
         if self.__is_not_found_page(http_response):
@@ -387,8 +397,8 @@ class DocuShare:
         with open(path, 'wb') as f:
             f.write(http_response.content)
 
-    def properties(self, hdl):
-        '''Open and read the contents of the property page of the given handle and return the properties as dict.
+    def load_properties(self, hdl):
+        '''Open and parse the property page of the given handle and return the properties as dict.
 
         Parameters:
         hdl (Handle): handle
@@ -399,7 +409,7 @@ class DocuShare:
         self.__check_if_logged_in()
         hdl = handle(hdl)
         url = self.url(Resource.Services, hdl)
-        http_response = self.__session.get(url)
+        http_response = self.http_get(url)
         http_response.raise_for_status()
         return self.__parse_property_page(http_response.text, hdl.type)
 
@@ -419,6 +429,8 @@ class DocuShare:
 
             if field_name == 'Handle':
                 properties[field_name] = handle(field_value)
+            elif field_name == 'Version Number':
+                properties[field_name] = int(field_value)
             else:
                 # TODO: parse user name, date and size
                 properties[field_name] = field_value
@@ -431,27 +443,25 @@ class DocuShare:
             
         return properties
 
-    def history(self, hdl):
-        '''Open and read the contents of the history page of the given handle and return the version information.
+    def load_history(self, hdl):
+        '''Open and parse the history page of the given Document handle and return the Version handles.
 
         Parameters:
-        hdl (Handle): Handle. Its type must be HandleType.Document.
+        hdl (Handle): Document handle. Its type must be HandleType.Document.
 
         Returns:
-        An array of version information. One element in the array is dict which has property values of
-        the version.
+        An array of Version handles (e.g. Version-xxxxxx).
         '''
         self.__check_if_logged_in()
         hdl = handle(hdl)
         url = self.url(Resource.History, hdl)
-        http_response = self.__session.get(url)
+        http_response = self.http_get(url)
         http_response.raise_for_status()
-        return self.__parse_history_page(http_response.text)
+        version_handles = self.__parse_history_page(http_response.text)
+        return version_handles
 
     @staticmethod
     def __parse_history_page(html_text):
-        version_infos = []
-        
         soup = BeautifulSoup(html_text, 'html.parser')
         propstable = soup.find('table', {'class': 'table_properties'})
 
@@ -462,8 +472,8 @@ class DocuShare:
             if field_name:
                 field_names[column_index] = field_name
 
+        version_handles = []
         for row in propstable.find_all('tr'):
-            version_info = {}
             cells = row.find_all('td')
 
             for column_index in field_names.keys():
@@ -471,38 +481,19 @@ class DocuShare:
 
                 if len(cells) > column_index:
                     if field_name == 'Preferred':
-                        # TODO: parse the radio button
-                        pass
-                    elif field_name == 'Type':
-                        # Do nothing. It is useless information.
+                        # TODO: parse the radio button and find the preferred version
                         pass
                     elif field_name == '#':
-                        version_number = cells[column_index].text.strip()
-                        if re.match(r'^[0-9]+$', version_number):
-                            file_url = cells[column_index].find('a')['href']
+                        a_tag = cells[column_index].find('a')
+                        if a_tag:
+                            file_url = a_tag['href']
                             handle_str = re.search(r'\/(Version-[0-9]{6})\/', file_url).group(1)
-                            filename = PurePosixPath(urlparse(file_url).path).name
-
-                            version_info['Version Number'] = int(version_number)
-                            version_info['Handle'] = handle(handle_str)
-                            version_info['_filename'] = filename
-                        pass
-                    elif field_name == 'Version':
-                        a = cells[column_index].find('a')
-                        if a:
-                            version_info['Title'] = a.text
-                    elif field_name = 'Created':
-                        # Do not parse created date as the itme zone information may be
-                        # missing in the history page.
-                        pass
+                            version_handles.append(handle(handle_str))
                     else:
-                        version_info[field_name] = cells[column_index].text.strip()
-                        # TODO: parse user name, date and size
+                        # Ignore other information
+                        pass
 
-            if 'Version Number' in version_info:
-                version_infos.append(version_info)
-
-        return version_infos
+        return version_handles
     
     @staticmethod
     def __is_not_found_page(http_response):
@@ -522,7 +513,7 @@ class DocuShare:
         hdl = handle(hdl)
         if hdl in self.__handle_properties:
             return self.__handle_properties[hdl]
-        
+
         if hdl.type == HandleType.Collection:
             raise NotImplementedError()
         elif hdl.type == HandleType.Document:
@@ -572,19 +563,11 @@ class DocumentProperty:
 
         return title, filename, document_control_number
         
-
-    def __get_properties(self):
-        properties = self.docushare.properties(self.handle)
-
-        self.__title = properties['Title']
-        self.__filename = properties['_filename']
-        self.__document_control_number = properties['Document Control Number']
-
-    def __get_history(self):
-        version_infos = self.docushare.history(self.handle)
-
-        # TODO: create VersionProperty array.
-        self.__versions = version_infos
+    def __load_properties(self):
+        properties = self.docushare.load_properties(self.handle)
+        self.__title = properties.get('Title', '')
+        self.__filename = properties.get('_filename', '')
+        self.__document_control_number = properties.get('Document Control Number', '')
 
     @property
     def docushare(self):
@@ -597,19 +580,19 @@ class DocumentProperty:
     @property
     def title(self):
         if self.__title is None:
-            self.__get_properties()
+            self.__load_properties()
         return self.__title
 
     @property
     def filename(self):
         if self.__filename is None:
-            self.__get_properties()
+            self.__load_properties()
         return self.__filename
 
     @property
     def document_control_number(self):
         if self.__document_control_number is None:
-            self.__get_properties()
+            self.__load_properties()
         return self.__document_control_number
 
     def __str__(self):
@@ -618,7 +601,7 @@ class DocumentProperty:
     @property
     def versions(self):
         if self.__versions is None:
-            self.__get_history()
+            self.__versions = self.docushare.load_history(self.handle)
         return self.__versions
 
     @property
@@ -652,12 +635,11 @@ class VersionProperty:
         self.__filename  = None
         self.__version_number = None
 
-    def __get_properties(self):
-        properties = self.docushare.properties(self.handle)
-
-        self.__title = properties['Title']
-        self.__filename = properties['_filename']
-        self.__version_number = int(properties['Version Number'])
+    def __load_properties(self):
+        properties = self.docushare.load_properties(self.handle)
+        self.__title = properties.get('Title', '')
+        self.__filename = properties.get('_filename', '')
+        self.__version_number = properties.get('Version Number', '')
 
     @property
     def docushare(self):
@@ -670,19 +652,19 @@ class VersionProperty:
     @property
     def title(self):
         if self.__title is None:
-            self.__get_properties()
+            self.__load_properties()
         return self.__title
 
     @property
     def filename(self):
         if self.__filename is None:
-            self.__get_properties()
+            self.__load_properties()
         return self.__filename
 
     @property
     def version_number(self):
         if self.__version_number is None:
-            self.__get_properties()
+            self.__load_properties()
         return self.__version_number
 
     def __str__(self):
@@ -710,7 +692,9 @@ def main():
     ds.login(username='tnakamoto', password=PasswordOption.USE_STORED)
 
     doc = ds['Document-94736']
-    print(doc.versions)
+    print(doc)
+    for version_handle in doc.versions:
+        print(ds[version_handle])
 
 if __name__ == "__main__":
     main()
