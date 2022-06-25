@@ -25,26 +25,38 @@ class DocuShare:
         self.__login_url = urljoin(self.__dsweb_url, 'Login')
         self.__apply_login_url = urljoin(self.__dsweb_url, 'ApplyLogin')
         self.__services_url = urljoin(self.__dsweb_url, 'Services/')
+        self.__serviceslib_url = urljoin(self.__dsweb_url, 'ServicesLib/')
         self.__get_url = urljoin(self.__dsweb_url, 'Get/')
         self.__session = None
         self.__js_interpreter = js_interpreter
 
     @staticmethod
-    def __validate_handle(handle):
+    def __validate_handle(handle, types = ['Version', 'Document', 'Collection']):
         if not isinstance(handle, str):
             raise TypeError('handle must be str')
 
-        return \
-            re.match(r'^Version-([0-9]{6})$', handle) or \
-            re.match(r'^Document-([0-9]{5})$', handle) or \
-            re.match(r'^Collection-([0-9]{5})$', handle)
+        if 'Version' in types and re.match(r'^Version-([0-9]{6})$', handle):
+            return True
+
+        if 'Document' in types and re.match(r'^Document-([0-9]{5})$', handle):
+            return True
+
+        if 'Collection' in types and re.match(r'^Collection-([0-9]{5})$', handle):
+            return True
+
+        return False
         
     def _services_url(self, handle):
-        self.__validate_handle(handle)
+        self.__validate_handle(handle, types = ['Version', 'Document', 'Collection'])
         return urljoin(self.__services_url, handle)
 
+    def _history_url(self, handle):
+        self.__validate_handle(handle, types = ['Document'])
+        url = urljoin(self.__serviceslib_url, handle + '/')
+        return urljoin(url, 'History')
+
     def _get_url(self, handle):
-        self.__validate_handle(handle)
+        self.__validate_handle(handle, types = ['Version', 'Document'])
         return urljoin(self.__get_url, handle)
 
     def _download(self, handle, path):
@@ -184,54 +196,6 @@ class DocuShare:
         except:
             pass
 
-    def get_version(self, handle_number):
-        self.__check_if_logged_in()
-
-        if isinstance(handle_number, int):
-            handle_number = f'{handle_number:06d}'
-        elif isinstance(handle_number, str):
-            m = re.match(r'^Version-([0-9]{6})$', handle_number)
-            if m:
-                handle_number = m.group(1)
-            elif re.match(r'^[0-9]{6}$', handle_number):
-                pass
-            else:
-                raise ValueException('"handle_number" must be a 6-digit number or Version-xxxxxx')
-        else:
-            raise TypeError('"handle_number" must be int or str.')
-
-        version_property_url = self._services_url(f'Version-{handle_number}')
-        title, filename, version_number = self.__parse_version_property_page(version_property_url, self.__session)
-
-        return self.Version(docushare = self,
-                            handle_number = handle_number,
-                            title = title,
-                            filename = filename,
-                            version_number = version_number)
-
-    @staticmethod
-    def __parse_version_property_page(version_property_url, session):
-        version_property_page = session.get(version_property_url)
-        soup = BeautifulSoup(version_property_page.content, 'html.parser')
-
-        title = None
-        filename = None
-        version_number = None
-
-        propstable = soup.find('table', {'class': 'propstable'})
-        for row in propstable.find_all('tr'):
-            cols = row.find_all('td')
-            field_name = cols[0].text.strip()
-           
-            if 'Title' in field_name:
-                title = cols[1].text.strip()
-                file_url = cols[1].find('a')['href']
-                filename = PurePosixPath(urlparse(file_url).path).name
-            elif 'Version Number' in field_name:
-                version_number = int(cols[1].text.strip())
-
-        return title, filename, version_number
-
     def get_document(self, handle_number):
         self.__check_if_logged_in()
 
@@ -248,14 +212,19 @@ class DocuShare:
         else:
             raise TypeError('"handle_number" must be int or str.')
 
-        document_property_url = self._services_url(f'Document-{handle_number}')
+        handle = f'Document-{handle_number}'
+        document_property_url = self._services_url(handle)
         title, filename, document_control_number = self.__parse_document_property_page(document_property_url, self.__session)
+
+        document_history_url = self._history_url(handle)
+        versions = self.__parse_document_history_page(document_history_url, self.__session)
 
         return self.Document(docushare = self,
                              handle_number = handle_number,
                              title = title,
                              filename = filename,
-                             document_control_number = document_control_number)
+                             document_control_number = document_control_number,
+                             versions = versions)
 
     @staticmethod
     def __parse_document_property_page(document_property_url, session):
@@ -279,18 +248,63 @@ class DocuShare:
                 document_control_number = cols[1].text.strip()
 
         return title, filename, document_control_number
-    
+
+    @staticmethod
+    def __parse_document_history_page(document_history_url, session):
+        document_history_page = session.get(document_history_url)
+        soup = BeautifulSoup(document_history_page.content, 'html.parser')
+
+        propstable = soup.find('table', {'class': 'table_properties'})
+
+        version_number_column = None
+        version_column = None
+        
+        column_headers = propstable.find('thead').find_all('th')
+        for i in range(len(column_headers)):
+            column_name = column_headers[i].text.strip()
+            if '#' in column_name:
+                version_number_column = i
+            elif 'Version' in column_name:
+                version_column = i
+
+        if version_number_column is None:
+            raise Exception(f'Cannot find "#" column in {document_history_url}.')
+        if version_column is None:
+            raise Exception(f'Cannot find "Version" column in {document_history_url}.')
+
+        versions = []
+        for row in propstable.find_all('tr'):
+            cells = row.find_all('td')
+            if len(cells) > max(version_number_column, version_column):
+                version_number = cells[version_number_column].text.strip()
+                if re.match(r'^[0-9]+$', version_number):
+                    file_url = cells[version_number_column].find('a')['href']
+                    handle_number = re.search(r'Version-([0-9]{6})', file_url).group(1)
+                    filename = PurePosixPath(urlparse(file_url).path).name
+                    title = cells[version_column].find('a').text
+
+                    versions.append( DocuShare.Version( document = None,
+                                                        handle_number = handle_number,
+                                                        title = title,
+                                                        filename = filename,
+                                                        version_number = version_number ) )
+
+        return versions
+                    
     class Version:
-        def __init__(self, docushare, handle_number, title, filename, version_number):
-            self.__docushare      = docushare
+        def __init__(self, document, handle_number, title, filename, version_number):
+            self.__document       = document
             self.__handle_number  = handle_number
             self.__title          = title
             self.__filename       = filename
             self.__version_number = version_number
 
         @property
-        def docushre(self):
-            return self.__docushare
+        def document(self):
+            return self.__document
+
+        def set_document(self, document):
+            self.__document = document
 
         @property
         def handle_number(self):
@@ -314,7 +328,7 @@ class DocuShare:
 
         @property
         def download_url(self):
-            return self.__docushare._get_url(self.handle)
+            return self.__document.docushare._get_url(self.handle)
 
         def __str__(self):
             return f'handle: "{self.handle}", title: "{self.title}", filename: "{self.filename}", version_number: {self.version_number}'
@@ -328,18 +342,22 @@ class DocuShare:
             if path.is_dir():
                 path = path.joinpath(self.__filename)
 
-            return self.__docushare._download(self.handle, path)
+            return self.__document.docushare._download(self.handle, path)
 
     class Document:
-        def __init__(self, docushare, handle_number, title, filename, document_control_number):
+        def __init__(self, docushare, handle_number, title, filename, document_control_number, versions):
             self.__docushare        = docushare
             self.__handle_number    = handle_number
             self.__title            = title
             self.__filename         = filename
             self.__document_control_number = document_control_number
+            self.__versions         = versions
+
+            for version in self.__versions:
+                version.set_document(self)
 
         @property
-        def docushre(self):
+        def docushare(self):
             return self.__docushare
 
         @property
@@ -361,6 +379,10 @@ class DocuShare:
         @property
         def document_control_number(self):
             return self.__document_control_number
+
+        @property
+        def versions(self):
+            return self.__versions
       
         @property
         def download_url(self):
@@ -385,19 +407,15 @@ def main():
     ds = DocuShare(docushare_url)
     ds.login(username='tnakamoto', password=DocuShare.USE_STORED_PASSWORD)
 
-    '''
-    version = ds.get_version('Version-130360')
-    print(version)
-    print(version.handle)
-    print(version.download_url)
-    print(version.download())
-    '''
-
     document = ds.get_document('Document-94736')
     print(document)
     print(document.handle)
     print(document.download_url)
-    print(document.download())
+
+    for version in document.versions:
+        print(version)
+        version.download()
+
 
 if __name__ == "__main__":
     main()
