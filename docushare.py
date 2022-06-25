@@ -392,6 +392,9 @@ class DocuShare:
 
         Parameters:
         hdl (Handle): handle
+
+        Returns:
+        Property values as dict.
         '''
         self.__check_if_logged_in()
         hdl = handle(hdl)
@@ -413,7 +416,12 @@ class DocuShare:
                 field_name = field_name[:-1]
 
             field_value = cols[1].text.strip()
-            properties[field_name] = field_value
+
+            if field_name == 'Handle':
+                properties[field_name] = handle(field_value)
+            else:
+                # TODO: parse user name, date and size
+                properties[field_name] = field_value
 
             if (handle_type == HandleType.Document or handle_type == HandleType.Version) and \
                field_name == 'Title':
@@ -421,10 +429,81 @@ class DocuShare:
                 filename = PurePosixPath(urlparse(file_url).path).name
                 properties['_filename'] = filename
             
-            # TODO: parse user name
-
         return properties
 
+    def history(self, hdl):
+        '''Open and read the contents of the history page of the given handle and return the version information.
+
+        Parameters:
+        hdl (Handle): Handle. Its type must be HandleType.Document.
+
+        Returns:
+        An array of version information. One element in the array is dict which has property values of
+        the version.
+        '''
+        self.__check_if_logged_in()
+        hdl = handle(hdl)
+        url = self.url(Resource.History, hdl)
+        http_response = self.__session.get(url)
+        http_response.raise_for_status()
+        return self.__parse_history_page(http_response.text)
+
+    @staticmethod
+    def __parse_history_page(html_text):
+        version_infos = []
+        
+        soup = BeautifulSoup(html_text, 'html.parser')
+        propstable = soup.find('table', {'class': 'table_properties'})
+
+        header_columns = propstable.find('thead').find_all('th')
+        field_names = {}
+        for column_index in range(len(header_columns)):
+            field_name = header_columns[column_index].text.strip()
+            if field_name:
+                field_names[column_index] = field_name
+
+        for row in propstable.find_all('tr'):
+            version_info = {}
+            cells = row.find_all('td')
+
+            for column_index in field_names.keys():
+                field_name = field_names[column_index]
+
+                if len(cells) > column_index:
+                    if field_name == 'Preferred':
+                        # TODO: parse the radio button
+                        pass
+                    elif field_name == 'Type':
+                        # Do nothing. It is useless information.
+                        pass
+                    elif field_name == '#':
+                        version_number = cells[column_index].text.strip()
+                        if re.match(r'^[0-9]+$', version_number):
+                            file_url = cells[column_index].find('a')['href']
+                            handle_str = re.search(r'\/(Version-[0-9]{6})\/', file_url).group(1)
+                            filename = PurePosixPath(urlparse(file_url).path).name
+
+                            version_info['Version Number'] = int(version_number)
+                            version_info['Handle'] = handle(handle_str)
+                            version_info['_filename'] = filename
+                        pass
+                    elif field_name == 'Version':
+                        a = cells[column_index].find('a')
+                        if a:
+                            version_info['Title'] = a.text
+                    elif field_name = 'Created':
+                        # Do not parse created date as the itme zone information may be
+                        # missing in the history page.
+                        pass
+                    else:
+                        version_info[field_name] = cells[column_index].text.strip()
+                        # TODO: parse user name, date and size
+
+            if 'Version Number' in version_info:
+                version_infos.append(version_info)
+
+        return version_infos
+    
     @staticmethod
     def __is_not_found_page(http_response):
         if not ('Content-Type' in http_response.headers and
@@ -469,6 +548,7 @@ class DocumentProperty:
         self.__title     = None
         self.__filename  = None
         self.__document_control_number = None
+        self.__versions  = None
 
     @staticmethod
     def __parse_document_property_page(html_text):
@@ -500,6 +580,12 @@ class DocumentProperty:
         self.__filename = properties['_filename']
         self.__document_control_number = properties['Document Control Number']
 
+    def __get_history(self):
+        version_infos = self.docushare.history(self.handle)
+
+        # TODO: create VersionProperty array.
+        self.__versions = version_infos
+
     @property
     def docushare(self):
         return self.__docushare
@@ -530,6 +616,12 @@ class DocumentProperty:
         return f'handle: "{self.handle}", title: "{self.title}", filename: "{self.filename}", document_control_number: "{self.document_control_number}"'
 
     @property
+    def versions(self):
+        if self.__versions is None:
+            self.__get_history()
+        return self.__versions
+
+    @property
     def download_url(self):
         return self.docushare.url(Resource.Get, self.handle)
 
@@ -544,7 +636,6 @@ class DocumentProperty:
             
         self.docushare.download(self.handle, path)
         return path
-
 
 class VersionProperty:
     def __init__(self, docushare, hdl):
@@ -618,11 +709,8 @@ def main():
     ds = DocuShare(docushare_url)
     ds.login(username='tnakamoto', password=PasswordOption.USE_STORED)
 
-    #doc = ds['Document-94736']
-    doc = ds['Version-130224']
-    print(doc)
-    print(doc.download_url)
-    print(doc.download())
+    doc = ds['Document-94736']
+    print(doc.versions)
 
 if __name__ == "__main__":
     main()
