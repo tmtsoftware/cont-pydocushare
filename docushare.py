@@ -232,6 +232,54 @@ class DocuShare:
 
         return title, filename, version_number
 
+    def get_document(self, handle_number):
+        self.__check_if_logged_in()
+
+        if isinstance(handle_number, int):
+            handle_number = f'{handle_number:05d}'
+        elif isinstance(handle_number, str):
+            m = re.match(r'^Document-([0-9]{5})$', handle_number)
+            if m:
+                handle_number = m.group(1)
+            elif re.match(r'^[0-9]{5}$', handle_number):
+                pass
+            else:
+                raise ValueException('"handle_number" must be a 5-digit number or Document-xxxxxx')
+        else:
+            raise TypeError('"handle_number" must be int or str.')
+
+        document_property_url = self._services_url(f'Document-{handle_number}')
+        title, filename, document_control_number = self.__parse_document_property_page(document_property_url, self.__session)
+
+        return self.Document(docushare = self,
+                             handle_number = handle_number,
+                             title = title,
+                             filename = filename,
+                             document_control_number = document_control_number)
+
+    @staticmethod
+    def __parse_document_property_page(document_property_url, session):
+        document_property_page = session.get(document_property_url)
+        soup = BeautifulSoup(document_property_page.content, 'html.parser')
+
+        title = None
+        filename = None
+        document_control_number = None
+
+        propstable = soup.find('table', {'class': 'propstable'})
+        for row in propstable.find_all('tr'):
+            cols = row.find_all('td')
+            field_name = cols[0].text.strip()
+           
+            if 'Title' in field_name:
+                title = cols[1].text.strip()
+                file_url = cols[1].find('a')['href']
+                filename = PurePosixPath(urlparse(file_url).path).name
+            elif 'Document Control Number' in field_name:
+                document_control_number = cols[1].text.strip()
+
+        return title, filename, document_control_number
+    
     class Version:
         def __init__(self, docushare, handle_number, title, filename, version_number):
             self.__docushare      = docushare
@@ -281,16 +329,75 @@ class DocuShare:
                 path = path.joinpath(self.__filename)
 
             return self.__docushare._download(self.handle, path)
+
+    class Document:
+        def __init__(self, docushare, handle_number, title, filename, document_control_number):
+            self.__docushare        = docushare
+            self.__handle_number    = handle_number
+            self.__title            = title
+            self.__filename         = filename
+            self.__document_control_number = document_control_number
+
+        @property
+        def docushre(self):
+            return self.__docushare
+
+        @property
+        def handle_number(self):
+            return self.__handle_number
+
+        @property
+        def handle(self):
+            return f'Document-{self.__handle_number}'
+
+        @property
+        def title(self):
+            return self.__title
+
+        @property
+        def filename(self):
+            return self.__filename
+
+        @property
+        def document_control_number(self):
+            return self.__document_control_number
+      
+        @property
+        def download_url(self):
+            return self.__docushare._get_url(self.handle)
+
+        def __str__(self):
+            return f'handle: "{self.handle}", title: "{self.title}", filename: "{self.filename}", document_control_number: "{self.document_control_number}"'
+
+        def download(self, path = None):
+            if path is None:
+                path = Path.cwd()
+            else:
+                path = Path(path)
+
+            if path.is_dir():
+                path = path.joinpath(self.__filename)
+
+            return self.__docushare._download(self.handle, path)
         
 def main():
     docushare_url = input('Enter DocuShare URL: ')
     ds = DocuShare(docushare_url)
     ds.login(username='tnakamoto', password=DocuShare.USE_STORED_PASSWORD)
+
+    '''
     version = ds.get_version('Version-130360')
     print(version)
     print(version.handle)
     print(version.download_url)
     print(version.download())
+    '''
+
+    document = ds.get_document('Document-94736')
+    print(document)
+    print(document.handle)
+    print(document.download_url)
+    print(document.download())
 
 if __name__ == "__main__":
     main()
