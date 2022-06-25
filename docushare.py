@@ -1,0 +1,297 @@
+import getpass
+import json
+import re
+import requests
+import subprocess
+from pathlib import Path, PurePosixPath
+from urllib.parse import urlparse, urljoin
+
+from bs4 import BeautifulSoup
+
+class DocuShare:
+    USE_STORED_PASSWORD = object()
+    
+    def __init__(self, base_url, js_interpreter = '/usr/bin/node'):
+        # Check if the given URL is valid.
+        parse_result = urlparse(base_url)
+        if parse_result.scheme != 'http' and parse_result.scheme != 'https':
+            raise ValueError(f'base_url was {base_url}, but it must start with "http://" or "https://"')
+
+        if not parse_result.netloc:
+            raise ValueError(f'"{base_url}" is an invalid URL. It must be in the form of https://www.example.org/.')
+
+        self.__base_url = base_url
+        self.__dsweb_url = urljoin(self.__base_url, '/docushare/dsweb/')
+        self.__login_url = urljoin(self.__dsweb_url, 'Login')
+        self.__apply_login_url = urljoin(self.__dsweb_url, 'ApplyLogin')
+        self.__services_url = urljoin(self.__dsweb_url, 'Services/')
+        self.__get_url = urljoin(self.__dsweb_url, 'Get/')
+        self.__session = None
+        self.__js_interpreter = js_interpreter
+
+    @staticmethod
+    def __validate_handle(handle):
+        if not isinstance(handle, str):
+            raise TypeError('handle must be str')
+
+        return \
+            re.match(r'^Version-([0-9]{6})$', handle) or \
+            re.match(r'^Document-([0-9]{5})$', handle) or \
+            re.match(r'^Collection-([0-9]{5})$', handle)
+        
+    def _services_url(self, handle):
+        self.__validate_handle(handle)
+        return urljoin(self.__services_url, handle)
+
+    def _get_url(self, handle):
+        self.__validate_handle(handle)
+        return urljoin(self.__get_url, handle)
+
+    def _download(self, handle, path):
+        self.__check_if_logged_in()
+        url = self._get_url(handle)
+        r = self.__session.get(url)
+        with open(path, 'wb') as f:
+            f.write(r.content)
+
+        return path
+    
+    def login(self, username = None, password = None, js_interpreter = '/usr/bin/node', retry_count = 3):
+        can_prompt = (username is None) or (password is None) or (password == self.USE_STORED_PASSWORD)
+        store_password = (password == self.USE_STORED_PASSWORD)
+        
+        if username is None:
+            print(f'\nEnter your username for {self.__base_url}')
+            username = input('Username: ')
+            password = None
+
+        if store_password:
+            password = self.__get_password(self.__base_url, username)
+            
+        if password is None:
+            print(f'\nEnter password of "{username}" for {self.__base_url}')
+            password = getpass.getpass('Password: ')
+
+        self.__session = requests.Session()
+
+        login_token, challenge_js_url = self.__parse_login_page(self.__login_url, self.__session)
+        challenge_js = self.__session.get(challenge_js_url).text
+        challenge_response = self.__challenge_response(
+            password = password,
+            login_token = login_token,
+            challenge_js = challenge_js,
+            js_interpreter = self.__js_interpreter
+        )
+        login_info = {
+            'response': challenge_response,
+            'login_token': login_token,
+            'bookmark': '',
+            'username': username,
+            'password': '',
+            'domain': 'DocuShare',
+            'Login': 'Login'
+        }
+
+        self.__session.post(self.__apply_login_url, data = login_info)
+        if 'AmberUser' not in self.__session.cookies.keys():
+            if retry_count <= 1:
+                raise Exception(f'Failed to login at {self.__login_url}')
+            if store_password:
+                # Delete unmatched password from the keyring, and ask the
+                # username and password again.
+                print(f'\nFailed to login at {self.__login_url}')
+                self.__delete_password(self.__base_url, username)
+                self.login( username = None,
+                            password = self.USE_STORED_PASSWORD,
+                            js_interpreter = js_interpreter,
+                            retry_count = retry_count - 1 )
+            elif can_prompt:
+                print(f'\nFailed to login at {self.__login_url}')
+                self.login( username = None,
+                            password = None,
+                            js_interpreter = js_interpreter,
+                            retry_count = retry_count - 1 )
+            else:
+                raise Exception(f'Failed to login at {self.__login_url}')
+
+        if store_password:
+            self.__set_password(self.__base_url, username, password)
+
+    @property
+    def is_logged_in(self):
+        return self.__session is not None and 'AmberUser' in self.__session.cookies.keys()
+
+    def __check_if_logged_in(self):
+        if not self.is_logged_in:
+            raise Exception('Not logged in yet. Login first.')
+
+    @staticmethod
+    def __parse_login_page(login_url, session):
+        login_page = session.get(login_url)
+        soup = BeautifulSoup(login_page.content, 'html.parser')
+        
+        login_token_element = soup.find('input', {'name': 'login_token'})
+        if not login_token_element:
+            raise Exception(f'Cannot find login_token in {login_url}.')
+
+        if not login_token_element.has_attr('value'):
+            raise Exception(f'"value" attribute is missing in {login_token_element} ({login_url}).')
+        
+        login_token = login_token_element['value']
+        if not login_token:
+            raise Exception(f'login_token is empty in {login_url}.')
+        
+        challenge_js_script_tag = soup.find('script', src=re.compile('challenge\.js'))
+        if not challenge_js_script_tag:
+            raise Exception(f'Cannot find URL to challenge.js in {login_url}')
+        
+        challenge_js_src = challenge_js_script_tag['src']
+        challenge_js_url = urljoin(login_url, challenge_js_src)
+
+        return login_token, challenge_js_url
+
+    @staticmethod
+    def __challenge_response(password, login_token, challenge_js, js_interpreter):
+        password_escaped = json.dumps(password)
+        login_token_escaped = json.dumps(login_token)
+        
+        challenge_js += f'\nconsole.log(obscure_string({password_escaped}, {login_token_escaped}))'
+
+        response_bytes = subprocess.check_output(js_interpreter, input=challenge_js.encode())
+        return response_bytes.decode().strip()
+
+    @staticmethod
+    def __get_password(base_url, username):
+        try:
+            import keyring
+            return keyring.get_password(base_url, username)
+        except:
+            return None
+
+    @staticmethod
+    def __set_password(base_url, username, password):
+        try:
+            import keyring
+            return keyring.set_password(base_url, username, password)
+        except:
+            pass
+        
+    @staticmethod
+    def __delete_password(base_url, username):
+        try:
+            import keyring
+            keyring.delete_password(base_url, username)
+        except:
+            pass
+
+    def get_version(self, handle_number):
+        self.__check_if_logged_in()
+
+        if isinstance(handle_number, int):
+            handle_number = f'{handle_number:06d}'
+        elif isinstance(handle_number, str):
+            m = re.match(r'^Version-([0-9]{6})$', handle_number)
+            if m:
+                handle_number = m.group(1)
+            elif re.match(r'^[0-9]{6}$', handle_number):
+                pass
+            else:
+                raise ValueException('"handle_number" must be a 6-digit number or Version-xxxxxx')
+        else:
+            raise TypeError('"handle_number" must be int or str.')
+
+        version_property_url = self._services_url(f'Version-{handle_number}')
+        title, filename, version_number = self.__parse_version_property_page(version_property_url, self.__session)
+
+        return self.Version(docushare = self,
+                            handle_number = handle_number,
+                            title = title,
+                            filename = filename,
+                            version_number = version_number)
+
+    @staticmethod
+    def __parse_version_property_page(version_property_url, session):
+        version_property_page = session.get(version_property_url)
+        soup = BeautifulSoup(version_property_page.content, 'html.parser')
+
+        title = None
+        filename = None
+        version_number = None
+
+        propstable = soup.find('table', {'class': 'propstable'})
+        for row in propstable.find_all('tr'):
+            cols = row.find_all('td')
+            field_name = cols[0].text.strip()
+           
+            if 'Title' in field_name:
+                title = cols[1].text.strip()
+                file_url = cols[1].find('a')['href']
+                filename = PurePosixPath(urlparse(file_url).path).name
+            elif 'Version Number' in field_name:
+                version_number = int(cols[1].text.strip())
+
+        return title, filename, version_number
+
+    class Version:
+        def __init__(self, docushare, handle_number, title, filename, version_number):
+            self.__docushare      = docushare
+            self.__handle_number  = handle_number
+            self.__title          = title
+            self.__filename       = filename
+            self.__version_number = version_number
+
+        @property
+        def docushre(self):
+            return self.__docushare
+
+        @property
+        def handle_number(self):
+            return self.__handle_number
+
+        @property
+        def handle(self):
+            return f'Version-{self.__handle_number}'
+
+        @property
+        def title(self):
+            return self.__title
+
+        @property
+        def filename(self):
+            return self.__filename
+
+        @property
+        def version_number(self):
+            return self.__version_number
+
+        @property
+        def download_url(self):
+            return self.__docushare._get_url(self.handle)
+
+        def __str__(self):
+            return f'handle: "{self.handle}", title: "{self.title}", filename: "{self.filename}", version_number: {self.version_number}'
+
+        def download(self, path = None):
+            if path is None:
+                path = Path.cwd()
+            else:
+                path = Path(path)
+
+            if path.is_dir():
+                path = path.joinpath(self.__filename)
+
+            return self.__docushare._download(self.handle, path)
+        
+def main():
+    docushare_url = input('Enter DocuShare URL: ')
+    ds = DocuShare(docushare_url)
+    ds.login(username='tnakamoto', password=DocuShare.USE_STORED_PASSWORD)
+    version = ds.get_version('Version-130360')
+    print(version)
+    print(version.handle)
+    print(version.download_url)
+    print(version.download())
+
+if __name__ == "__main__":
+    main()
+
