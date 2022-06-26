@@ -146,7 +146,7 @@ class DocuShare:
 
         Raises
         ------
-        HTTPError
+        requests.HTTPError
             If HTTP error status code was returned.
         DocuShareSystemError
             If the DocuShare site encounters a system error.
@@ -180,9 +180,16 @@ class DocuShare:
         -------
         requests.Response
             HTTP response.
+
+        Raises
+        ------
+        requests.HTTPError
+            If HTTP error status code was returned.
         '''
         self.__logger.info(f'HTTP POST {url}')
-        return self.__session.post(url, data = data)
+        response = self.__session.post(url, data = data)
+        response.raise_for_status()
+        return response
 
     def url(self, resource = None, hdl = None):
         if not resource:
