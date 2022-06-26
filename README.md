@@ -4,7 +4,13 @@ This is the git repository of PyDocuShare, python API to interact with DocuShare
 
 ## Install
 
-Clone this repository, then run the commad below to install PyDocuShare module.
+Clone this repository, then run the commad below to install PyDocuShare module:
+
+```sh
+ $ pip install -e ".[password-store]"
+```
+
+For better user experience (storing password), it is recommended to specify all extra options as shown above. If you do not need those extra features, you can simply omit all options as shown below:
 
 ```sh
  $ pip install -e .
@@ -55,7 +61,7 @@ ds.login(js_interpreter='/path/to/node')
 API documents can be generated using Sphinx. Install Sphinx and relevant extensions with the command below:
 
 ```sh
- $ pip intall sphinx sphinx-rtd-theme sphinx-prompt sphinx-automodapi enum-tools[sphinx]
+ $ pip install -e ".[docs]"
 ```
 
 Then, run the command below in the root directory of this repository:

@@ -19,6 +19,15 @@ setup(
         'beautifulsoup4 >= 4.8.2',
         'requests >= 2.22.0',
     ],
+    extras_require = {
+        'password-store': ['keyring >= 18.0.1'],
+        'docs': [
+            'sphinx >= 4.5.0',
+            'sphinx-rtd-theme >= 1.0.0',
+            'sphinx-automodapi >= 0.14.1',
+            'enum-tools >= 0.9.0',
+        ],
+    },
     classifiers=[
         'Topic :: Utilities'
     ],
