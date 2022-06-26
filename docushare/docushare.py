@@ -1,6 +1,7 @@
 from enum import Enum, auto
 import getpass
 import json
+import logging
 import re
 import requests
 import subprocess
@@ -48,7 +49,7 @@ class DocuShare:
     in multiple threads.
     '''
     
-    def __init__(self, base_url):
+    def __init__(self, base_url):        
         # Check if the given URL is valid.
         parse_result = urlparse(base_url)
         if parse_result.scheme != 'http' and parse_result.scheme != 'https':
@@ -57,10 +58,31 @@ class DocuShare:
             raise ValueError(f'"{base_url}" is an invalid URL. It must be in the form of https://www.example.org/.')
         if not parse_result.path.endswith('/'):
             base_url = base_url + '/'
-        
+
+        # Default logging settings to output log messages to stdout.
+        self.__logger = logging.getLogger(__name__)
+        log_handler   = logging.StreamHandler() # to output stdout.
+        log_formatter = logging.Formatter('%(asctime)s: %(levelname)s - %(message)s')
+        log_handler.setFormatter(log_formatter)
+        self.__logger.addHandler(log_handler)
+
         self.__base_url = base_url
         self.__session  = requests.Session()
         self.__handle_properties = {}
+
+    @property
+    def logger(self):
+        '''logging.Logger: Logger of this instance
+
+        It may be useful to change logging settings like log level.
+
+        Examples
+        --------
+        >>> import logging
+        >>> ds = DocuShare(base_url='https://your.domain/docushare/')
+        >>> ds.logger.setLevel(logging.DEBUG)
+        '''
+        return self.__logger
 
     def http_get(self, url):
         '''Access the given URL with HTTP GET method using the current DocuShare session.
@@ -78,7 +100,7 @@ class DocuShare:
         requests.Response
             HTTP response.
         '''
-        print(f'HTTP GET : {url}') # TODO: use a logging mechanism
+        self.__logger.info(f'HTTP GET  {url}')
         return self.__session.get(url)
 
     def http_post(self, url, data = None):
@@ -100,12 +122,8 @@ class DocuShare:
         requests.Response
             HTTP response.
         '''
-        print(f'HTTP POST: {url}') # TODO: use a logging mechanism
+        self.__logger.info(f'HTTP POST {url}')
         return self.__session.post(url, data = data)
-
-    @property
-    def cookies(self):
-        return self.__session.cookies
 
     def url(self, resource = None, hdl = None):
         if not resource:
@@ -218,6 +236,8 @@ class DocuShare:
         challenge_js = self.http_get(challenge_js_url).text
 
         # Get the challenge response.
+        self.__logger.debug(f'challenge_js: {challenge_js}')
+        self.__logger.debug(f'js_interpreter: {js_interpreter}')
         challenge_response = self.__challenge_response(
             password = entered_password,
             login_token = login_token,
@@ -235,17 +255,23 @@ class DocuShare:
             'domain': domain,
             'Login': 'Login'
         }
+        self.__logger.debug(f'response    = {challenge_response}')
+        self.__logger.debug(f'login_token = {login_token}')
+        self.__logger.debug(f'username    = {entered_username}')
+        self.__logger.debug(f'domain      = {domain}')
         self.http_post(self.url(Resource.ApplyLogin), data = login_info)
+
+        self.__logger.debug(f'cookies.keys() = {self.cookies.keys()}')
 
         # If the authentication is successful, 'AmberUser' is added to the
         # cookies.
         if 'AmberUser' not in self.cookies.keys():
             if retry_count <= 1:
-                raise Exception(f'Failed to login at {login_url}')
+                raise RuntimeError(f'Failed to login at {login_url}')
             elif password == PasswordOption.USE_STORED:
                 # Delete unmatched password from the keyring, and ask the
                 # password again.
-                print(f'\nFailed to login at {login_url}')
+                print(f'\nFailed to login at {login_url}.')
                 self.__delete_password(entered_username)
                 self.login(username = username,
                            password = PasswordOption.USE_STORED,
@@ -253,34 +279,49 @@ class DocuShare:
                            retry_count = retry_count - 1,
                            domain = domain)
             elif password == PasswordOption.ASK:
-                print(f'\nFailed to login at {login_url}')
+                print(f'\nFailed to login at {login_url}.')
                 self.login(username = username,
                            password = PasswordOption.ASK,
                            js_interpreter = js_interpreter,
                            retry_count = retry_count - 1,
                            domain = domain )
             else:
-                raise Exception(f'Failed to login at {login_url}')
+                raise RuntimeError(f'Failed to login at {login_url}.')
 
         if password == PasswordOption.USE_STORED:
             self.__set_password(entered_username, entered_password)
-            
+
+    @property
+    def cookies(self):
+        '''Cookies of the current session.
+
+        See more details in :py:attr:`requests.Session.cookies`.'''
+        return self.__session.cookies
+    
     @property
     def is_logged_in(self):
+        '''boolean: indicates if this instance successfully logged in the DocuShare site.'''
         return 'AmberUser' in self.cookies.keys()
 
     def __check_if_logged_in(self):
         if not self.is_logged_in:
-            raise Exception('Not logged in yet. Login first.')
+            raise RuntimeError('Not logged in yet. Login first.')
 
     def __open_and_parse_login_page(self):
         login_url = self.url(Resource.Login)
         login_page = self.http_get(login_url)
         login_token, challenge_js_src = parse_login_page(login_page.text)
-        return login_token, join_url(login_url, challenge_js_src)
+        challenge_js_url = join_url(login_url, challenge_js_src)
+        self.__logger.debug(f'login_token = {login_token}')
+        self.__logger.debug(f'challenge_js_src = {challenge_js_src}')
+        self.__logger.debug(f'challenge_js_url = {challenge_js_url}')
+        self.__logger.debug(f'cookies.keys()   = {self.cookies.keys()}')
+        if 'JSESSIONID' not in self.cookies.keys():
+            self.__logger.warning('JSESSIONID is missing in the cookies.')
+        return login_token, challenge_js_url
 
     @staticmethod
-    def __challenge_response(password, login_token, challenge_js, js_interpreter):
+    def __challenge_response(password, login_token, challenge_js, js_interpreter):        
         password_escaped = json.dumps(password)
         login_token_escaped = json.dumps(login_token)
         challenge_js += f'\nconsole.log(obscure_string({password_escaped}, {login_token_escaped}))'
@@ -290,14 +331,18 @@ class DocuShare:
     def __get_password(self, username):
         try:
             import keyring
-            return keyring.get_password(self.__base_url, username)
+            password = keyring.get_password(self.__base_url, username)
+            if password:
+                self.__logger.info(f'Found stored password of "{username}" for {self.__base_url}.')
+            return password
         except:
             return None
 
     def __set_password(self, username, password):
         try:
             import keyring
-            return keyring.set_password(self.__base_url, username, password)
+            keyring.set_password(self.__base_url, username, password)
+            self.__logger.info(f'Stored password of "{username}" for {self.__base_url}.')
         except:
             pass
         
@@ -305,6 +350,7 @@ class DocuShare:
         try:
             import keyring
             keyring.delete_password(self.__base_url, username)
+            self.__logger.info(f'Deleted password of "{username}" for {self.__base_url}.')
         except:
             pass
 
@@ -322,7 +368,7 @@ class DocuShare:
         http_response.raise_for_status()
 
         if self.__is_not_found_page(http_response):
-            raise Exception(f'{url} was not found.')
+            raise RuntimeError(f'{url} was not found.')
         
         with open(path, 'wb') as f:
             f.write(http_response.content)
@@ -529,16 +575,3 @@ class VersionProperty:
         self.docushare.download(self.handle, path)
         return path
     
-def main():
-    docushare_url = input('Enter DocuShare URL: ')
-    ds = DocuShare(docushare_url)
-    ds.login(username='tnakamoto', password=PasswordOption.USE_STORED)
-
-    doc = ds['Document-94736']
-    print(doc)
-    for version_handle in doc.versions:
-        print(ds[version_handle])
-
-if __name__ == "__main__":
-    main()
-
