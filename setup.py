@@ -1,8 +1,20 @@
+from distutils.command.clean import clean
 from setuptools import setup, find_packages
 from sphinx.setup_command import BuildDoc
 
-cmdclass = {'build_sphinx': BuildDoc}
+class CleanAlsoSphinx(clean):
+    def run(self):
+        super().run()
+        
+        import shutil
+        from pathlib import Path
+        dirs_to_remove = ['build/docs/', 'docs/api/']
+        for dir_to_remove in dirs_to_remove:
+            dir_to_remove_abs = Path(dir_to_remove).resolve()
+            print(f'Removing {dir_to_remove_abs}...')
+            shutil.rmtree(dir_to_remove_abs, ignore_errors=True)
 
+cmdclass = {'build_sphinx': BuildDoc}
 name         = 'PyDocuShare'
 version      = '0.0.1'
 
@@ -42,4 +54,7 @@ setup(
             'builder'   : ('setup.py', 'html'),
         }
     },
+    cmdclass = {
+        'clean': CleanAlsoSphinx,
+    }
 )

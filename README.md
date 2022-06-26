@@ -72,6 +72,13 @@ Then, run the command below in the root directory of this repository:
 
 The API documents are generated under `build/docs/html`. Open [build/docs/html/index.html](build/docs/html/index.html) in your Web browser to see the API documents.
 
+Sometimes document generation does not work as intended due to remnant from the previous build. In that case, clean the build first:
+
+```sh
+ $ python setup.py clean
+ $ python setup.py build_sphinx
+```
+
 ## Restriction
 
 This API has been tested with DocuShare version 7.0.0. The implementation of this API does not use DocuShare HTTP/XML interface. It rather parses the same HTML pages as the users see in their Web browsers. Therefore, it may not work with different versions or if the DocuShare configuration is different from what the author assumed.
