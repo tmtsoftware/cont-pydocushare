@@ -540,28 +540,6 @@ class DocumentProperty:
         self.__filename  = None
         self.__document_control_number = None
         self.__versions  = None
-
-    @staticmethod
-    def __parse_document_property_page(html_text):
-        soup = BeautifulSoup(html_text, 'html.parser')
-
-        title = None
-        filename = None
-        document_control_number = None
-
-        propstable = soup.find('table', {'class': 'propstable'})
-        for row in propstable.find_all('tr'):
-            cols = row.find_all('td')
-            field_name = cols[0].text.strip()
-           
-            if 'Title' in field_name:
-                title = cols[1].text.strip()
-                file_url = cols[1].find('a')['href']
-                filename = PurePosixPath(urlparse(file_url).path).name
-            elif 'Document Control Number' in field_name:
-                document_control_number = cols[1].text.strip()
-
-        return title, filename, document_control_number
         
     def __load_properties(self):
         properties = self.docushare.load_properties(self.handle)
