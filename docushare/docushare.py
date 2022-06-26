@@ -11,7 +11,7 @@ from urllib.parse import urlparse
 from bs4 import BeautifulSoup
 
 from .handle import HandleType, Handle, handle
-from .parser import parse_if_system_error_page, parse_login_page, parse_property_page, parse_history_page
+from .parser import is_not_found_page, parse_if_system_error_page, parse_login_page, parse_property_page, parse_history_page
 from .util import join_url
 
 class Resource(Enum):
@@ -66,6 +66,33 @@ class DocuShareSystemError(RuntimeError):
     @property
     def url(self):
         '''str: URL that caused this error.'''
+        return self.__url
+    
+    @property
+    def username(self):
+        '''str: DocuShare username when this error was returned.'''
+        return self.__username
+
+class DocuShareNotFoundError(RuntimeError):
+    '''Raised if the object does not exist in the DocuShare site.
+
+    Parameters
+    ----------
+    docushare : DocuShare
+        DocuShare instance to get the context for detailed error messages.
+    url : str
+        URL that does not exist.
+    '''
+    
+    def __init__(self, docushare, url):
+        self.__username = docushare.username
+        self.__url      = url
+        msg = f'{url} does not exist (username: {docushare.username})'
+        super().__init__(msg)
+
+    @property
+    def url(self):
+        '''str: URL that does not exist.'''
         return self.__url
     
     @property
@@ -431,17 +458,25 @@ class DocuShare:
     def download(self, hdl, path):
         '''Download the given handle (Document or Version) as a file.
 
-        Parameters:
-        hdl (Handle): Handle to download.
-        path (path-like object): Destination file.
+        Parameters
+        ----------
+        hdl : Handle
+            DocuShare handle to download as a file.
+        path : path-like object:
+            Destination file path.
+
+        Raises
+        ------
+        DocuShareNotFoundError
+            If the given handle does not exist.
         '''
         
         self.__check_if_logged_in()
         url = self.url(Resource.Get, handle(hdl))
         http_response = self.http_get(url)
 
-        if self.__is_not_found_page(http_response):
-            raise RuntimeError(f'{url} was not found.')
+        if is_not_found_page(http_response):
+            raise DocuShareNotFoundError(self, url)
         
         with open(path, 'wb') as f:
             f.write(http_response.content)
@@ -476,18 +511,6 @@ class DocuShare:
         http_response = self.http_get(url)
         version_handles = parse_history_page(http_response.text)
         return version_handles
-
-    @staticmethod
-    def __is_not_found_page(http_response):
-        if not ('Content-Type' in http_response.headers and
-                http_response.headers['Content-Type'].startswith('text/html')):
-            return False
-
-        soup = BeautifulSoup(http_response.text, 'html.parser')
-        for h2s in soup.find_all('h2'):
-            if 'Not Found' in h2s.text.strip():
-                return True
-        return False
 
     def __getitem__(self, hdl):
         self.__check_if_logged_in()

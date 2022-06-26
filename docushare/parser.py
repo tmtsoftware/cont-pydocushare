@@ -11,6 +11,31 @@ class ParseError(RuntimeError):
     '''Raised when parsing one of DocuShare web page.'''
     pass
 
+def is_not_found_page(http_response):
+    '''Check if the given HTTP response represents 'Not Found' error.
+
+    Note that it is different from HTTP 404 response. This function only checks if the given HTTP 
+    response contains an HTML that represents 'Not Found' in the DocuShare.
+
+    Parameters
+    ----------
+    http_response : requests.Response
+        HTTP response from a DocuShare site.
+
+    Returns
+    -------
+    bool : True if the given HTTP response indicates 'Not Found'.
+    '''
+    if not ('Content-Type' in http_response.headers and
+            http_response.headers['Content-Type'].startswith('text/html')):
+        return False
+
+    soup = BeautifulSoup(http_response.text, 'html.parser')
+    for h2s in soup.find_all('h2'):
+        if 'Not Found' in h2s.text.strip():
+            return True
+    return False
+
 def parse_if_system_error_page(html_text):
     '''If the given HTML represents a DocuShare system error page, parse it.
 
