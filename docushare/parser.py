@@ -70,7 +70,8 @@ def parse_property_page(html_text, handle_type):
 
     Returns
     -------
-    dict: property name as key and property value as value.
+    dict
+        property name as key and property value as value.
 
     Raises
     ------
@@ -121,7 +122,8 @@ def parse_history_page(html_text):
 
     Returns
     -------
-    array: array of :class:`Handle` instances.
+    array
+        array of :class:`Handle` instances.
 
     Raises
     ------

@@ -16,9 +16,9 @@ setup(
     license      = 'Apache',
     python_requires  = '>=3.8',
     install_requires = [
-        'beautifulsoup4 >= 4.8.2'
+        'beautifulsoup4 >= 4.8.2',
+        'requests >= 2.22.0',
     ],
-    
     classifiers=[
         'Topic :: Utilities'
     ],

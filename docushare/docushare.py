@@ -14,29 +14,41 @@ from .parser import parse_login_page, parse_property_page, parse_history_page
 from .util import join_url
 
 class Resource(Enum):
-    DSWEB      = auto()
-    Login      = auto()
-    ApplyLogin = auto()
-    Services   = auto()
-    History    = auto()
-    Get        = auto()
+    '''This enum represents one DocuShare resource.'''
+    
+    DSWEB      = '(base URL for any resources in DocuShare)'
+    Login      = 'HTTP GET : login page to get login token'
+    ApplyLogin = 'HTTP POST: to send credential information'
+    Services   = 'HTTP GET : property page'
+    History    = 'HTTP GET : version history of a document'
+    Get        = 'HTTP GET : get a document file'
 
 class PasswordOption(Enum):
-    ASK        = auto()
-    USE_STORED = auto()
+    '''Option for password prompting.'''
+    
+    ASK        = 'Always prompts the user to enter the password in the console.'
+    USE_STORED = 'Try to use the stored password if exists. If not, prompts the user to enter the password in the console. Correctly authenticated password will be stored. Note that `keyring` module is required to use this option.'
 
 class DocuShare:
-    '''This class represents one DocuShare site.'''
-    
-    USE_STORED_PASSWORD = object()
+    '''This class represents a session to access a DocuShare site.
+
+    An instance of this class stores login session so that the user does not have to enter the authentication
+    information many times. It also caches some metadata so that it does not have to access the DocuShare
+    multiple times to get the same information.
+
+    Parameters
+    ----------
+    base_url : str
+        Base URL of DocuShare. Both 'http' and 'https' schemes are supported.
+        For example, https://your.docushare.domain/docushare/.
+
+    Warnings
+    --------
+    This class is not thread-safe. Use an appropriate mechanism if you want to use an instance of this class
+    in multiple threads.
+    '''
     
     def __init__(self, base_url):
-        '''Constructor
-
-        Parameters:
-        base_url (str): Base URL of DocuShare. For example, https://www.example.com/docushare/.
-        '''
-        
         # Check if the given URL is valid.
         parse_result = urlparse(base_url)
         if parse_result.scheme != 'http' and parse_result.scheme != 'https':
@@ -51,11 +63,44 @@ class DocuShare:
         self.__handle_properties = {}
 
     def http_get(self, url):
-        print(f' GET: {url}')
+        '''Access the given URL with HTTP GET method using the current DocuShare session.
+
+        This method may be useful to access the resource that PyDocuShare does not directly support
+        (e.g. Wiki, Calendar).
+
+        Parameters
+        ----------
+        url : str
+            URL to access.
+
+        Returns
+        -------
+        requests.Response
+            HTTP response.
+        '''
+        print(f'HTTP GET : {url}') # TODO: use a logging mechanism
         return self.__session.get(url)
 
-    def http_post(self, url, data):
-        print(f'POST: {url}')
+    def http_post(self, url, data = None):
+        '''Access the given URL with HTTP POST method using the current DocuShare session.
+
+        This method may be useful to access the resource that PyDocuShare does not directly support
+        (e.g. uploading documents).
+
+        Parameters
+        ----------
+        url : str
+            URL to access.
+
+        data
+           See :py:meth:`requests.Session.post` for more details.
+
+        Returns
+        -------
+        requests.Response
+            HTTP response.
+        '''
+        print(f'HTTP POST: {url}') # TODO: use a logging mechanism
         return self.__session.post(url, data = data)
 
     @property
@@ -101,29 +146,31 @@ class DocuShare:
             js_interpreter = '/usr/bin/node',
             retry_count = 3,
             domain = 'DocuShare'):
-        '''Login DocuShare.
+        '''Login the DocuShare site.
 
-        Parameters:
-        username (str): Username for DocuShare. Specify None to prompt the user to enter the username.
+        This must be executed, at least, once before accessing any other resources in DocuShare.
 
-        password (str or PasswordOption): Password for the DocuShare user.
+        Parameters
+        ----------
+
+        username : str or None
+            Username for Docushare. Specify None to prompt the user to enter the username.
+
+        password : str or PasswordOption
+            Password for the DocuShare user.
             If a string is given, it is considered as the password and this method never prompts the user.
-
-            If PasswordOption.ASK, this method always prompts the user to enter the password.
-
-            If PassowrdOption.USE_STORED, this method first tries to use the stored password. If the password
-            is not stored or the stored password is not correct, this method prompts the user to enter the 
-            password. If the password is correct, it will be stored in the keyring so that the user does not
-            have to enter the same password again next time this method is called.
-            Note that storing password requires 'keyring' module.
+            If an :class:`PasswordOption` enum is given, this method behaves as described in each enum
+            value.
         
+        js_interpreter : str
+            Path to JavaScript interpreter.
+            This will be used to run DocuShare's for challenge-response authentication.
 
-        js_interpreter (str): Path to JavaScript interpreter. This will be used to run DocuShare's
-                              for challenge-response authentication.
+        retry_count : int
+            The user will have a chance to enter the credentials this amount of time.
 
-        retry_count (int): The user will have a chance to enter the credentials this amount of time.
-
-        domain (str): Domain to specify when logging in DocuShare. Typically, it is 'DocuShare'.
+        domain : str
+            Domain to specify when logging in DocuShare. Typically, it is 'DocuShare'.
         '''
 
         if not (username is None or isinstance(username, str)):

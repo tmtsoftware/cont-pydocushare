@@ -39,7 +39,10 @@ templates_path = ['_templates']
 # This pattern also affects html_static_path and html_extra_path.
 exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
 
-intersphinx_mapping = {'python': ('https://docs.python.org/3.8', None)}
+intersphinx_mapping = {
+    'python'  : ('https://docs.python.org/3.8', None),
+    'requests': ('https://requests.readthedocs.io/en/latest', None),
+}
 
 # -- Options for HTML output -------------------------------------------------
 
