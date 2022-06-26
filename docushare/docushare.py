@@ -5,20 +5,12 @@ import re
 import requests
 import subprocess
 from pathlib import Path, PurePosixPath
-from urllib.parse import urlparse, urljoin
+from urllib.parse import urlparse
 
 from bs4 import BeautifulSoup
 
 from .handle import HandleType, Handle, handle
-
-def join_url(*args):
-    ret = None
-    for arg in args:
-        if ret is None:
-            ret = arg
-        else:
-            ret = urljoin(ret, arg)
-    return ret
+from .util import join_url
 
 class Resource(Enum):
     DSWEB      = auto()
@@ -77,11 +69,11 @@ class DocuShare:
             raise TypeError('resource must be one of Resource enum')
 
         if resource == Resource.DSWEB:
-            return urljoin(self.__base_url, 'dsweb/')
+            return join_url(self.__base_url, 'dsweb/')
         elif resource == Resource.Login:
-            return urljoin(self.url(Resource.DSWEB), 'Login')
+            return join_url(self.url(Resource.DSWEB), 'Login')
         elif resource == Resource.ApplyLogin:
-            return urljoin(self.url(Resource.DSWEB), 'ApplyLogin')
+            return join_url(self.url(Resource.DSWEB), 'ApplyLogin')
         elif resource == Resource.Services:
             if not isinstance(hdl, Handle):
                 raise TypeError('hdl must be an instance of Handle')
@@ -254,7 +246,7 @@ class DocuShare:
             raise Exception(f'Cannot find URL to challenge.js in {login_url}')
         
         challenge_js_src = challenge_js_script_tag['src']
-        challenge_js_url = urljoin(login_url, challenge_js_src)
+        challenge_js_url = join_url(login_url, challenge_js_src)
 
         return login_token, challenge_js_url
 
