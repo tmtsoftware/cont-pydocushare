@@ -64,3 +64,10 @@ The API documents are generated under `build/docs/html`. Open [build/docs/html/i
 
 This API has been tested with DocuShare version 7.0.0. The implementation of this API does not use DocuShare HTTP/XML interface. It rather parses the same HTML pages as the users see in their Web browsers. Therefore, it may not work with different versions or if the DocuShare configuration is different from what the author assumed.
 
+## Developer information
+
+The sections below provide information for developer who extend and/or fix PyDocuShare API.
+
+### Documentation
+
+PyDocuShare uses [numpy style](https://numpydoc.readthedocs.io/en/latest/format.html#docstring-standard) as the docstring style. Use the same style for consistency.

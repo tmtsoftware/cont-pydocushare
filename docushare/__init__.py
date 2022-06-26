@@ -1,10 +1,16 @@
+'''
+TODO: document "docushare" module.
+'''
+
 from .docushare import DocuShare
-from .handle import HandleType, Handle, handle
+from .handle import handle, Handle, HandleType, InvalidHandleError
 
 __all__ = [
     'DocuShare',
-    'HandleType',
-    'Handle',
+    
     'handle',
+    'Handle',
+    'HandleType',
+    'InvalidHandleError',
 ]
 
