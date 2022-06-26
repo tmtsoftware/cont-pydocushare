@@ -11,6 +11,32 @@ class ParseError(RuntimeError):
     '''Raised when parsing one of DocuShare web page.'''
     pass
 
+def parse_if_system_error_page(html_text):
+    '''If the given HTML represents a DocuShare system error page, parse it.
+
+    Parameters
+    ----------
+    html_text : str
+        HTML text that was obtained from a DocuShare.
+
+    Returns
+    -------
+    error_code : str or None
+        Error code from DocuShare, or None if the given page is not a DocuShare system error page.
+    error_message : str or None
+        Error message from DocuShare, or None if the given page is not a DocuShare system error page.
+    '''
+    soup = BeautifulSoup(html_text, 'html.parser')
+    error_code_tag    = soup.find('input', {'name': 'dserrorcode'})
+    error_message_tag = soup.find('input', {'name': 'detail_message'})
+
+    if error_code_tag or error_message_tag:
+        error_code    = error_code_tag['value']    if error_code_tag.has_attr('value')    else ''
+        error_message = error_message_tag['value'] if error_message_tag.has_attr('value') else ''
+        return error_code, error_message
+    else:
+        return None, None
+
 def parse_login_page(html_text):
     '''Parse the DocuShare login page and returns login token and path to challenge.js.
 

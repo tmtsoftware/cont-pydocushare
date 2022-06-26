@@ -11,7 +11,7 @@ from urllib.parse import urlparse
 from bs4 import BeautifulSoup
 
 from .handle import HandleType, Handle, handle
-from .parser import parse_login_page, parse_property_page, parse_history_page
+from .parser import parse_if_system_error_page, parse_login_page, parse_property_page, parse_history_page
 from .util import join_url
 
 class Resource(Enum):
@@ -30,6 +30,49 @@ class PasswordOption(Enum):
     ASK        = 'Always prompts the user to enter the password in the console.'
     USE_STORED = 'Try to use the stored password if exists. If not, prompts the user to enter the password in the console. Correctly authenticated password will be stored. Note that `keyring` module is required to use this option.'
 
+class DocuShareSystemError(RuntimeError):
+    '''Raised if the DocuShare site encounters a system error.
+
+    Parameters
+    ----------
+    error_code : str
+        Error code returned by DocuShare.
+    error_message : str
+        Error message returned by DocuShare.
+    docushare : DocuShare
+        DocuShare instance to get the context for detailed error messages.
+    url : str
+        URL that caused this error.
+    '''
+    
+    def __init__(self, error_code, error_message, docushare, url):
+        self.__error_code    = error_code
+        self.__error_message = error_message
+        self.__username      = docushare.username
+        self.__url           = url
+        msg = f'DocuShare system error (code: {error_code}, message: {error_message}, username: {docushare.username}, url: {url})'
+        super().__init__(msg)
+
+    @property
+    def error_code(self):
+        '''str: Error code returned from DocuShare.'''
+        return self.__error_code
+    
+    @property
+    def error_message(self):
+        '''str: Error message returned from DocuShare.'''
+        return self.__error_message
+
+    @property
+    def url(self):
+        '''str: URL that caused this error.'''
+        return self.__url
+    
+    @property
+    def username(self):
+        '''str: DocuShare username when this error was returned.'''
+        return self.__username
+    
 class DocuShare:
     '''This class represents a session to access a DocuShare site.
 
@@ -68,6 +111,7 @@ class DocuShare:
 
         self.__base_url = base_url
         self.__session  = requests.Session()
+        self.__username = None
         self.__handle_properties = {}
 
     @property
@@ -99,9 +143,24 @@ class DocuShare:
         -------
         requests.Response
             HTTP response.
+
+        Raises
+        ------
+        HTTPError
+            If HTTP error status code was returned.
+        DocuShareSystemError
+            If the DocuShare site encounters a system error.
         '''
         self.__logger.info(f'HTTP GET  {url}')
-        return self.__session.get(url)
+        response = self.__session.get(url)
+        response.raise_for_status()
+        
+        if response.headers['Content-Type'].startswith('text/html'):
+            error_code, error_message = parse_if_system_error_page(response.text)
+            if error_code:
+                raise DocuShareSystemError(error_code, error_message, self, url)
+            
+        return response
 
     def http_post(self, url, data = None):
         '''Access the given URL with HTTP POST method using the current DocuShare session.
@@ -207,6 +266,7 @@ class DocuShare:
             raise TypeError('domain must be str')
 
         self.cookies.clear()
+        self.__username = None
         
         if username is None:
             print(f'\nEnter your username for {self.__base_url}')
@@ -288,6 +348,8 @@ class DocuShare:
             else:
                 raise RuntimeError(f'Failed to login at {login_url}.')
 
+        # If successfully logged in, record the username.
+        self.__username = entered_username
         if password == PasswordOption.USE_STORED:
             self.__set_password(entered_username, entered_password)
 
@@ -306,6 +368,11 @@ class DocuShare:
     def __check_if_logged_in(self):
         if not self.is_logged_in:
             raise RuntimeError('Not logged in yet. Login first.')
+        
+    @property
+    def username(self):
+        '''str or None: Currently logged in DocuShare username, or None if login has not been done yet.'''
+        return self.__username
 
     def __open_and_parse_login_page(self):
         login_url = self.url(Resource.Login)
@@ -365,7 +432,6 @@ class DocuShare:
         self.__check_if_logged_in()
         url = self.url(Resource.Get, handle(hdl))
         http_response = self.http_get(url)
-        http_response.raise_for_status()
 
         if self.__is_not_found_page(http_response):
             raise RuntimeError(f'{url} was not found.')
@@ -386,7 +452,6 @@ class DocuShare:
         hdl = handle(hdl)
         url = self.url(Resource.Services, hdl)
         http_response = self.http_get(url)
-        http_response.raise_for_status()
         return parse_property_page(http_response.text, hdl.type)
 
     def load_history(self, hdl):
@@ -402,7 +467,6 @@ class DocuShare:
         hdl = handle(hdl)
         url = self.url(Resource.History, hdl)
         http_response = self.http_get(url)
-        http_response.raise_for_status()
         version_handles = parse_history_page(http_response.text)
         return version_handles
 
