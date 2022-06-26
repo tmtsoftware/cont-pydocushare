@@ -52,7 +52,13 @@ ds.login(js_interpreter='/path/to/node')
 
 ## API Document
 
-To generate API documents, run the command below in the root directory of this repository:
+API documents can be generated using Sphinx. Install Sphinx and relevant extensions with the command below:
+
+```sh
+ $ pip intall sphinx sphinx-rtd-theme sphinx-prompt sphinx-automodapi enum-tools[sphinx]
+```
+
+Then, run the command below in the root directory of this repository:
 
 ```sh
  $ python setup.py build_sphinx
