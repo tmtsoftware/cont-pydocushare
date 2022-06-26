@@ -61,13 +61,13 @@ def is_not_authorized_page(http_response):
             return True
     return False
 
-def parse_if_system_error_page(html_text):
-    '''If the given HTML represents a DocuShare system error page, parse it.
+def parse_if_system_error_page(http_response):
+    '''If the given HTTP response represents a DocuShare system error page, parse it.
 
     Parameters
     ----------
-    html_text : str
-        HTML text that was obtained from a DocuShare.
+    http_response : requests.Response
+        HTTP response from a DocuShare site.
 
     Returns
     -------
@@ -76,7 +76,11 @@ def parse_if_system_error_page(html_text):
     error_message : str or None
         Error message from DocuShare, or None if the given page is not a DocuShare system error page.
     '''
-    soup = BeautifulSoup(html_text, 'html.parser')
+    if not ('Content-Type' in http_response.headers and
+            http_response.headers['Content-Type'].startswith('text/html')):
+        return None, None
+
+    soup = BeautifulSoup(http_response.text, 'html.parser')
     error_code_tag    = soup.find('input', {'name': 'dserrorcode'})
     error_message_tag = soup.find('input', {'name': 'detail_message'})
 

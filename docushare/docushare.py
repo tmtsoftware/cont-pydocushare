@@ -210,11 +210,10 @@ class DocuShare:
         self.__logger.info(f'HTTP GET  {url}')
         response = self.__session.get(url)
         response.raise_for_status()
-        
-        if response.headers['Content-Type'].startswith('text/html'):
-            error_code, error_message = parse_if_system_error_page(response.text)
-            if error_code:
-                raise DocuShareSystemError(error_code, error_message, self, url)
+
+        error_code, error_message = parse_if_system_error_page(response)
+        if error_code:
+            raise DocuShareSystemError(error_code, error_message, self, url)
 
         if is_not_authorized_page(response):
             raise DocuShareNotAuthorizedError(self, url)
