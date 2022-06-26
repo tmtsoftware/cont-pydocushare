@@ -7,7 +7,7 @@ from .handle import handle, Handle, HandleType, InvalidHandleError
 
 __all__ = [
     'DocuShare',
-    
+
     'handle',
     'Handle',
     'HandleType',

@@ -94,7 +94,7 @@ class Handle:
 
     @property
     def identifier(self):
-        '''str: String representation of this handle (e.g. 'Document-20202').'''
+        '''str: String representation of this handle like "Document-20202".'''
         type_id = self.__handle_type.identifier
         num_of_digits = self.__num_of_digits[self.__handle_type]
         number_str = format(self.__handle_number, f'0{num_of_digits}')

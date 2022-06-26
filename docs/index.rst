@@ -1,13 +1,10 @@
-.. PyDocuShare documentation master file, created by
-   sphinx-quickstart on Sat Jun 25 19:03:27 2022.
-   You can adapt this file completely to your liking, but it should at least
-   contain the root `toctree` directive.
+PyDocuShare
+===========
 
-PyDocuShare API Document
-========================
+This is the documentation of PyDocuShare, python API to interact with DocuShare.
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 1
    :caption: Contents:
 
    docushare

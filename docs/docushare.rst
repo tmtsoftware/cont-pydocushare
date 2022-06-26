@@ -1,8 +1,6 @@
-docushare module
-================
+PyDocuShare API Reference
+=========================
 
-.. automodule:: docushare
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
+.. automodapi:: docushare
+   :no-inheritance-diagram:
+   :no-heading:
