@@ -4,12 +4,13 @@ import json
 import re
 import requests
 import subprocess
-from pathlib import Path, PurePosixPath
+from pathlib import Path
 from urllib.parse import urlparse
 
 from bs4 import BeautifulSoup
 
 from .handle import HandleType, Handle, handle
+from .parser import parse_property_page, parse_history_page
 from .util import join_url
 
 class Resource(Enum):
@@ -312,37 +313,7 @@ class DocuShare:
         url = self.url(Resource.Services, hdl)
         http_response = self.http_get(url)
         http_response.raise_for_status()
-        return self.__parse_property_page(http_response.text, hdl.type)
-
-    @staticmethod
-    def __parse_property_page(html_text, handle_type):
-        properties = {}
-        
-        soup = BeautifulSoup(html_text, 'html.parser')
-        propstable = soup.find('table', {'class': 'propstable'})
-        for row in propstable.find_all('tr'):
-            cols = row.find_all('td')
-            field_name = cols[0].text.strip()
-            if field_name.endswith(':'):
-                field_name = field_name[:-1]
-
-            field_value = cols[1].text.strip()
-
-            if field_name == 'Handle':
-                properties[field_name] = handle(field_value)
-            elif field_name == 'Version Number':
-                properties[field_name] = int(field_value)
-            else:
-                # TODO: parse user name, date and size
-                properties[field_name] = field_value
-
-            if (handle_type == HandleType.Document or handle_type == HandleType.Version) and \
-               field_name == 'Title':
-                file_url = cols[1].find('a')['href']
-                filename = PurePosixPath(urlparse(file_url).path).name
-                properties['_filename'] = filename
-            
-        return properties
+        return parse_property_page(http_response.text, hdl.type)
 
     def load_history(self, hdl):
         '''Open and parse the history page of the given Document handle and return the Version handles.
@@ -358,44 +329,9 @@ class DocuShare:
         url = self.url(Resource.History, hdl)
         http_response = self.http_get(url)
         http_response.raise_for_status()
-        version_handles = self.__parse_history_page(http_response.text)
+        version_handles = parse_history_page(http_response.text)
         return version_handles
 
-    @staticmethod
-    def __parse_history_page(html_text):
-        soup = BeautifulSoup(html_text, 'html.parser')
-        propstable = soup.find('table', {'class': 'table_properties'})
-
-        header_columns = propstable.find('thead').find_all('th')
-        field_names = {}
-        for column_index in range(len(header_columns)):
-            field_name = header_columns[column_index].text.strip()
-            if field_name:
-                field_names[column_index] = field_name
-
-        version_handles = []
-        for row in propstable.find_all('tr'):
-            cells = row.find_all('td')
-
-            for column_index in field_names.keys():
-                field_name = field_names[column_index]
-
-                if len(cells) > column_index:
-                    if field_name == 'Preferred':
-                        # TODO: parse the radio button and find the preferred version
-                        pass
-                    elif field_name == '#':
-                        a_tag = cells[column_index].find('a')
-                        if a_tag:
-                            file_url = a_tag['href']
-                            handle_str = re.search(r'\/(Version-[0-9]{6})\/', file_url).group(1)
-                            version_handles.append(handle(handle_str))
-                    else:
-                        # Ignore other information
-                        pass
-
-        return version_handles
-    
     @staticmethod
     def __is_not_found_page(http_response):
         if not ('Content-Type' in http_response.headers and
