@@ -10,7 +10,7 @@ from urllib.parse import urlparse
 from bs4 import BeautifulSoup
 
 from .handle import HandleType, Handle, handle
-from .parser import parse_property_page, parse_history_page
+from .parser import parse_login_page, parse_property_page, parse_history_page
 from .util import join_url
 
 class Resource(Enum):
@@ -229,27 +229,8 @@ class DocuShare:
     def __open_and_parse_login_page(self):
         login_url = self.url(Resource.Login)
         login_page = self.http_get(login_url)
-        soup = BeautifulSoup(login_page.text, 'html.parser')
-        
-        login_token_element = soup.find('input', {'name': 'login_token'})
-        if not login_token_element:
-            raise Exception(f'Cannot find login_token in {login_url}.')
-
-        if not login_token_element.has_attr('value'):
-            raise Exception(f'"value" attribute is missing in {login_token_element} ({login_url}).')
-        
-        login_token = login_token_element['value']
-        if not login_token:
-            raise Exception(f'login_token is empty in {login_url}.')
-        
-        challenge_js_script_tag = soup.find('script', src=re.compile('challenge\.js'))
-        if not challenge_js_script_tag:
-            raise Exception(f'Cannot find URL to challenge.js in {login_url}')
-        
-        challenge_js_src = challenge_js_script_tag['src']
-        challenge_js_url = join_url(login_url, challenge_js_src)
-
-        return login_token, challenge_js_url
+        login_token, challenge_js_src = parse_login_page(login_page.text)
+        return login_token, join_url(login_url, challenge_js_src)
 
     @staticmethod
     def __challenge_response(password, login_token, challenge_js, js_interpreter):

@@ -5,6 +5,44 @@ from urllib.parse import urlparse
 from bs4 import BeautifulSoup
 
 from .handle import handle, HandleType
+from .util import join_url
+
+def parse_login_page(html_text):
+    '''Parse the DocuShare login page and returns login token and path to challenge.js.
+
+    Parameters
+    ----------
+    html_text : str
+        HTML text that was obtained from a DocuShare login page like
+        https://your.docushare.domain/docushare/dsweb/Login.
+
+    Returns
+    -------
+    login_token : str
+        Login token given by the DocuShare server like '1cwe4irxdwe7yl4v6ggow'.
+    challenge_js_str : str
+        Relative path of challenge.js.
+    '''
+    soup = BeautifulSoup(html_text, 'html.parser')
+        
+    login_token_element = soup.find('input', {'name': 'login_token'})
+    if not login_token_element:
+        raise Exception(f'Cannot find login_token.')
+
+    if not login_token_element.has_attr('value'):
+        raise Exception(f'"value" attribute is missing in {login_token_element}.')
+        
+    login_token = login_token_element['value']
+    if not login_token:
+        raise Exception(f'login_token is empty.')
+        
+    challenge_js_script_tag = soup.find('script', src=re.compile('challenge\.js'))
+    if not challenge_js_script_tag:
+        raise Exception(f'Cannot find URL to challenge.js.')
+        
+    challenge_js_src = challenge_js_script_tag['src']
+
+    return login_token, challenge_js_src
 
 def parse_property_page(html_text, handle_type):
     '''Parse a DocuShare property page and returns the properties.
