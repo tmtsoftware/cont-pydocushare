@@ -77,3 +77,13 @@ The sections below provide information for developer who extend and/or fix PyDoc
 ### Documentation
 
 PyDocuShare uses [numpy style](https://numpydoc.readthedocs.io/en/latest/format.html#docstring-standard) as the docstring style. Use the same style for consistency.
+
+### Unit Test
+
+PyDocuShare uses [unittest](https://docs.python.org/3/library/unittest.html) unit testing framework. All test cases are stored under [tests/](tests/). Run
+
+```sh
+ $ python -m unittest discover tests
+```
+
+to test all cases.

@@ -62,7 +62,7 @@ class Handle:
         if not isinstance(handle_number, int):
             raise TypeError('handle_number must be int')
         if handle_number < 0:
-            raise ValueError('handle_number must be a positive integer')
+            raise ValueError('handle_number must be zero or a positive integer')
 
         # Check the number of digits.
         max_number = 10 ** self.__num_of_digits[handle_type] - 1
@@ -106,7 +106,7 @@ class Handle:
 
         Parameters
         ----------
-        handle_str : str
+        handle_str : str or bytes-like object
            A string that represents a DocuShare handle like 'Document-20202'.
 
         Returns
