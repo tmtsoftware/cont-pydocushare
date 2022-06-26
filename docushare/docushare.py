@@ -11,7 +11,7 @@ from urllib.parse import urlparse
 from bs4 import BeautifulSoup
 
 from .handle import HandleType, Handle, handle
-from .parser import is_not_found_page, parse_if_system_error_page, parse_login_page, parse_property_page, parse_history_page
+from .parser import is_not_found_page, is_not_authorized_page, parse_if_system_error_page, parse_login_page, parse_property_page, parse_history_page
 from .util import join_url
 
 class Resource(Enum):
@@ -100,6 +100,33 @@ class DocuShareNotFoundError(RuntimeError):
         '''str: DocuShare username when this error was returned.'''
         return self.__username
     
+class DocuShareNotAuthorizedError(RuntimeError):
+    '''Raised if it is not authorized to access a DocuShare URL.
+
+    Parameters
+    ----------
+    docushare : DocuShare
+        DocuShare instance to get the context for detailed error messages.
+    url : str
+        URL that is not authorized to access.
+    '''
+    
+    def __init__(self, docushare, url):
+        self.__username = docushare.username
+        self.__url      = url
+        msg = f'"{docushare.username}" is not authorized to access {url}.'
+        super().__init__(msg)
+
+    @property
+    def url(self):
+        '''str: URL that is not authorized to access.'''
+        return self.__url
+    
+    @property
+    def username(self):
+        '''str: DocuShare username who is not authorized to access the URL.'''
+        return self.__username
+
 class DocuShare:
     '''This class represents a session to access a DocuShare site.
 
@@ -177,6 +204,8 @@ class DocuShare:
             If HTTP error status code was returned.
         DocuShareSystemError
             If the DocuShare site encounters a system error.
+        DocuShareNotAuthorizedError
+            If the user is not authorized to access the URL.
         '''
         self.__logger.info(f'HTTP GET  {url}')
         response = self.__session.get(url)
@@ -186,7 +215,10 @@ class DocuShare:
             error_code, error_message = parse_if_system_error_page(response.text)
             if error_code:
                 raise DocuShareSystemError(error_code, error_message, self, url)
-            
+
+        if is_not_authorized_page(response):
+            raise DocuShareNotAuthorizedError(self, url)
+
         return response
 
     def http_post(self, url, data = None):
@@ -422,7 +454,7 @@ class DocuShare:
         return login_token, challenge_js_url
 
     @staticmethod
-    def __challenge_response(password, login_token, challenge_js, js_interpreter):        
+    def __challenge_response(password, login_token, challenge_js, js_interpreter):
         password_escaped = json.dumps(password)
         login_token_escaped = json.dumps(login_token)
         challenge_js += f'\nconsole.log(obscure_string({password_escaped}, {login_token_escaped}))'
@@ -469,6 +501,8 @@ class DocuShare:
         ------
         DocuShareNotFoundError
             If the given handle does not exist.
+        DocuShareNotAuthorizedError
+            If the user is not authorized to access the URL.
         '''
         
         self.__check_if_logged_in()

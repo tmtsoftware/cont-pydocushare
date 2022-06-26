@@ -31,8 +31,33 @@ def is_not_found_page(http_response):
         return False
 
     soup = BeautifulSoup(http_response.text, 'html.parser')
-    for h2s in soup.find_all('h2'):
-        if 'Not Found' in h2s.text.strip():
+    for h2 in soup.find_all('h2'):
+        if 'Not Found' in h2.text.strip():
+            return True
+    return False
+
+def is_not_authorized_page(http_response):
+    '''Check if the given HTTP response represents 'Not Authorized' error.
+
+    Note that it is different from HTTP 401 and 403 responses. This function only checks if the given
+    HTTP response contains an HTML that represents 'Not Authornized' in the DocuShare.
+
+    Parameters
+    ----------
+    http_response : requests.Response
+        HTTP response from a DocuShare site.
+
+    Returns
+    -------
+    bool : True if the given HTTP response indicates 'Not Authorized'.
+    '''
+    if not ('Content-Type' in http_response.headers and
+            http_response.headers['Content-Type'].startswith('text/html')):
+        return False
+
+    soup = BeautifulSoup(http_response.text, 'html.parser')
+    for h1 in soup.find_all('h1'):
+        if 'Not Authorized' in h1.text.strip():
             return True
     return False
 
