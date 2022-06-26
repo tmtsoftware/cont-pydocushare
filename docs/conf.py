@@ -14,13 +14,9 @@ import os
 import sys
 sys.path.insert(0, os.path.abspath('..'))
 
-
 # -- Project information -----------------------------------------------------
 
-project = 'PyDocuShare'
-copyright = '2022 TMT International Observatory'
-author = 'Takashi Nakamoto'
-
+# Project information is in ../setup.py
 
 # -- General configuration ---------------------------------------------------
 

@@ -23,9 +23,12 @@ setup(
     ],
     command_options={
         'build_sphinx': {
-            'project': ('setup.py', name),
-            'version': ('setup.py', version),
-            'source_dir': ('setup.py', 'docs')
+            'project'   : ('setup.py', name),
+            'version'   : ('setup.py', version),
+            'copyright' : ('setup.py', '2022 TMT International Observatory'),
+            'source_dir': ('setup.py', 'docs'),
+            'build_dir' : ('setup.py', 'build/docs'),
+            'builder'   : ('setup.py', 'html'),
         }
     },
 )
