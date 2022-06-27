@@ -266,3 +266,34 @@ class HandleFunctionTest(TestCase):
         with self.assertRaises(TypeError) as context:
             hdl = handle(object())
             
+    def test_handle_equal(self):
+        self.assertEqual(Handle(HandleType.Collection, 12345), Handle(HandleType.Collection, 12345))
+        self.assertEqual(Handle(HandleType.Document, 99999), Handle(HandleType.Document, 99999))
+        self.assertEqual(Handle(HandleType.Version, 111111), Handle(HandleType.Version, 111111))
+
+        self.assertNotEqual(Handle(HandleType.Collection, 12345), Handle(HandleType.Collection, 54321))
+        self.assertNotEqual(Handle(HandleType.Document, 99999), Handle(HandleType.Document, 11111))
+        self.assertNotEqual(Handle(HandleType.Version, 111111), Handle(HandleType.Version, 999999))
+        
+        self.assertNotEqual(Handle(HandleType.Collection, 12345), Handle(HandleType.Document, 12345))
+        self.assertNotEqual(Handle(HandleType.Collection, 12345), Handle(HandleType.Version, 12345))
+        self.assertNotEqual(Handle(HandleType.Document, 99999), Handle(HandleType.Collection, 99999))
+        self.assertNotEqual(Handle(HandleType.Document, 99999), Handle(HandleType.Version, 99999))
+        self.assertNotEqual(Handle(HandleType.Version, 11111), Handle(HandleType.Collection, 11111))
+        self.assertNotEqual(Handle(HandleType.Version, 11111), Handle(HandleType.Document, 11111))
+
+    def test_handle_hash(self):
+        self.assertEqual(Handle(HandleType.Collection, 12345).__hash__(), Handle(HandleType.Collection, 12345).__hash__())
+        self.assertEqual(Handle(HandleType.Document, 99999).__hash__(), Handle(HandleType.Document, 99999).__hash__())
+        self.assertEqual(Handle(HandleType.Version, 111111).__hash__(), Handle(HandleType.Version, 111111).__hash__())
+
+        self.assertNotEqual(Handle(HandleType.Collection, 12345).__hash__(), Handle(HandleType.Collection, 54321).__hash__())
+        self.assertNotEqual(Handle(HandleType.Document, 99999).__hash__(), Handle(HandleType.Document, 11111).__hash__())
+        self.assertNotEqual(Handle(HandleType.Version, 111111).__hash__(), Handle(HandleType.Version, 999999).__hash__())
+        
+        self.assertNotEqual(Handle(HandleType.Collection, 12345).__hash__(), Handle(HandleType.Document, 12345).__hash__())
+        self.assertNotEqual(Handle(HandleType.Collection, 12345).__hash__(), Handle(HandleType.Version, 12345).__hash__())
+        self.assertNotEqual(Handle(HandleType.Document, 99999).__hash__(), Handle(HandleType.Collection, 99999).__hash__())
+        self.assertNotEqual(Handle(HandleType.Document, 99999).__hash__(), Handle(HandleType.Version, 99999).__hash__())
+        self.assertNotEqual(Handle(HandleType.Version, 11111).__hash__(), Handle(HandleType.Collection, 11111).__hash__())
+        self.assertNotEqual(Handle(HandleType.Version, 11111).__hash__(), Handle(HandleType.Document, 11111).__hash__())
