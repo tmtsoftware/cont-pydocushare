@@ -379,7 +379,8 @@ class DocuShare:
             'domain': domain,
             'Login': 'Login'
         }
-        self.__logger.debug(f'response    = {challenge_response}')
+        
+        # Do not log 'response' because it can be a hint to an attacker.
         self.__logger.debug(f'login_token = {login_token}')
         self.__logger.debug(f'username    = {entered_username}')
         self.__logger.debug(f'domain      = {domain}')
@@ -416,6 +417,9 @@ class DocuShare:
         self.__username = entered_username
         if password == PasswordOption.USE_STORED:
             self.__set_password(entered_username, entered_password)
+
+        # The entered password is no longer needed. Remove it from the memory.
+        del entered_password
 
     @property
     def cookies(self):
