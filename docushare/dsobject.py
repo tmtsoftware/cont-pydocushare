@@ -76,7 +76,7 @@ class FileObject(DocuShareBaseObject):
         from .docushare import Resource
         return self.docushare.url(Resource.Get, self.handle)
 
-    def download(self, path = None):
+    def download(self, path = None, size_for_progress_report = 1000000):
         '''Download this document from the DocuShare site to the local storage.
 
         Parameters
@@ -88,6 +88,9 @@ class FileObject(DocuShareBaseObject):
             and the file name is determined as suggested by the DocuShare site.
             If the given path is not a directory or does not exist, the document is downloaded
             as a file to the given path.
+        size_for_progress_report : int
+            This method shows a progress bar using `tqdm <https://tqdm.github.io/>` if the file size is
+            more than the specified size in bytes.
 
         Returns
         -------
@@ -102,7 +105,7 @@ class FileObject(DocuShareBaseObject):
         if path.is_dir():
             path = path.joinpath(self.filename)
             
-        self.docushare.download(self.handle, path)
+        self.docushare.download(self.handle, path, size_for_progress_report = size_for_progress_report)
         return path
 
 class DocumentObject(FileObject):

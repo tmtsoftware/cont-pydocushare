@@ -4,6 +4,7 @@ import json
 import logging
 import requests
 import subprocess
+from pathlib import Path
 from urllib.parse import urlparse
 
 from .handle import HandleType, Handle, handle
@@ -489,7 +490,7 @@ class DocuShare:
         except:
             pass
 
-    def download(self, hdl, path):
+    def download(self, hdl, path, size_for_progress_report = 1000000):
         '''Download the given handle (Document or Version) as a file.
 
         Parameters
@@ -498,6 +499,9 @@ class DocuShare:
             DocuShare handle to download as a file or a string that represents a valid DocuShare handle.
         path : path-like object:
             Destination file path.
+        size_for_progress_report : int
+            This method shows a progress bar using `tqdm <https://tqdm.github.io/>` if the file size is
+            more than the specified size in bytes.
 
         Raises
         ------
@@ -506,16 +510,48 @@ class DocuShare:
         DocuShareNotAuthorizedError
             If the user is not authorized to access the URL.
         '''
-        
+
+        path = Path(path)
         self.__check_if_logged_in()
         url = self.url(Resource.Get, handle(hdl))
         http_response = self.http_get(url)
 
         if is_not_found_page(http_response):
             raise DocuShareNotFoundError(self, url)
-        
-        with open(path, 'wb') as f:
-            f.write(http_response.content)
+
+        # Get the file size.
+        if 'Content-Length' in http_response.headers:
+            file_size = int(http_response.headers['Content-Length'])
+            self.__logger.debug(f'Content-Length is {file_size} for {url}.')
+        else:
+            self.__logger.debug(f'Content-Length is missing for {url}.')
+
+        self.__logger.info(f'Start downloading: {url} => {path}.')
+            
+        with open(path, 'wb') as output_file:
+            try:
+                from tqdm import tqdm
+                use_tqdm = True
+            except:
+                use_tqdm = False
+               
+            if use_tqdm and file_size >= size_for_progress_report:
+                with tqdm(
+                        desc = hdl.identifier,
+                        total = file_size,
+                        unit = 'iB',
+                        unit_scale = True,
+                        unit_divisor = 1024,
+                ) as progress_bar:
+                    for data in http_response.iter_content(chunk_size = 1024):
+                        downloaded_size = output_file.write(data)
+                        progress_bar.update(downloaded_size)
+            else:
+                # If tqdm is not available or the file size is not large,
+                # simply download the file silently.
+                output_file.write(http_response.content)
+
+        self.__logger.info(f'Completed downloading: {url} => {path}.')
 
     def __load_properties(self, hdl):
         '''Open and parse the property page of the given handle and return the properties as dict.
