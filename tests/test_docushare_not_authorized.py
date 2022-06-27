@@ -3,7 +3,9 @@ import pathlib
 import shutil
 import tempfile
 from unittest import TestCase, skipIf
+
 from docushare import *
+
 
 class DocuShareNotAuthorizedTest(TestCase):
     required_envs = [
@@ -59,4 +61,3 @@ class DocuShareNotAuthorizedTest(TestCase):
 
         with self.assertRaises(DocuShareNotAuthorizedError) as context:
             self.ds.http_get(self.base_url + 'dsweb/Services/' + self.not_authorized_version_handle)
-            

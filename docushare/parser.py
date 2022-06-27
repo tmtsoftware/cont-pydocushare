@@ -4,8 +4,9 @@ from urllib.parse import urlparse
 
 from bs4 import BeautifulSoup
 
-from .handle import handle, HandleType
+from .handle import HandleType, handle
 from .util import join_url
+
 
 class ParseError(RuntimeError):
     '''Raised if parsing one of DocuShare web page fails.'''
@@ -256,5 +257,3 @@ def parse_history_page(html_text):
         return version_handles
     except Exception as err:
         raise ParseError('Failed to parse a DocuShare history page.', err)
-
-

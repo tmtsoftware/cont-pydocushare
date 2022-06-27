@@ -1,6 +1,7 @@
 import re
 from enum import Enum
 
+
 def handle(handle_str):
     '''Utility function to convert a handle string to a canonical instance.
 
@@ -148,4 +149,3 @@ class InvalidHandleError(ValueError):
     
     def __init__(self, invalid_handle_str):
         super().__init__(f'{invalid_handle_str} is not a valid DocuShare handle.')
-

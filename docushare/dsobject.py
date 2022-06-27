@@ -3,6 +3,7 @@ from pathlib import Path
 
 from .handle import Handle, HandleType
 
+
 class DocuShareBaseObject(ABC):
     '''Represents one object in DocuShare.
 

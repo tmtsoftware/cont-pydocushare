@@ -1,5 +1,7 @@
 from unittest import TestCase
+
 from docushare import *
+
 
 class HandleTest(TestCase):
     def test_init_wrong_type_1(self):

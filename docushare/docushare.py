@@ -1,18 +1,22 @@
-from enum import Enum
 import getpass
 import json
 import logging
-import requests
 import subprocess
+from enum import Enum
 from pathlib import Path
 from urllib.parse import urlparse
 
+import requests
+
 import pyduktape
 
-from .handle import HandleType, Handle, handle
 from .dsobject import DocumentObject, VersionObject
-from .parser import is_not_found_page, is_not_authorized_page, parse_if_system_error_page, parse_login_page, parse_property_page, parse_history_page
+from .handle import Handle, HandleType, handle
+from .parser import (is_not_authorized_page, is_not_found_page,
+                     parse_history_page, parse_if_system_error_page,
+                     parse_login_page, parse_property_page)
 from .util import join_url
+
 
 class Resource(Enum):
     '''This enum represents one DocuShare resource.'''

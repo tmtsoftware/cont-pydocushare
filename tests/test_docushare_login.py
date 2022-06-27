@@ -1,6 +1,8 @@
 import os
 from unittest import TestCase, skipIf
+
 from docushare import *
+
 
 class DocuShareLoginTest(TestCase):
     required_envs = [
@@ -37,4 +39,3 @@ class DocuShareLoginTest(TestCase):
 
         self.assertFalse(ds.is_logged_in)
         self.assertIsNone(ds.username)
-

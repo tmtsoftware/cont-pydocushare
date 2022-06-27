@@ -3,7 +3,9 @@ import pathlib
 import shutil
 import tempfile
 from unittest import TestCase, skipIf
+
 from docushare import *
+
 
 class DocuShareTest(TestCase):
     required_envs = [
@@ -119,4 +121,3 @@ class DocuShareTest(TestCase):
         self.assertIsInstance(ver_obj.filename, str)
         self.assertIsInstance(ver_obj.version_number, int)
         self.assertEqual(ver_obj.download_url, self.base_url + 'dsweb/Get/' + self.valid_version_handle)
-            

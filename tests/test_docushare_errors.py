@@ -3,7 +3,9 @@ import pathlib
 import shutil
 import tempfile
 from unittest import TestCase, skipIf
+
 from docushare import *
+
 
 class DocuShareErrorTest(TestCase):
     required_envs = [

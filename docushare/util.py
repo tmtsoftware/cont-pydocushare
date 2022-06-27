@@ -1,5 +1,6 @@
 from urllib.parse import urljoin
 
+
 def join_url(*args):
     '''Construct a full URL by combining a base URL with other URLs.
 
