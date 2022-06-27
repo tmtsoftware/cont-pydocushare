@@ -8,7 +8,7 @@ from .handle import handle, HandleType
 from .util import join_url
 
 class ParseError(RuntimeError):
-    '''Raised when parsing one of DocuShare web page.'''
+    '''Raised if parsing one of DocuShare web page fails.'''
     pass
 
 def is_not_found_page(http_response):
@@ -71,9 +71,9 @@ def parse_if_system_error_page(http_response):
 
     Returns
     -------
-    error_code : str or None
+    error_code : :py:class:`str` or None
         Error code from DocuShare, or None if the given page is not a DocuShare system error page.
-    error_message : str or None
+    error_message : :py:class:`str` or None
         Error message from DocuShare, or None if the given page is not a DocuShare system error page.
     '''
     if not ('Content-Type' in http_response.headers and
@@ -96,15 +96,15 @@ def parse_login_page(html_text):
 
     Parameters
     ----------
-    html_text : str
+    html_text : :py:class:`str`
         HTML text that was obtained from a DocuShare login page like
         https://your.docushare.domain/docushare/dsweb/Login.
 
     Returns
     -------
-    login_token : str
+    login_token : :py:class:`str`
         Login token given by the DocuShare server like '1cwe4irxdwe7yl4v6ggow'.
-    challenge_js_str : str
+    challenge_js_str : :py:class:`str`
         Relative path of challenge.js.
 
     Raises
@@ -202,8 +202,8 @@ def parse_history_page(html_text):
 
     Returns
     -------
-    array
-        array of :class:`Handle` instances.
+    list
+        :py:class:`list` of :py:class:`Handle` instances.
 
     Raises
     ------
