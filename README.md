@@ -105,6 +105,8 @@ to test some cases. You may notice that many test cases are skipped. This is bec
  * **DOCUSHARE_USERNAME**: Your username of the DocuShare site.
  * **DOCUSHARE_VALID_DOCUMENT_HANDLE**: Valid document handle like Document-12345.
  * **DOCUSHARE_VALID_VERSION_HANDLE** : Valid version handle like Version-111111.
+ * **DOCUSHARE_NOT_AUTHORIZED_DOCUMENT_HANDLE**: Document handle like Document-12345 that the user is not authorized to access.
+ * **DOCUSHARE_NOT_AUTHORIZED_VERSION_HANDLE**: Version handle like Version-111111 that the user is not authorized to access.
  * **DOCUSHARE_PASSWORD**: [optional] Your password of the DocuShare site. Do not define this environmental variable to use stored password or have the unit test show the password prompt (recommended).
  * **DOCUSHARE_
 
