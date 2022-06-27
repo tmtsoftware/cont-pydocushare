@@ -96,7 +96,13 @@ PyDocuShare uses [numpy style](https://numpydoc.readthedocs.io/en/latest/format.
 PyDocuShare uses [unittest](https://docs.python.org/3/library/unittest.html) unit testing framework. All test cases are stored under [tests/](tests/). Run
 
 ```sh
- $ python -m unittest discover tests
+ $ python -m unittest discover tests/ -vvv
 ```
 
-to test all cases.
+to test some cases. You may notice that many test cases are skipped. This is because the command above tests only the functionality that does not require connection with a DocuShare site, which probably does not make sense. To test the main functionality of PyDocuShare, you need to provide your DocuShare connection information through environmental variables:
+
+ * **DOCUSHARE_BASEURL** : Base URL of your DocuShare site. For example, https://your.docushare.domain/docushare/
+ * **DOCUSHARE_USERNAME**: Your username of the DocuShare site.
+ * **DOCUSHARE_PASSWORD**: [optional] Your password of the DocuShare site. Do not define this environmental variable to use stored password or have the unit test show the password prompt (recommended).
+
+With those environmental variables, run the command above again. Now all cases should have been tested.
