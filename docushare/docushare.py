@@ -560,8 +560,9 @@ class DocuShare:
 
         Parameters
         ----------
-        hdl : Handle
+        hdl : Handle or str
             DocuShare handle for which you want to get an instance that represents a DocuShare object.
+            It can be a string that represents a DocuShare handle like "Document-xxxxx".
 
         Returns
         -------
@@ -569,9 +570,6 @@ class DocuShare:
             An instance through which you can get individual property values, file, etc.
         '''
 
-        if not isinstance(hdl, Handle):
-            raise TypeError('hdl must an instance of Handle')
-        
         self.__check_if_logged_in()
         
         hdl = handle(hdl)
@@ -590,5 +588,5 @@ class DocuShare:
             assert False, 'code must not reach here'
 
     def __getitem__(self, hdl):
-        self.object(hdl)
+        return self.object(hdl)
 

@@ -15,6 +15,7 @@ class DocuShareBaseObject(ABC):
     '''
     
     def __init__(self, docushare, hdl):
+        from .docushare import DocuShare
         if not isinstance(docushare, DocuShare):
             raise TypeError('docushare must be an instance of DocuShare')
         if not isinstance(hdl, Handle):
