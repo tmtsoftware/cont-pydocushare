@@ -539,15 +539,15 @@ class DocuShare:
     def load_history(self, hdl):
         '''Open and parse the history page of the given Document handle and return the Version handles.
 
-        Parameters:
-        hdl (Handle): Document handle. Its type must be HandleType.Document.
+        Parameters
+        ----------
+        hdl : Handle
+            DocuShare handle. Its type must be :py:enum:`HandleType.Document`.
 
-        Returns:
-        An array of Version handles (e.g. Version-xxxxxx).
+        Returns
+        -------
+        list : :py:class:`list` of :py:enum:`Handle` instances, each represents a Version handle (e.g. Version-xxxxxx).
         '''
-        
-        # TODO: refactor
-        
         self.__check_if_logged_in()
         hdl = handle(hdl)
         url = self.url(Resource.History, hdl)
