@@ -16,7 +16,7 @@ class CleanAlsoSphinx(clean):
 
 cmdclass = {'build_sphinx': BuildDoc}
 name         = 'PyDocuShare'
-version      = '0.0.1'
+version      = '0.1.0'
 
 setup(
     name         = name,
