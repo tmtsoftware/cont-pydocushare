@@ -94,32 +94,5 @@ class DocuShareTest(TestCase):
         self.assertIsInstance(ver_obj.filename, str)
         self.assertIsInstance(ver_obj.version_number, int)
         self.assertEqual(ver_obj.download_url, self.base_url + 'dsweb/Get/' + self.valid_version_handle)
-
-    @skipIf(skip, skip_reason)
-    def test_http_get_errors(self):
-        import requests
-        
-        with self.assertRaises(requests.HTTPError) as context:
-            self.ds.http_get(self.base_url + 'dsweb/xxx')
-
-        with self.assertRaises(DocuShareSystemError) as context:
-            self.ds.http_get(self.base_url + 'dsweb/Services/Document-00000')
-
-    @skipIf(skip, skip_reason)
-    def test_docushare_system_errors(self):
-        with self.assertRaises(DocuShareSystemError) as context:
-            self.ds.object('Document-00000')
-            
-        with self.assertRaises(DocuShareSystemError) as context:
-            self.ds['Document-00000']
-            
-        with self.assertRaises(DocuShareSystemError) as context:
-            self.ds.object('Version-000000')
-
-        with self.assertRaises(DocuShareSystemError) as context:
-            self.ds['Version-000000']
-            
-        with self.assertRaises(DocuShareSystemError) as context:
-            self.ds['Version-000000']
             
     # TODO: test DocuShareNotAuthorizedError

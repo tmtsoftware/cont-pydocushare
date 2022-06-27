@@ -490,8 +490,8 @@ class DocuShare:
 
         Parameters
         ----------
-        hdl : Handle
-            DocuShare handle to download as a file.
+        hdl : Handle or str
+            DocuShare handle to download as a file or a string that represents a valid DocuShare handle.
         path : path-like object:
             Destination file path.
 

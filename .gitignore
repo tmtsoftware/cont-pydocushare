@@ -133,3 +133,6 @@ docs/api/
 
 # Temporary test python script
 /test*.py
+
+# Local environmental variables for unittests
+env_for_unittest.sh
