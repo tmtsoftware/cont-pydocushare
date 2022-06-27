@@ -1,14 +1,10 @@
-from enum import Enum, auto
+from enum import Enum
 import getpass
 import json
 import logging
-import re
 import requests
 import subprocess
-from pathlib import Path
 from urllib.parse import urlparse
-
-from bs4 import BeautifulSoup
 
 from .handle import HandleType, Handle, handle
 from .dsobject import DocumentObject, VersionObject
@@ -167,7 +163,9 @@ class DocuShare:
         self.__base_url = base_url
         self.__session  = requests.Session()
         self.__username = None
-        self.__handle_properties = {}
+        self.__dsobjects = {} # Dict to cache the DocuShare object.
+                              # The key is an instance of Handle,
+                              # and the value is an instance of DocuShareBaseObject.
 
     @property
     def logger(self):
@@ -518,15 +516,20 @@ class DocuShare:
     def load_properties(self, hdl):
         '''Open and parse the property page of the given handle and return the properties as dict.
 
-        Parameters:
-        hdl (Handle): handle
+        Parameters
+        ----------
+        hdl : Handle
+            DocuShare handle for which the properties will be obtained.
 
-        Returns:
-        Property values as dict.
+        Returns
+        -------
+            Property names and values as :py:class:`dict`.
+
+        Notes
+        -----
+        This method internally uses :py:func:`parse_property_page`. Special properties are added depending on the
+        handle type. See :py:func:`parse_property_page` for more details about those special properties.
         '''
-
-        # TODO: refactor
-        
         self.__check_if_logged_in()
         hdl = handle(hdl)
         url = self.url(Resource.Services, hdl)
@@ -563,7 +566,7 @@ class DocuShare:
         Returns
         -------
         DocuShareBaseObject
-            An instance through which you can get individual property values, the file, etc.
+            An instance through which you can get individual property values, file, etc.
         '''
 
         if not isinstance(hdl, Handle):
@@ -572,20 +575,20 @@ class DocuShare:
         self.__check_if_logged_in()
         
         hdl = handle(hdl)
-        if hdl in self.__handle_properties:
-            return self.__handle_properties[hdl]
+        if hdl in self.__dsobjects:
+            return self.__dsobjects[hdl]
 
         if hdl.type == HandleType.Collection:
-            raise NotImplementedError()
+            raise NotImplementedError() # TODO: implement
         elif hdl.type == HandleType.Document:
-            self.__handle_properties[hdl] = DocumentObject(self, hdl)
-            return self.__handle_properties[hdl]
+            self.__dsobjects[hdl] = DocumentObject(self, hdl)
+            return self.__dsobjects[hdl]
         elif hdl.type == HandleType.Version:
-            self.__handle_properties[hdl] = VersionObject(self, hdl)
-            return self.__handle_properties[hdl]
+            self.__dsobjects[hdl] = VersionObject(self, hdl)
+            return self.__dsobjects[hdl]
         else:
             assert False, 'code must not reach here'
 
     def __getitem__(self, hdl):
-        self.property(hdl)
+        self.object(hdl)
 

@@ -1,4 +1,5 @@
 from abc import ABC, abstractmethod
+from pathlib import Path
 
 from .handle import Handle, HandleType
 
@@ -166,7 +167,7 @@ class VersionObject(FileObject):
         
         self.__version_number = None
 
-    def __load_properties(self):
+    def _load_properties(self):
         properties = self.docushare.load_properties(self.handle)
         self._title = properties.get('Title', '')
         self._filename = properties.get('_filename', '')
