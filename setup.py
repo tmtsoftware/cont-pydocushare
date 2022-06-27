@@ -33,6 +33,7 @@ setup(
     ],
     extras_require = {
         'password-store': ['keyring >= 18.0.1'],
+        'progress-bar': ['tqdm >= 4.30.0'],
         'docs': [
             'sphinx >= 4.5.0',
             'sphinx-rtd-theme >= 1.0.0',

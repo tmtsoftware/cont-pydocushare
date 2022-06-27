@@ -7,10 +7,12 @@ This is the git repository of PyDocuShare, python API to interact with DocuShare
 Clone this repository, then run the commad below to install PyDocuShare module:
 
 ```sh
- $ pip install -e ".[password-store]"
+ $ pip install -e ".[progress-bar,password-store]"
 ```
 
-For better user experience (storing password), it is recommended to specify all extra options as shown above. If you do not need those extra features, you can simply omit all options as shown below:
+For better user experience, it is recommended to specify all extra options (`progress-bar` and `password-store`) as shown above.
+
+With `progress-bar` option, PyDocuShare shows a progress bar when downloading a large file. With `password-store` option, PyDocuShare can store the password in a safe manner and reuse the stored password for the DocuShare authentication. If you do not need those extra features, you can simply omit all options as shown below:
 
 ```sh
  $ pip install -e .
