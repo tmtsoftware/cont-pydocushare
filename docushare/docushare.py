@@ -513,7 +513,7 @@ class DocuShare:
         with open(path, 'wb') as f:
             f.write(http_response.content)
 
-    def load_properties(self, hdl):
+    def __load_properties(self, hdl):
         '''Open and parse the property page of the given handle and return the properties as dict.
 
         Parameters
@@ -529,6 +529,13 @@ class DocuShare:
         -----
         This method internally uses :py:func:`parse_property_page`. Special properties are added depending on the
         handle type. See :py:func:`parse_property_page` for more details about those special properties.
+
+        Raises
+        ------
+        DocuShareSystemError
+            If the given handle does not exist or the DocuShare site encounters a system error.
+        DocuShareNotAuthorizedError
+            If the user is not authorized to access the given handle.
         '''
         self.__check_if_logged_in()
         hdl = handle(hdl)
@@ -536,7 +543,7 @@ class DocuShare:
         http_response = self.http_get(url)
         return parse_property_page(http_response.text, hdl.type)
     
-    def load_history(self, hdl):
+    def __load_history(self, hdl):
         '''Open and parse the history page of the given Document handle and return the Version handles.
 
         Parameters
@@ -547,6 +554,13 @@ class DocuShare:
         Returns
         -------
         list : :py:class:`list` of :py:enum:`Handle` instances, each represents a Version handle (e.g. Version-xxxxxx).
+
+        Raises
+        ------
+        DocuShareSystemError
+            If the given handle does not exist or the DocuShare site encounters a system error.
+        DocuShareNotAuthorizedError
+            If the user is not authorized to access the given handle.
         '''
         self.__check_if_logged_in()
         hdl = handle(hdl)
@@ -568,6 +582,13 @@ class DocuShare:
         -------
         DocuShareBaseObject
             An instance through which you can get individual property values, file, etc.
+
+        Raises
+        ------
+        DocuShareNotFoundError
+            If the given handle does not exist.
+        DocuShareNotAuthorizedError
+            If the user is not authorized to access the URL.
         '''
 
         self.__check_if_logged_in()
@@ -579,10 +600,38 @@ class DocuShare:
         if hdl.type == HandleType.Collection:
             raise NotImplementedError() # TODO: implement
         elif hdl.type == HandleType.Document:
-            self.__dsobjects[hdl] = DocumentObject(self, hdl)
+            # Get properties
+            properties = self.__load_properties(hdl)
+            title = properties['Title']
+            filename = properties['_filename']
+            document_control_number = properties['Document Control Number']
+
+            # Get history
+            versions = self.__load_history(hdl)
+            
+            self.__dsobjects[hdl] = DocumentObject(
+                docushare = self,
+                hdl = hdl,
+                title = title,
+                filename = filename,
+                document_control_number = document_control_number,
+                versions = versions
+            )
             return self.__dsobjects[hdl]
         elif hdl.type == HandleType.Version:
-            self.__dsobjects[hdl] = VersionObject(self, hdl)
+            # Get properties
+            properties = self.__load_properties(hdl)
+            title = properties['Title']
+            filename = properties['_filename']
+            version_number = properties['Version Number']
+            
+            self.__dsobjects[hdl] = VersionObject(
+                docushare = self,
+                hdl = hdl,
+                title = title,
+                filename = filename,
+                version_number = version_number
+            )
             return self.__dsobjects[hdl]
         else:
             assert False, 'code must not reach here'

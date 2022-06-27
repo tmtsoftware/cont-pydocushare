@@ -1,4 +1,4 @@
-from abc import ABC, abstractmethod
+from abc import ABC
 from pathlib import Path
 
 from .handle import Handle, HandleType
@@ -34,10 +34,6 @@ class DocuShareBaseObject(ABC):
         '''Handle : The DocuShare handle that represents this object.'''
         return self.__hdl
 
-    @abstractmethod
-    def _load_properties(self):
-        pass
-
     def __str__(self):
         return f'handle: "{self.handle}"'
 
@@ -50,25 +46,25 @@ class FileObject(DocuShareBaseObject):
         The DocuShare site that this object belongs to.
     hdl : Handle
         The DocuShare handle that represents this object.
+    title : str
+        Title of this file.
+    filename : str
+        File name of this file.
     '''
     
-    def __init__(self, docushare, hdl):
+    def __init__(self, docushare, hdl, title, filename):
         super().__init__(docushare, hdl)
-        self._title     = None
-        self._filename  = None
+        self._title     = title
+        self._filename  = filename
     
     @property
     def title(self):
         '''str : Title of this document.'''
-        if self._title is None:
-            self._load_properties()
         return self._title
 
     @property
     def filename(self):
         '''str : File name of this document.'''
-        if self._filename is None:
-            self._load_properties()
         return self._filename
 
     def __str__(self):
@@ -118,27 +114,27 @@ class DocumentObject(FileObject):
         The DocuShare site that this object belongs to.
     hdl : Handle
         The DocuShare handle that represents this object. The type must be :py:enum:`HandleType.Document`.
+    title : str
+        Title of this document.
+    filename : str
+        File name of this document.
+    document_control_number : str
+        Document conrol number of this document.
+    versions : list
+        Version handles of this document. :py:class:`list` of :py:class:`Handle` instances.'
     '''
     
-    def __init__(self, docushare, hdl):
-        super().__init__(docushare, hdl)
+    def __init__(self, docushare, hdl, title, filename, document_control_number, versions):
+        super().__init__(docushare, hdl, title, filename)
         if hdl.type != HandleType.Document:
             raise ValueError('handle type must be Document')
         
-        self._document_control_number = None
-        self._versions  = None
-        
-    def _load_properties(self):
-        properties = self.docushare.load_properties(self.handle)
-        self._title = properties.get('Title', '')
-        self._filename = properties.get('_filename', '')
-        self._document_control_number = properties.get('Document Control Number', '')
+        self._document_control_number = document_control_number
+        self._versions  = versions
 
     @property
     def document_control_number(self):
         '''str : Document control number.'''
-        if self._document_control_number is None:
-            self._load_properties()
         return self._document_control_number
 
     def __str__(self):
@@ -147,8 +143,6 @@ class DocumentObject(FileObject):
     @property
     def versions(self):
         ''':py:class:`list` of :py:class:`Handle`: Version handles of this document.'''
-        if self._versions is None:
-            self._versions = self.docushare.load_history(self.handle)
         return self._versions
 
 class VersionObject(FileObject):
@@ -160,26 +154,24 @@ class VersionObject(FileObject):
         The DocuShare site that this object belongs to.
     hdl : Handle
         The DocuShare handle that represents this object. The type must be :py:enum:`HandleType.Version`.
+    title : str
+        Title of this version.
+    filename : str
+        File name of this version.
+    version_number : int
+        Version number of this version.
     '''
     
-    def __init__(self, docushare, hdl):
-        super().__init__(docushare, hdl)
+    def __init__(self, docushare, hdl, title, filename, version_number):
+        super().__init__(docushare, hdl, title, filename)
         if hdl.type != HandleType.Version:
             raise ValueError('handle type must be Version')
         
-        self._version_number = None
-
-    def _load_properties(self):
-        properties = self.docushare.load_properties(self.handle)
-        self._title = properties.get('Title', '')
-        self._filename = properties.get('_filename', '')
-        self._version_number = properties.get('Version Number', '')
+        self._version_number = version_number
 
     @property
     def version_number(self):
         '''int : version number (a sequential number)'''
-        if self._version_number is None:
-            self._load_properties()
         return self._version_number
 
     def __str__(self):

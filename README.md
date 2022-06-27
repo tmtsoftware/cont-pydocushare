@@ -101,7 +101,7 @@ PyDocuShare uses [unittest](https://docs.python.org/3/library/unittest.html) uni
 
 to test some cases. You may notice that many test cases are skipped. This is because the command above tests only the functionality that does not require connection with a DocuShare site, which probably does not make sense. To test the main functionality of PyDocuShare, you need to provide your DocuShare connection information through environmental variables:
 
- * **DOCUSHARE_BASEURL** : Base URL of your DocuShare site. For example, https://your.docushare.domain/docushare/
+ * **DOCUSHARE_BASEURL** : Base URL of your DocuShare site. For example, https://your.docushare.domain/docushare/ . It must end with a slash '/'.
  * **DOCUSHARE_USERNAME**: Your username of the DocuShare site.
  * **DOCUSHARE_VALID_DOCUMENT_HANDLE**: Valid document handle like Document-12345.
  * **DOCUSHARE_VALID_VERSION_HANDLE** : Valid version handle like Version-111111.

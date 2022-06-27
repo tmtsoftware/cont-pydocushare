@@ -30,7 +30,7 @@ class DocuShareTest(TestCase):
         self.ds.close()
 
     @skipIf(skip, skip_reason)
-    def test_normal_workflow(self):
+    def test_normal_workflow_1(self):
         doc_obj = self.ds.object(self.valid_document_handle)
         self.assertIsInstance(doc_obj, DocumentObject)
         self.assertIsInstance(doc_obj, DocuShareBaseObject)
@@ -62,3 +62,64 @@ class DocuShareTest(TestCase):
         self.assertIsInstance(ver_obj.version_number, int)
         self.assertEqual(ver_obj.download_url, self.base_url + 'dsweb/Get/' + self.valid_version_handle)
 
+    @skipIf(skip, skip_reason)
+    def test_normal_workflow_2(self):
+        doc_obj = self.ds[self.valid_document_handle]
+        self.assertIsInstance(doc_obj, DocumentObject)
+        self.assertIsInstance(doc_obj, DocuShareBaseObject)
+        self.assertEqual(doc_obj.docushare, self.ds)
+        self.assertEqual(doc_obj.handle.type, HandleType.Document)
+        self.assertIsInstance(doc_obj.handle.number, int)
+        self.assertTrue(doc_obj.handle.number >= 0)
+        self.assertEqual(doc_obj.handle.identifier, self.valid_document_handle)
+        self.assertIsInstance(doc_obj.title, str)
+        self.assertIsInstance(doc_obj.filename, str)
+        self.assertIsInstance(doc_obj.document_control_number, str)
+        self.assertEqual(doc_obj.download_url, self.base_url + 'dsweb/Get/' + self.valid_document_handle)
+
+        doc_versions = doc_obj.versions
+        self.assertIsInstance(doc_versions, list)
+        self.assertTrue(len(doc_versions) > 0)
+        self.assertTrue(all([version_handle.type == HandleType.Version for version_handle in doc_versions]))
+
+        ver_obj = self.ds[self.valid_version_handle]
+        self.assertIsInstance(ver_obj, VersionObject)
+        self.assertIsInstance(ver_obj, DocuShareBaseObject)
+        self.assertEqual(ver_obj.docushare, self.ds)
+        self.assertEqual(ver_obj.handle.type, HandleType.Version)
+        self.assertIsInstance(ver_obj.handle.number, int)
+        self.assertTrue(ver_obj.handle.number >= 0)
+        self.assertEqual(ver_obj.handle.identifier, self.valid_version_handle)
+        self.assertIsInstance(ver_obj.title, str)
+        self.assertIsInstance(ver_obj.filename, str)
+        self.assertIsInstance(ver_obj.version_number, int)
+        self.assertEqual(ver_obj.download_url, self.base_url + 'dsweb/Get/' + self.valid_version_handle)
+
+    @skipIf(skip, skip_reason)
+    def test_http_get_errors(self):
+        import requests
+        
+        with self.assertRaises(requests.HTTPError) as context:
+            self.ds.http_get(self.base_url + 'dsweb/xxx')
+
+        with self.assertRaises(DocuShareSystemError) as context:
+            self.ds.http_get(self.base_url + 'dsweb/Services/Document-00000')
+
+    @skipIf(skip, skip_reason)
+    def test_docushare_system_errors(self):
+        with self.assertRaises(DocuShareSystemError) as context:
+            self.ds.object('Document-00000')
+            
+        with self.assertRaises(DocuShareSystemError) as context:
+            self.ds['Document-00000']
+            
+        with self.assertRaises(DocuShareSystemError) as context:
+            self.ds.object('Version-000000')
+
+        with self.assertRaises(DocuShareSystemError) as context:
+            self.ds['Version-000000']
+            
+        with self.assertRaises(DocuShareSystemError) as context:
+            self.ds['Version-000000']
+            
+    # TODO: test DocuShareNotAuthorizedError
