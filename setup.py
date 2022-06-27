@@ -30,6 +30,7 @@ setup(
     install_requires = [
         'beautifulsoup4 >= 4.8.2',
         'requests >= 2.22.0',
+        'pyduktape >= 0.0.6',
     ],
     extras_require = {
         'password-store': ['keyring >= 18.0.1'],

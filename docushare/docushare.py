@@ -7,6 +7,8 @@ import subprocess
 from pathlib import Path
 from urllib.parse import urlparse
 
+import pyduktape
+
 from .handle import HandleType, Handle, handle
 from .dsobject import DocumentObject, VersionObject
 from .parser import is_not_found_page, is_not_authorized_page, parse_if_system_error_page, parse_login_page, parse_property_page, parse_history_page
@@ -285,7 +287,6 @@ class DocuShare:
             self,
             username = None,
             password = PasswordOption.USE_STORED,
-            js_interpreter = '/usr/bin/node',
             retry_count = 3,
             domain = 'DocuShare'):
         '''Login the DocuShare site.
@@ -304,10 +305,6 @@ class DocuShare:
             If an :class:`PasswordOption` enum is given, this method behaves as described in each enum
             value.
         
-        js_interpreter : str
-            Path to JavaScript interpreter.
-            This will be used to run DocuShare's for challenge-response authentication.
-
         retry_count : int
             The user will have a chance to enter the credentials this amount of time.
 
@@ -320,9 +317,6 @@ class DocuShare:
         
         if not isinstance(password, (str, PasswordOption)):
             raise TypeError('password must be str or one of PasswordOption enum')
-
-        if not isinstance(js_interpreter, str) or not js_interpreter:
-            raise TypeError('js_interpreter must be a non-empty string')
 
         if not isinstance(retry_count, int) or retry_count < 1:
             raise TypeError('retry_count must be a positive integer')
@@ -362,12 +356,10 @@ class DocuShare:
 
         # Get the challenge response.
         self.__logger.debug(f'challenge_js: {challenge_js}')
-        self.__logger.debug(f'js_interpreter: {js_interpreter}')
         challenge_response = self.__challenge_response(
             password = entered_password,
             login_token = login_token,
             challenge_js = challenge_js,
-            js_interpreter = js_interpreter
         )
 
         # Send credentails to DocuShare.
@@ -401,14 +393,12 @@ class DocuShare:
                 self.__delete_password(entered_username)
                 self.login(username = username,
                            password = PasswordOption.USE_STORED,
-                           js_interpreter = js_interpreter,
                            retry_count = retry_count - 1,
                            domain = domain)
             elif password == PasswordOption.ASK:
                 print(f'\nFailed to login at {login_url}.')
                 self.login(username = username,
                            password = PasswordOption.ASK,
-                           js_interpreter = js_interpreter,
                            retry_count = retry_count - 1,
                            domain = domain )
             else:
@@ -457,12 +447,12 @@ class DocuShare:
         return login_token, challenge_js_url
 
     @staticmethod
-    def __challenge_response(password, login_token, challenge_js, js_interpreter):
-        password_escaped = json.dumps(password)
-        login_token_escaped = json.dumps(login_token)
-        challenge_js += f'\nconsole.log(obscure_string({password_escaped}, {login_token_escaped}))'
-        response_bytes = subprocess.check_output(js_interpreter, input=challenge_js.encode())
-        return response_bytes.decode().strip()
+    def __challenge_response(password, login_token, challenge_js):
+        js_context = pyduktape.DuktapeContext()
+        js_context.eval_js(challenge_js)
+        js_context.set_globals(arg1=password, arg2=login_token)
+        response = js_context.eval_js('obscure_string(arg1,arg2);')
+        return response
 
     def __get_password(self, username):
         try:

@@ -10,17 +10,13 @@ Clone this repository, then run the commad below to install PyDocuShare module:
  $ pip install -e ".[progress-bar,password-store]"
 ```
 
+The command above also installs all required python modules.
+
 For better user experience, it is recommended to specify all extra options (`progress-bar` and `password-store`) as shown above. With `progress-bar` option, PyDocuShare shows a progress bar when downloading a large file. With `password-store` option, PyDocuShare can store passwords in a secure manner and reuse the stored passwords for the DocuShare authentication. If you do not need those extra features, you can simply omit all options as shown below:
 
 ```sh
  $ pip install -e .
 ```
-
-## Pre-requisite
-
-All required python modules are automatically installed by `pip install`, so you do not have to install them manually.
-
-PyDocuShare uses Node.js as JavaScript interpreter, which is required for the DocuShare authentication. By default, `/usr/bin/node` is assumed as the interpreter path. You can explicitly specify the interpreter path as an argument of [login()](#login).
 
 ## Quick Usage
 
@@ -50,12 +46,6 @@ or
 
 ```python
 ds.login(username='your_user_name', password='your_password')
-```
-
-The login() method uses Node.js as JavaScript interpreter, which is required for authentication. By default, `/usr/bin/node` is assumed as the interpreter path. You can explicitly specify the path as an `js_interpreter` argument:
-
-```python
-ds.login(js_interpreter='/path/to/node')
 ```
 
 ## API Document
