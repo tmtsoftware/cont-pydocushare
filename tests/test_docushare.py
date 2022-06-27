@@ -95,4 +95,4 @@ class DocuShareTest(TestCase):
         self.assertIsInstance(ver_obj.version_number, int)
         self.assertEqual(ver_obj.download_url, self.base_url + 'dsweb/Get/' + self.valid_version_handle)
             
-    # TODO: test DocuShareNotAuthorizedError
+

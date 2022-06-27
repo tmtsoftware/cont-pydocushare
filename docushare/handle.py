@@ -74,7 +74,7 @@ class Handle:
         
     # The number of digits for the handle number.
     #
-    # TODO: The number of digits is maybe not be the same for all DocuShare site.
+    # TODO: The number of digits is maybe not the same for all DocuShare site.
     #       It would be useful to make it configurable.
     __num_of_digits = {
         HandleType.Collection: 5,
