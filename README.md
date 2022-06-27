@@ -106,3 +106,16 @@ You may notice that many test cases are skipped. This is because the command abo
  * **DOCUSHARE_NOT_AUTHORIZED_VERSION_HANDLE**: Version handle like Version-111111 that the user is not authorized to access.
 
 With those environmental variables, run the command above again. Now all test cases should have been executed.
+
+### Release Procedure
+
+Follow the procedure below to release a new version.
+
+ * Commit all changes by `git commit -a -m "your_commit_message"`.
+ * Run [all unit tests](#unit-test) and confirm that all tests were passed.
+ * Generate [API document](#api-document) and make sure that no error/warning is shown during the document generation.
+ * Open [setup.py](setup.py) and set the new version number to release.
+ * Run `git commit -a -m "Changed version number"` to commit the change in [setup.py](setup.py).
+ * Run `git tag -a vx.y.z -m "Version x.y.z"` to mark the new release.
+ * Run `git push --tags`. Make sure that you have `--tags` option to upload all tags to the upstream.
+ 
