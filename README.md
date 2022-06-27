@@ -103,6 +103,9 @@ to test some cases. You may notice that many test cases are skipped. This is bec
 
  * **DOCUSHARE_BASEURL** : Base URL of your DocuShare site. For example, https://your.docushare.domain/docushare/
  * **DOCUSHARE_USERNAME**: Your username of the DocuShare site.
+ * **DOCUSHARE_VALID_DOCUMENT_HANDLE**: Valid document handle like Document-12345.
+ * **DOCUSHARE_VALID_VERSION_HANDLE** : Valid version handle like Version-111111.
  * **DOCUSHARE_PASSWORD**: [optional] Your password of the DocuShare site. Do not define this environmental variable to use stored password or have the unit test show the password prompt (recommended).
+ * **DOCUSHARE_
 
 With those environmental variables, run the command above again. Now all cases should have been tested.

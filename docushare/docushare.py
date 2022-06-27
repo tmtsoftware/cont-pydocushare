@@ -590,3 +590,11 @@ class DocuShare:
     def __getitem__(self, hdl):
         return self.object(hdl)
 
+    def close(self):
+        '''Close the session with the DocuShare site.
+
+        You need to run :py:meth:`login` again to access any resources on the DocuShare site again.'''
+        self.cookies.clear()
+        self.__username = None
+        self.__session.close()
+        self.__session = requests.Session()

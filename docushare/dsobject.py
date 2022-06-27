@@ -77,6 +77,7 @@ class FileObject(DocuShareBaseObject):
     @property
     def download_url(self):
         '''str : URL to download this document.'''
+        from .docushare import Resource
         return self.docushare.url(Resource.Get, self.handle)
 
     def download(self, path = None):
@@ -166,7 +167,7 @@ class VersionObject(FileObject):
         if hdl.type != HandleType.Version:
             raise ValueError('handle type must be Version')
         
-        self.__version_number = None
+        self._version_number = None
 
     def _load_properties(self):
         properties = self.docushare.load_properties(self.handle)
