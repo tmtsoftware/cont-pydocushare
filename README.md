@@ -48,9 +48,11 @@ or
 ds.login(username='your_user_name', password='your_password')
 ```
 
+If `password` argument is not specified, PyDocuShare stores the successful password using [keyring](https://keyring.readthedocs.io/) module, and use the stored password in the future login so that you do not have to enter the password many times.
+
 ## API Document
 
-API documents can be generated using Sphinx. Install Sphinx and relevant extensions with the command below:
+To know more about PyDocuShare API, you first need to generate API document using [Sphinx](https://www.sphinx-doc.org/). Install Sphinx and required extensions with the command below:
 
 ```sh
  $ pip install -e ".[docs]"
@@ -62,9 +64,9 @@ Then, run the command below in the root directory of this repository:
  $ python setup.py build_sphinx
 ```
 
-The API documents are generated under `build/docs/html`. Open [build/docs/html/index.html](build/docs/html/index.html) in your Web browser to see the API documents.
+This command generates the API documents under `build/docs/html`. Open [build/docs/html/index.html](build/docs/html/index.html) in your Web browser to see the API documents.
 
-Sometimes document generation does not work as intended due to remnant from the previous build. In that case, clean the build first:
+The above command sometimes does not work as intended due to remnant from the previous build. In that case, clean the build first:
 
 ```sh
  $ python setup.py clean
@@ -75,7 +77,7 @@ TODO: upload the generated document to somewhere (readthedocs, github.io) so tha
 
 ## Restriction
 
-This API has been tested with DocuShare version 7.0.0. The implementation of this API does not use DocuShare HTTP/XML interface. It rather parses the same HTML pages as the users see in their Web browsers. Therefore, it may not work with different versions or if the DocuShare configuration is different from what the author assumed.
+This API has been tested with DocuShare version 7.0.0. The implementation of this API does not use DocuShare HTTP/XML interface. It rather parses the same HTML pages as the users see in their Web browsers. Therefore, it may not work with different versions or if the DocuShare configuration is different from what the author assumes.
 
 ## Developer information
 
@@ -87,21 +89,20 @@ PyDocuShare uses [numpy style](https://numpydoc.readthedocs.io/en/latest/format.
 
 ### Unit Test
 
-PyDocuShare uses [unittest](https://docs.python.org/3/library/unittest.html) unit testing framework. All test cases are stored under [tests/](tests/). Run
+PyDocuShare uses [unittest](https://docs.python.org/3/library/unittest.html) unit testing framework. All test cases are stored under [tests/](tests/). Execute the command below to run the unit tests:
 
 ```sh
  $ python -m unittest discover tests/ -vvv
 ```
 
-to test some cases. You may notice that many test cases are skipped. This is because the command above tests only the functionality that does not require connection with a DocuShare site, which probably does not make sense. To test the main functionality of PyDocuShare, you need to provide your DocuShare connection information through environmental variables:
+You may notice that many test cases are skipped. This is because the command above tests only the functionality that does not require connection with a DocuShare site, which probably does not make sense. To test the main functionality of PyDocuShare, you need to provide your DocuShare connection information through environmental variables as follows:
 
  * **DOCUSHARE_BASEURL** : Base URL of your DocuShare site. For example, https://your.docushare.domain/docushare/ . It must end with a slash '/'.
  * **DOCUSHARE_USERNAME**: Your username of the DocuShare site.
+ * **DOCUSHARE_PASSWORD**: [optional] Your password of the DocuShare site. Do not define this environmental variable to use stored password or have the unit test show the password prompt (recommended).
  * **DOCUSHARE_VALID_DOCUMENT_HANDLE**: Valid document handle like Document-12345.
  * **DOCUSHARE_VALID_VERSION_HANDLE** : Valid version handle like Version-111111.
  * **DOCUSHARE_NOT_AUTHORIZED_DOCUMENT_HANDLE**: Document handle like Document-12345 that the user is not authorized to access.
  * **DOCUSHARE_NOT_AUTHORIZED_VERSION_HANDLE**: Version handle like Version-111111 that the user is not authorized to access.
- * **DOCUSHARE_PASSWORD**: [optional] Your password of the DocuShare site. Do not define this environmental variable to use stored password or have the unit test show the password prompt (recommended).
- * **DOCUSHARE_
 
-With those environmental variables, run the command above again. Now all cases should have been tested.
+With those environmental variables, run the command above again. Now all test cases should have been executed.
