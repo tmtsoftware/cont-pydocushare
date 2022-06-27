@@ -209,6 +209,10 @@ def parse_history_page(html_text):
     ------
     ParseError
         If the given page cannot be parsed correctly.
+
+    Notes
+    -----
+    This method may return an empty array if there is only one version in the history.
     '''
 
     try:
@@ -237,8 +241,14 @@ def parse_history_page(html_text):
                         a_tag = cells[column_index].find('a')
                         if a_tag:
                             file_url = a_tag['href']
-                            handle_str = re.search(r'\/(Version-[0-9]{6})\/', file_url).group(1)
-                            version_handles.append(handle(handle_str))
+                            version_handle_match = re.search(r'\/(Version-[0-9]{6})\/', file_url)
+                            if version_handle_match:
+                                handle_str = version_handle_match.group(1)
+                                version_handles.append(handle(handle_str))
+                            else:
+                                # TODO: Support v_Document handle. If there is only one version in the document,
+                                #       the handle is not Version-xxxxxx, but rather v_Document-zzzzz.
+                                pass
                     else:
                         # Ignore other information
                         pass

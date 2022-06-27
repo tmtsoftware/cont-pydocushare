@@ -208,7 +208,7 @@ class DocuShare:
             If the user is not authorized to access the URL.
         '''
         self.__logger.info(f'HTTP GET  {url}')
-        response = self.__session.get(url)
+        response = self.__session.get(url, stream=True)
         response.raise_for_status()
 
         error_code, error_message = parse_if_system_error_page(response)
@@ -526,7 +526,7 @@ class DocuShare:
         else:
             self.__logger.debug(f'Content-Length is missing for {url}.')
 
-        self.__logger.info(f'Start downloading: {url} => {path}.')
+        self.__logger.info(f'Started downloading: {url} => {path}.')
             
         with open(path, 'wb') as output_file:
             try:
@@ -539,11 +539,11 @@ class DocuShare:
                 with tqdm(
                         desc = hdl.identifier,
                         total = file_size,
-                        unit = 'iB',
+                        unit = 'B',
                         unit_scale = True,
-                        unit_divisor = 1024,
+                        unit_divisor = 1000,
                 ) as progress_bar:
-                    for data in http_response.iter_content(chunk_size = 1024):
+                    for data in http_response.iter_content(chunk_size = 1000):
                         downloaded_size = output_file.write(data)
                         progress_bar.update(downloaded_size)
             else:
