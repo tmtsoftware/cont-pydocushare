@@ -132,4 +132,4 @@ dmypy.json
 docs/api/
 
 # Temporary test python script
-test*.py
+/test*.py
