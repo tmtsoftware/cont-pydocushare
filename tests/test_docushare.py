@@ -1,4 +1,7 @@
 import os
+import pathlib
+import shutil
+import tempfile
 from unittest import TestCase, skipIf
 from docushare import *
 
@@ -25,10 +28,12 @@ class DocuShareTest(TestCase):
 
         self.ds = DocuShare(self.base_url)
         self.ds.login(username = self.username, password = self.password)
-
+        self.tempdir = pathlib.Path(tempfile.mkdtemp())
+        
     def tearDown(self):
         self.ds.close()
-
+        shutil.rmtree(self.tempdir)
+        
     @skipIf(skip, skip_reason)
     def test_normal_workflow_1(self):
         doc_obj = self.ds.object(self.valid_document_handle)
@@ -44,6 +49,16 @@ class DocuShareTest(TestCase):
         self.assertIsInstance(doc_obj.document_control_number, str)
         self.assertEqual(doc_obj.download_url, self.base_url + 'dsweb/Get/' + self.valid_document_handle)
 
+        doc_obj_path1 = doc_obj.download(self.tempdir)
+        self.assertTrue(pathlib.Path(doc_obj_path1).is_file())
+
+        doc_obj_path2 = doc_obj.download(self.tempdir.joinpath('document.bin'))
+        self.assertTrue(pathlib.Path(doc_obj_path2).is_file())
+
+        doc_obj_path3 = self.tempdir.joinpath('document.bin2')
+        self.ds.download(self.valid_document_handle, doc_obj_path3)
+        self.assertTrue(pathlib.Path(doc_obj_path3).is_file())
+       
         doc_versions = doc_obj.versions
         self.assertIsInstance(doc_versions, list)
         self.assertTrue(len(doc_versions) > 0)
@@ -61,6 +76,16 @@ class DocuShareTest(TestCase):
         self.assertIsInstance(ver_obj.filename, str)
         self.assertIsInstance(ver_obj.version_number, int)
         self.assertEqual(ver_obj.download_url, self.base_url + 'dsweb/Get/' + self.valid_version_handle)
+
+        ver_obj_path1 = ver_obj.download(self.tempdir)
+        self.assertTrue(pathlib.Path(ver_obj_path1).is_file())
+
+        ver_obj_path2 = ver_obj.download(self.tempdir.joinpath('version.bin'))
+        self.assertTrue(pathlib.Path(ver_obj_path2).is_file())
+
+        ver_obj_path3 = self.tempdir.joinpath('version.bin2')
+        self.ds.download(self.valid_version_handle, ver_obj_path3)
+        self.assertTrue(pathlib.Path(ver_obj_path3).is_file())
 
     @skipIf(skip, skip_reason)
     def test_normal_workflow_2(self):
@@ -95,4 +120,3 @@ class DocuShareTest(TestCase):
         self.assertIsInstance(ver_obj.version_number, int)
         self.assertEqual(ver_obj.download_url, self.base_url + 'dsweb/Get/' + self.valid_version_handle)
             
-
