@@ -118,4 +118,5 @@ Follow the procedure below to release a new version.
  * Run `git commit -a -m "Changed version number"` to commit the change in [setup.py](setup.py).
  * Run `git tag -a vx.y.z -m "Version x.y.z"` to mark the new release.
  * Run `git push --tags`. Make sure that you have `--tags` option to upload all tags to the upstream.
+ * You may regenerate [API document](#api-document) to see the new version number in the API document.
  
