@@ -32,7 +32,7 @@ class HandleTest(TestCase):
         hdl = Handle(HandleType.Collection, 0)
         self.assertEqual(hdl.type, HandleType.Collection)
         self.assertEqual(hdl.number, 0)
-        self.assertEqual(hdl.identifier, 'Collection-00000')
+        self.assertEqual(hdl.identifier, 'Collection-0')
         
     def test_init_collection_1(self):
         hdl = Handle(HandleType.Collection, 12345)
@@ -44,7 +44,7 @@ class HandleTest(TestCase):
         hdl = Handle(HandleType.Collection, 1234)
         self.assertEqual(hdl.type, HandleType.Collection)
         self.assertEqual(hdl.number, 1234)
-        self.assertEqual(hdl.identifier, 'Collection-01234')
+        self.assertEqual(hdl.identifier, 'Collection-1234')
 
     def test_init_collection_3(self):
         hdl = Handle(HandleType.Collection, 99999)
@@ -52,15 +52,11 @@ class HandleTest(TestCase):
         self.assertEqual(hdl.number, 99999)
         self.assertEqual(hdl.identifier, 'Collection-99999')
 
-    def test_init_collection_4(self):
-        with self.assertRaises(ValueError) as context:
-            Handle(HandleType.Collection, 100000)
-        
     def test_init_document_0(self):
         hdl = Handle(HandleType.Document, 0)
         self.assertEqual(hdl.type, HandleType.Document)
         self.assertEqual(hdl.number, 0)
-        self.assertEqual(hdl.identifier, 'Document-00000')
+        self.assertEqual(hdl.identifier, 'Document-0')
 
     def test_init_document_1(self):
         hdl = Handle(HandleType.Document, 12345)
@@ -72,7 +68,7 @@ class HandleTest(TestCase):
         hdl = Handle(HandleType.Document, 1234)
         self.assertEqual(hdl.type, HandleType.Document)
         self.assertEqual(hdl.number, 1234)
-        self.assertEqual(hdl.identifier, 'Document-01234')
+        self.assertEqual(hdl.identifier, 'Document-1234')
         
     def test_init_document_3(self):
         hdl = Handle(HandleType.Document, 99999)
@@ -80,15 +76,11 @@ class HandleTest(TestCase):
         self.assertEqual(hdl.number, 99999)
         self.assertEqual(hdl.identifier, 'Document-99999')
 
-    def test_init_document_4(self):
-        with self.assertRaises(ValueError) as context:
-            Handle(HandleType.Document, 100000)
-            
     def test_init_version_0(self):
         hdl = Handle(HandleType.Version, 0)
         self.assertEqual(hdl.type, HandleType.Version)
         self.assertEqual(hdl.number, 0)
-        self.assertEqual(hdl.identifier, 'Version-000000')
+        self.assertEqual(hdl.identifier, 'Version-0')
         
     def test_init_version_1(self):
         hdl = Handle(HandleType.Version, 123456)
@@ -100,7 +92,7 @@ class HandleTest(TestCase):
         hdl = Handle(HandleType.Version, 1234)
         self.assertEqual(hdl.type, HandleType.Version)
         self.assertEqual(hdl.number, 1234)
-        self.assertEqual(hdl.identifier, 'Version-001234')
+        self.assertEqual(hdl.identifier, 'Version-1234')
 
     def test_init_version_3(self):
         hdl = Handle(HandleType.Version, 999999)
@@ -108,10 +100,6 @@ class HandleTest(TestCase):
         self.assertEqual(hdl.number, 999999)
         self.assertEqual(hdl.identifier, 'Version-999999')
         
-    def test_init_version_4(self):
-        with self.assertRaises(ValueError) as context:
-            Handle(HandleType.Version, 1000000)
-
     def test_from_str_collection_1(self):
         hdl = Handle.from_str('Collection-12345')
         self.assertEqual(hdl.type, HandleType.Collection)
@@ -119,10 +107,10 @@ class HandleTest(TestCase):
         self.assertEqual(hdl.identifier, 'Collection-12345')
 
     def test_from_str_collection_2(self):
-        hdl = Handle.from_str('Collection-00000')
+        hdl = Handle.from_str('Collection-0')
         self.assertEqual(hdl.type, HandleType.Collection)
         self.assertEqual(hdl.number, 0)
-        self.assertEqual(hdl.identifier, 'Collection-00000')
+        self.assertEqual(hdl.identifier, 'Collection-0')
 
     def test_from_str_collection_3(self):
         hdl = Handle.from_str('Collection-99999')
@@ -132,11 +120,11 @@ class HandleTest(TestCase):
 
     def test_from_str_collection_4(self):
         with self.assertRaises(InvalidHandleError) as context:
-            hdl = Handle.from_str('Collection-100000')
+            hdl = Handle.from_str('Collection-a')
         
     def test_from_str_collection_5(self):
         with self.assertRaises(InvalidHandleError) as context:
-            hdl = Handle.from_str('Collection-1')
+            hdl = Handle.from_str('Collection-0x01')
 
     def test_from_str_document_1(self):
         hdl = Handle.from_str('Document-12345')
@@ -145,10 +133,10 @@ class HandleTest(TestCase):
         self.assertEqual(hdl.identifier, 'Document-12345')
 
     def test_from_str_document_2(self):
-        hdl = Handle.from_str('Document-00000')
+        hdl = Handle.from_str('Document-0')
         self.assertEqual(hdl.type, HandleType.Document)
         self.assertEqual(hdl.number, 0)
-        self.assertEqual(hdl.identifier, 'Document-00000')
+        self.assertEqual(hdl.identifier, 'Document-0')
 
     def test_from_str_document_3(self):
         hdl = Handle.from_str('Document-99999')
@@ -158,11 +146,11 @@ class HandleTest(TestCase):
 
     def test_from_str_document_4(self):
         with self.assertRaises(InvalidHandleError) as context:
-            hdl = Handle.from_str('Document-100000')
+            hdl = Handle.from_str('Document-a')
         
     def test_from_str_document_5(self):
         with self.assertRaises(InvalidHandleError) as context:
-            hdl = Handle.from_str('Document-1')
+            hdl = Handle.from_str('Document-0x01')
             
     def test_from_str_version_1(self):
         hdl = Handle.from_str('Version-123456')
@@ -171,10 +159,10 @@ class HandleTest(TestCase):
         self.assertEqual(hdl.identifier, 'Version-123456')
 
     def test_from_str_version_2(self):
-        hdl = Handle.from_str('Version-000000')
+        hdl = Handle.from_str('Version-0')
         self.assertEqual(hdl.type, HandleType.Version)
         self.assertEqual(hdl.number, 0)
-        self.assertEqual(hdl.identifier, 'Version-000000')
+        self.assertEqual(hdl.identifier, 'Version-0')
 
     def test_from_str_version_3(self):
         hdl = Handle.from_str('Version-999999')
@@ -184,11 +172,11 @@ class HandleTest(TestCase):
 
     def test_from_str_version_4(self):
         with self.assertRaises(InvalidHandleError) as context:
-            hdl = Handle.from_str('Version-1000000')
+            hdl = Handle.from_str('Version-a')
         
     def test_from_str_version_5(self):
         with self.assertRaises(InvalidHandleError) as context:
-            hdl = Handle.from_str('Version-1')
+            hdl = Handle.from_str('Version-0xff')
 
     def test_from_str_invalid_1(self):
         with self.assertRaises(InvalidHandleError) as context:
@@ -250,7 +238,7 @@ class HandleFunctionTest(TestCase):
 
     def test_handle_invalid_1(self):
         with self.assertRaises(InvalidHandleError) as context:
-            hdl = handle('Collection-123456')
+            hdl = handle('Collection-0x01')
 
     def test_handle_invalid_2(self):
         with self.assertRaises(InvalidHandleError) as context:
