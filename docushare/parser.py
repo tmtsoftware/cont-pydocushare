@@ -242,7 +242,7 @@ def parse_history_page(html_text):
                         a_tag = cells[column_index].find('a')
                         if a_tag:
                             file_url = a_tag['href']
-                            version_handle_match = re.search(r'\/(Version-[0-9]{6})\/', file_url)
+                            version_handle_match = re.search(r'\/(Version-[0-9]+)\/', file_url)
                             if version_handle_match:
                                 handle_str = version_handle_match.group(1)
                                 version_handles.append(handle(handle_str))
