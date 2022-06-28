@@ -65,23 +65,10 @@ class Handle:
         if handle_number < 0:
             raise ValueError('handle_number must be zero or a positive integer')
 
-        # Check the number of digits.
-        max_number = 10 ** self.__num_of_digits[handle_type] - 1
-        if handle_number > max_number:
-            raise ValueError(f'handle_number must be {max_number} or less for handle_type = {handle_type}.')
-        
+        # TODO: is zero really a valid handle number?
+
         self.__handle_type   = handle_type
         self.__handle_number = handle_number
-        
-    # The number of digits for the handle number.
-    #
-    # TODO: The number of digits is maybe not the same for all DocuShare site.
-    #       It would be useful to make it configurable.
-    __num_of_digits = {
-        HandleType.Collection: 5,
-        HandleType.Document  : 5,
-        HandleType.Version   : 6,
-    }
        
     @property
     def type(self):
@@ -96,10 +83,7 @@ class Handle:
     @property
     def identifier(self):
         '''str: String representation of this handle like "Document-20202".'''
-        type_id = self.__handle_type.identifier
-        num_of_digits = self.__num_of_digits[self.__handle_type]
-        number_str = format(self.__handle_number, f'0{num_of_digits}')
-        return f'{type_id}-{number_str}'
+        return f'{self.__handle_type.identifier}-{self.__handle_number}'
 
     @classmethod
     def from_str(cls, handle_str):
@@ -122,7 +106,7 @@ class Handle:
         '''
         
         for handle_type in HandleType:
-            pattern = f'^{handle_type.identifier}-([0-9]{{{cls.__num_of_digits[handle_type]}}})$'
+            pattern = f'^{handle_type.identifier}-([0-9]+)$'
             match = re.match(pattern, handle_str)
             if match:
                 return Handle(handle_type, int(match.group(1)))
