@@ -214,7 +214,8 @@ class DocuShare:
             If the user is not authorized to access the URL.
         '''
         self.__logger.info(f'HTTP GET  {url}')
-        response = self.__session.get(url, stream=True)
+        headers = {'Accept-Language': 'en-US,en;q=0.9'} # Specify English.
+        response = self.__session.get(url, headers = headers, stream=True)
         response.raise_for_status()
 
         error_code, error_message = parse_if_system_error_page(response)
@@ -638,7 +639,7 @@ class DocuShare:
             properties = self.__load_properties(hdl)
             title = properties['Title']
             filename = properties['_filename']
-            document_control_number = properties['Document Control Number']
+            document_control_number = properties.get('Document Control Number', None)
 
             # Get history
             versions = self.__load_history(hdl)

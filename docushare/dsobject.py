@@ -122,8 +122,8 @@ class DocumentObject(FileObject):
         Title of this document.
     filename : str
         File name of this document.
-    document_control_number : str
-        Document conrol number of this document.
+    document_control_number : str or None
+        Document conrol number of this document. This can be None if document control number is not defined.
     versions : list
         Version handles of this document. :py:class:`list` of :py:class:`Handle` instances.'
     '''
