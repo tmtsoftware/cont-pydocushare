@@ -48,7 +48,7 @@ class DocuShareTest(TestCase):
         self.assertEqual(doc_obj.handle.identifier, self.valid_document_handle)
         self.assertIsInstance(doc_obj.title, str)
         self.assertIsInstance(doc_obj.filename, str)
-        self.assertIsInstance(doc_obj.document_control_number, str)
+        self.assertIsInstance(doc_obj.document_control_number, (str, type(None)))
         self.assertEqual(doc_obj.download_url, self.base_url + 'dsweb/Get/' + self.valid_document_handle)
 
         doc_obj_path1 = doc_obj.download(self.tempdir)
@@ -101,7 +101,7 @@ class DocuShareTest(TestCase):
         self.assertEqual(doc_obj.handle.identifier, self.valid_document_handle)
         self.assertIsInstance(doc_obj.title, str)
         self.assertIsInstance(doc_obj.filename, str)
-        self.assertIsInstance(doc_obj.document_control_number, str)
+        self.assertIsInstance(doc_obj.document_control_number, (str, type(None)))
         self.assertEqual(doc_obj.download_url, self.base_url + 'dsweb/Get/' + self.valid_document_handle)
 
         doc_versions = doc_obj.versions
