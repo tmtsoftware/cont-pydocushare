@@ -66,6 +66,12 @@ class DocuShareTest(TestCase):
         self.assertTrue(len(doc_version_handles) > 0)
         self.assertTrue(all([version_handle.type == HandleType.Version for version_handle in doc_version_handles]))
 
+        doc_versions = doc_obj.versions
+        self.assertIsInstance(doc_versions, list)
+        self.assertEqual(len(doc_versions), len(doc_version_handles))
+        self.assertTrue(all([isinstance(version, VersionObject) for version in doc_versions]))
+        self.assertTrue(all([(version.handle in doc_version_handles) for version in doc_versions]))
+
         ver_obj = self.ds.object(self.valid_version_handle)
         self.assertIsInstance(ver_obj, VersionObject)
         self.assertIsInstance(ver_obj, DocuShareBaseObject)
@@ -108,6 +114,12 @@ class DocuShareTest(TestCase):
         self.assertIsInstance(doc_version_handles, list)
         self.assertTrue(len(doc_version_handles) > 0)
         self.assertTrue(all([version_handle.type == HandleType.Version for version_handle in doc_version_handles]))
+        
+        doc_versions = doc_obj.versions
+        self.assertIsInstance(doc_versions, list)
+        self.assertEqual(len(doc_versions), len(doc_version_handles))
+        self.assertTrue(all([isinstance(version, VersionObject) for version in doc_versions]))
+        self.assertTrue(all([(version.handle in doc_version_handles) for version in doc_versions]))
 
         ver_obj = self.ds[self.valid_version_handle]
         self.assertIsInstance(ver_obj, VersionObject)
