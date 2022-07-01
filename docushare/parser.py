@@ -8,9 +8,33 @@ from .handle import HandleType, handle
 from .util import join_url
 
 
-class ParseError(RuntimeError):
-    '''Raised if parsing one of DocuShare web page fails.'''
-    pass
+class DocuShareParseError(RuntimeError):
+    '''Raised if parsing one of DocuShare web page fails.
+
+    Parameters
+    ----------
+    docushare : DocuShare
+        DocuShare instance to get the context for detailed error messages.
+    url : str
+        URL that could not be parsed successfully.
+    cause : BaseException
+        Original exception that caused the parsing error.
+    '''
+    def __init__(self, docushare, url, cause):
+        self.__username = docushare.username
+        self.__url = url
+        msg = f'Failed to parse {url} [username: {docushare.username}]'
+        super().__init__(msg, cause)
+    
+    @property
+    def url(self):
+        '''str: URL that cannot be parsed successfully.'''
+        return self.__url
+    
+    @property
+    def username(self):
+        '''str: DocuShare username who accessed the URL.'''
+        return self.__username
 
 def is_not_found_page(http_response):
     '''Check if the given HTTP response represents 'Not Found' error.
@@ -110,25 +134,25 @@ def parse_login_page(html_text):
 
     Raises
     ------
-    ParseError
+    RuntimeError
         If the given page cannot be parsed correctly.
     '''
     soup = BeautifulSoup(html_text, 'html.parser')
         
     login_token_element = soup.find('input', {'name': 'login_token'})
     if not login_token_element:
-        raise ParseError(f'Cannot find login_token.')
+        raise RuntimeError(f'Cannot find login_token.')
 
     if not login_token_element.has_attr('value'):
-        raise ParseError(f'"value" attribute is missing in {login_token_element}.')
+        raise RuntimeError(f'"value" attribute is missing in {login_token_element}.')
         
     login_token = login_token_element['value']
     if not login_token:
-        raise ParseError(f'login_token is empty.')
+        raise RuntimeError(f'login_token is empty.')
         
     challenge_js_script_tag = soup.find('script', src=re.compile('challenge\.js'))
     if (not challenge_js_script_tag) or (not challenge_js_script_tag.has_attr('src')):
-        raise ParseError(f'Cannot find URL of challenge.js.')
+        raise RuntimeError(f'Cannot find URL of challenge.js.')
 
     challenge_js_src = challenge_js_script_tag['src']
 
@@ -153,44 +177,38 @@ def parse_property_page(html_text, handle_type):
     -------
     dict
         property name as key and property value as value.
-
-    Raises
-    ------
-    ParseError
-        If the given page cannot be parsed correctly.
     '''
 
-    try:
-        properties = {}
+    properties = {}
         
-        soup = BeautifulSoup(html_text, 'html.parser')
-        propstable = soup.find('table', {'class': 'propstable'})
-        for row in propstable.find_all('tr'):
-            cols = row.find_all('td')
-            field_name = cols[0].text.strip()
-            if field_name.endswith(':'):
-                field_name = field_name[:-1]
+    soup = BeautifulSoup(html_text, 'html.parser')
+    propstable = soup.find('table', {'class': 'propstable'})
+    for row in propstable.find_all('tr'):
+        cols = row.find_all('td')
+        if len(cols) < 2:
+            continue
+        
+        field_name = cols[0].text.strip()
+        if field_name.endswith(':'):
+            field_name = field_name[:-1]
 
-            field_value = cols[1].text.strip()
+        field_value = cols[1].text.strip()
 
-            if field_name == 'Handle':
-                properties[field_name] = handle(field_value)
-            elif field_name == 'Version Number':
-                properties[field_name] = int(field_value)
-            else:
-                # TODO: parse user name, date and size
-                properties[field_name] = field_value
+        if field_name == 'Handle':
+            properties[field_name] = handle(field_value)
+        elif field_name == 'Version Number':
+            properties[field_name] = int(field_value)
+        else:
+            # TODO: parse user name, date and size
+            properties[field_name] = field_value
 
-            if (handle_type == HandleType.Document or handle_type == HandleType.Version) and \
-               field_name == 'Title':
-                file_url = cols[1].find('a')['href']
-                filename = PurePosixPath(urlparse(file_url).path).name
-                properties['_filename'] = filename
+        if (handle_type == HandleType.Document or handle_type == HandleType.Version) and \
+           field_name == 'Title':
+            file_url = cols[1].find('a')['href']
+            filename = PurePosixPath(urlparse(file_url).path).name
+            properties['_filename'] = filename
             
-        return properties
-    except Exception as err:
-        raise ParseError('Failed to parse a DocuShare property page.', err)
-
+    return properties
 
 def parse_history_page(html_text):
     '''Parse a DocuShare history page and returns the version handles.
@@ -206,54 +224,78 @@ def parse_history_page(html_text):
     list
         :py:class:`list` of :py:class:`Handle` instances.
 
-    Raises
-    ------
-    ParseError
-        If the given page cannot be parsed correctly.
-
     Notes
     -----
     This method may return an empty array if there is only one version in the history.
     '''
 
-    try:
-        soup = BeautifulSoup(html_text, 'html.parser')
-        propstable = soup.find('table', {'class': 'table_properties'})
+    soup = BeautifulSoup(html_text, 'html.parser')
+    propstable = soup.find('table', {'class': 'table_properties'})
 
-        header_columns = propstable.find('thead').find_all('th')
-        field_names = {}
-        for column_index in range(len(header_columns)):
-            field_name = header_columns[column_index].text.strip()
-            if field_name:
-                field_names[column_index] = field_name
+    header_columns = propstable.find('thead').find_all('th')
+    field_names = {}
+    for column_index in range(len(header_columns)):
+        field_name = header_columns[column_index].text.strip()
+        if field_name:
+            field_names[column_index] = field_name
 
-        version_handles = []
-        for row in propstable.find_all('tr'):
-            cells = row.find_all('td')
+    version_handles = []
+    for row in propstable.find_all('tr'):
+        cells = row.find_all('td')
 
-            for column_index in field_names.keys():
-                field_name = field_names[column_index]
+        for column_index in field_names.keys():
+            field_name = field_names[column_index]
 
-                if len(cells) > column_index:
-                    if field_name == 'Preferred':
-                        # TODO: parse the radio button and find the preferred version
-                        pass
-                    elif field_name == '#':
-                        a_tag = cells[column_index].find('a')
-                        if a_tag:
-                            file_url = a_tag['href']
-                            version_handle_match = re.search(r'\/(Version-[0-9]+)\/', file_url)
-                            if version_handle_match:
-                                handle_str = version_handle_match.group(1)
-                                version_handles.append(handle(handle_str))
-                            else:
-                                # TODO: Support v_Document handle. If there is only one version in the document,
-                                #       the handle is not Version-xxxxxx, but rather v_Document-zzzzz.
-                                pass
-                    else:
-                        # Ignore other information
-                        pass
+            if len(cells) > column_index:
+                if field_name == 'Preferred':
+                    # TODO: parse the radio button and find the preferred version
+                    pass
+                elif field_name == '#':
+                    a_tag = cells[column_index].find('a')
+                    if a_tag:
+                        file_url = a_tag['href']
+                        version_handle_match = re.search(r'\/(Version-[0-9]+)\/', file_url)
+                        if version_handle_match:
+                            handle_str = version_handle_match.group(1)
+                            version_handles.append(handle(handle_str))
+                        else:
+                            # TODO: Support v_Document handle. If there is only one version in the document,
+                            #       the handle is not Version-xxxxxx, but rather v_Document-zzzzz.
+                            pass
+                else:
+                    # Ignore other information
+                    pass
 
-        return version_handles
-    except Exception as err:
-        raise ParseError('Failed to parse a DocuShare history page.', err)
+    return version_handles
+
+def parse_collection_page(html_text):
+    '''Parse a DocuShare Collection page and returns the handles of the objects under the Collection.
+
+    Parameters
+    ----------
+    html_text : str
+        HTML text that was obtained from a DocuShare Collection page like
+        https://your.docushare.domain/docushare/dsweb/View/Collection-xxxxx
+
+    Returns
+    -------
+    list
+        :py:class:`list` of :py:class:`Handle` instances.
+    '''
+
+    soup = BeautifulSoup(html_text, 'html.parser')
+    collection_table = soup.find('table', {'class': 'table-collection'})
+
+    object_handles = []
+    for row in collection_table.find_all('tr'):
+        if row.has_attr('about'):
+            document_handle_match   = re.search(r'\/(Document-[0-9]+)', row['about'])
+            collection_handle_match = re.search(r'\/(Collection-[0-9]+)', row['about'])
+            if document_handle_match:
+                handle_str = document_handle_match.group(1)
+                object_handles.append(handle(handle_str))
+            elif collection_handle_match:
+                handle_str = collection_handle_match.group(1)
+                object_handles.append(handle(handle_str))
+
+    return object_handles

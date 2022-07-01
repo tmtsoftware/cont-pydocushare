@@ -44,9 +44,9 @@ You can get the version information as shown below:
 '''
 
 from .docushare import DocuShare, Resource, PasswordOption, DocuShareSystemError, DocuShareNotFoundError, DocuShareNotAuthorizedError
-from .dsobject import DocuShareBaseObject, FileObject, DocumentObject, VersionObject
+from .dsobject import DocuShareBaseObject, FileObject, DocumentObject, VersionObject, CollectionObject
 from .handle import handle, Handle, HandleType, InvalidHandleError
-from .parser import ParseError
+from .parser import DocuShareParseError
 from .util import join_url
 
 __all__ = [
@@ -61,13 +61,14 @@ __all__ = [
     'FileObject',
     'DocumentObject',
     'VersionObject',
-
+    'CollectionObject',
+    
     'handle',
     'Handle',
     'HandleType',
     'InvalidHandleError',
 
-    'ParseError',
+    'DocuShareParseError',
     
     'join_url',
 ]

@@ -10,11 +10,13 @@ import requests
 
 import pyduktape
 
-from .dsobject import DocumentObject, VersionObject
+from .dsobject import DocumentObject, VersionObject, CollectionObject
 from .handle import Handle, HandleType, handle
-from .parser import (is_not_authorized_page, is_not_found_page,
+from .parser import (DocuShareParseError,
+                     is_not_authorized_page, is_not_found_page,
                      parse_history_page, parse_if_system_error_page,
-                     parse_login_page, parse_property_page)
+                     parse_login_page, parse_property_page,
+                     parse_collection_page)
 from .util import join_url
 
 
@@ -27,6 +29,7 @@ class Resource(Enum):
     Services   = 'HTTP GET : property page'
     History    = 'HTTP GET : version history of a document'
     Get        = 'HTTP GET : get a document file'
+    View       = 'HTTP GET : view a collection'
 
 class PasswordOption(Enum):
     '''Option for password prompting.'''
@@ -212,13 +215,19 @@ class DocuShare:
             If the DocuShare site encounters a system error.
         DocuShareNotAuthorizedError
             If the user is not authorized to access the URL.
+        DocuShareParseError
+            If this method fails to parse the DocuShare system error page.
         '''
         self.__logger.info(f'HTTP GET  {url}')
         headers = {'Accept-Language': 'en-US,en;q=0.9'} # Specify English.
         response = self.__session.get(url, headers = headers, stream=True)
         response.raise_for_status()
 
-        error_code, error_message = parse_if_system_error_page(response)
+        try:
+            error_code, error_message = parse_if_system_error_page(response)
+        except Exception as err:
+            raise DocuShareParseError(self, url, err)
+            
         if error_code:
             raise DocuShareSystemError(error_code, error_message, self, url)
 
@@ -285,6 +294,12 @@ class DocuShare:
             if hdl.type != HandleType.Document and hdl.type != HandleType.Version:
                 raise ValueError('handle type must be Document or Version')
             return join_url(self.url(Resource.DSWEB), 'Get/', hdl.identifier)
+        elif resource == Resource.View:
+            if not isinstance(hdl, Handle):
+                raise TypeError('hdl must be an instance of Handle')
+            if hdl.type != HandleType.Collection:
+                raise ValueError('handle type must be Collection')
+            return join_url(self.url(Resource.DSWEB), 'View/', hdl.identifier)
         else:
             assert False, 'code must not reach here'
    
@@ -315,6 +330,11 @@ class DocuShare:
 
         domain : str
             Domain to specify when logging in DocuShare. Typically, it is 'DocuShare'.
+
+        Raises
+        ------
+        DocuShareParseError
+            If this method fails to parse the DocuShare login page.
         '''
 
         if not (username is None or isinstance(username, str)):
@@ -441,7 +461,12 @@ class DocuShare:
     def __open_and_parse_login_page(self):
         login_url = self.url(Resource.Login)
         login_page = self.http_get(login_url)
-        login_token, challenge_js_src = parse_login_page(login_page.text)
+
+        try:
+            login_token, challenge_js_src = parse_login_page(login_page.text)
+        except Exception as err:
+            raise DocuShareParseError(self, login_url, err)
+            
         challenge_js_url = join_url(login_url, challenge_js_src)
         self.__logger.debug(f'login_token = {login_token}')
         self.__logger.debug(f'challenge_js_src = {challenge_js_src}')
@@ -571,12 +596,18 @@ class DocuShare:
             If the given handle does not exist or the DocuShare site encounters a system error.
         DocuShareNotAuthorizedError
             If the user is not authorized to access the given handle.
+        DocuShareParseError
+            If this method fails to parse the DocuShare property page.
         '''
         self.__check_if_logged_in()
         hdl = handle(hdl)
         url = self.url(Resource.Services, hdl)
         http_response = self.http_get(url)
-        return parse_property_page(http_response.text, hdl.type)
+
+        try:
+            return parse_property_page(http_response.text, hdl.type)
+        except Exception as err:
+            raise DocuShareParseError(self, url, err)
     
     def __load_history(self, hdl):
         '''Open and parse the history page of the given Document handle and return the Version handles.
@@ -596,13 +627,53 @@ class DocuShare:
             If the given handle does not exist or the DocuShare site encounters a system error.
         DocuShareNotAuthorizedError
             If the user is not authorized to access the given handle.
+        DocuShareParseError
+            If this method fails to parse the DocuShare history page.
         '''
         self.__check_if_logged_in()
         hdl = handle(hdl)
         url = self.url(Resource.History, hdl)
         http_response = self.http_get(url)
-        version_handles = parse_history_page(http_response.text)
+
+        try:
+            version_handles = parse_history_page(http_response.text)
+        except Exception as err:
+            raise DocuShareParseError(self, url, err)
+            
         return version_handles
+
+    def __load_collection(self, hdl):
+        '''Open and parse the Collection page and return the handles of the objects under the Collection.
+
+        Parameters
+        ----------
+        hdl : Handle
+            DocuShare handle. Its type must be :py:enum:`HandleType.Collection`.
+
+        Returns
+        -------
+        list : :py:class:`list` of :py:enum:`Handle` instances, each represents a handle of the objects under the specified Collection.
+
+        Raises
+        ------
+        DocuShareSystemError
+            If the given handle does not exist or the DocuShare site encounters a system error.
+        DocuShareNotAuthorizedError
+            If the user is not authorized to access the given handle.
+        DocuShareParseError
+            If this method fails to parse the DocuShare collection page.
+        '''
+        self.__check_if_logged_in()
+        hdl = handle(hdl)
+        url = self.url(Resource.View, hdl)
+        http_response = self.http_get(url)
+        
+        try:
+            object_handles = parse_collection_page(http_response.text)
+        except Exception as err:
+            raise DocuShareParseError(self, url, err)
+            
+        return object_handles
 
     def object(self, hdl):
         '''Get an instance that represents a DocuShare object.
@@ -624,6 +695,8 @@ class DocuShare:
             If the given handle does not exist.
         DocuShareNotAuthorizedError
             If the user is not authorized to access the URL.
+        DocuShareParseError
+            If this method fails to parse one of DocuShare pages related to the given handle.
         '''
 
         self.__check_if_logged_in()
@@ -633,7 +706,19 @@ class DocuShare:
             return self.__dsobjects[hdl]
 
         if hdl.type == HandleType.Collection:
-            raise NotImplementedError() # TODO: implement
+            properties = self.__load_properties(hdl)
+            title = properties['Title']
+
+            # Get objects under this collection
+            objects = self.__load_collection(hdl)
+
+            self.__dsobjects[hdl] = CollectionObject(
+                docushare = self,
+                hdl = hdl,
+                title = title,
+                objects = objects
+            )
+            return self.__dsobjects[hdl]
         elif hdl.type == HandleType.Document:
             # Get properties
             properties = self.__load_properties(hdl)

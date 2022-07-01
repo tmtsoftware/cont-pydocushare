@@ -180,3 +180,40 @@ class VersionObject(FileObject):
 
     def __str__(self):
         return f'handle: "{self.handle}", title: "{self.title}", filename: "{self.filename}", version_number: {self.version_number}'
+
+class CollectionObject(DocuShareBaseObject):
+    '''Represents one Collection object in DocuShare.
+
+    Parameters
+    ----------
+    docushare : DocuShare
+        The DocuShare site that this object belongs to.
+    hdl : Handle
+        The DocuShare handle that represents this object. The type must be :py:enum:`HandleType.Collection`.
+    title : str
+        Title of this collection.
+    objects : list
+        Handles of the objects under this collection. :py:class:`list` of :py:class:`Handle` instances.'
+    '''
+    
+    def __init__(self, docushare, hdl, title, objects):
+        super().__init__(docushare, hdl)
+        if hdl.type != HandleType.Collection:
+            raise ValueError('handle type must be Collection')
+        
+        self._title   = title
+        self._objects = objects
+
+    @property
+    def title(self):
+        '''str : Title of this collection.'''
+        return self._title
+
+    def __str__(self):
+        return f'handle: "{self.handle}", title: "{self.title}"'
+
+    @property
+    def objects(self):
+        ''':py:class:`list` of :py:class:`Handle`: Handles of the objects under this collection.'''
+        return self._objects
+
