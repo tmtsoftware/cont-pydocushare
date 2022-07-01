@@ -146,7 +146,7 @@ class DocumentObject(FileObject):
         if not all([isinstance(version_handle, Handle) for version_handle in version_handles]):
             raise TypeError('All elements in verion_handles must be instances of Handle')
         if not all([hdl.type == HandleType.Version for hdl in version_handles]):
-            raise TypeError('All handle types in verion_handles must be Version')
+            raise ValueError('All handle types in verion_handles must be Version')
         
         self._document_control_number = document_control_number
         self._version_handles         = version_handles
