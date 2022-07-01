@@ -285,6 +285,8 @@ def parse_collection_page(html_text):
 
     soup = BeautifulSoup(html_text, 'html.parser')
     collection_table = soup.find('table', {'class': 'table-collection'})
+    if not collection_table:
+        return []
 
     object_handles = []
     for row in collection_table.find_all('tr'):

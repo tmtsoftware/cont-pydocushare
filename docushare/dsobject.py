@@ -1,7 +1,7 @@
 from abc import ABC
 from pathlib import Path
 
-from .handle import Handle, HandleType
+from .handle import Handle, HandleType, DocumentHandleNode, CollectionHandleNode
 
 
 class DocuShareBaseObject(ABC):
@@ -244,3 +244,16 @@ class CollectionObject(DocuShareBaseObject):
         ''':py:class:`list` of :py:class:`Handle`: Handles of the objects under this collection.'''
         return self._object_handles
 
+    @property
+    def tree(self):
+        '''TODO: fill out'''
+        children = []
+        for obj_hdl in self._object_handles:
+            if obj_hdl.type == HandleType.Document:
+                children.append(DocumentHandleNode(obj_hdl.number))
+            elif obj_hdl.type == HandleType.Collection:
+                children.append(self.docushare[obj_hdl].tree)
+            else:
+                assert False, 'code must not reach here'
+        root = CollectionHandleNode(self.handle.number, children)
+        return root

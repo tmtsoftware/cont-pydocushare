@@ -710,13 +710,13 @@ class DocuShare:
             title = properties['Title']
 
             # Get objects under this collection
-            objects = self.__load_collection(hdl)
+            object_handles = self.__load_collection(hdl)
 
             self.__dsobjects[hdl] = CollectionObject(
                 docushare = self,
                 hdl = hdl,
                 title = title,
-                objects = objects
+                object_handles = object_handles
             )
             return self.__dsobjects[hdl]
         elif hdl.type == HandleType.Document:
