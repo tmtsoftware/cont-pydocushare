@@ -26,6 +26,7 @@ setup(
     author       = 'Takashi Nakamoto',
     author_email = 'tnakamoto@tmt.org',
     license      = 'Apache',
+    packages     = ['docushare'],
     python_requires  = '>=3.8',
     install_requires = [
         'beautifulsoup4 >= 4.8.2',
