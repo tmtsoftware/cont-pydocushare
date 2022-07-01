@@ -6,7 +6,7 @@ This is the git repository of PyDocuShare, python API to interact with DocuShare
 
 Clone this repository, then run the commad below to install PyDocuShare module:
 
-```sh
+```bash
  $ pip install ".[progress-bar,password-store]"
 ```
 
@@ -14,7 +14,7 @@ The command above also installs all required python modules.
 
 For better user experience, it is recommended to specify all extra options (`progress-bar` and `password-store`) as shown above. With `progress-bar` option, PyDocuShare shows a progress bar when downloading a large file. With `password-store` option, PyDocuShare can store passwords in a secure manner and reuse the stored passwords for the DocuShare authentication. If you do not need those extra features, you can simply omit all options as shown below:
 
-```sh
+```bash
  $ pip install .
 ```
 
@@ -22,7 +22,7 @@ For better user experience, it is recommended to specify all extra options (`pro
 
 If you want to uninsall PyDocuShare that was installed with `pip`, run the command below:
 
-```sh
+```bash
  $ pip uninstall pydocushare
 ```
 
@@ -62,13 +62,13 @@ If `password` argument is not specified, PyDocuShare stores the successful passw
 
 To know more about PyDocuShare API, you first need to generate API document using [Sphinx](https://www.sphinx-doc.org/). Install Sphinx and required extensions with the command below:
 
-```sh
+```bash
  $ pip install -e ".[docs]"
 ```
 
 Then, run the command below in the root directory of this repository:
 
-```sh
+```bash
  $ python setup.py build_sphinx
 ```
 
@@ -76,7 +76,7 @@ This command generates the API documents under `build/docs/html`. Open [build/do
 
 The above command sometimes does not work as intended due to remnant from the previous build. In that case, clean the build first:
 
-```sh
+```bash
  $ python setup.py clean
  $ python setup.py build_sphinx
 ```
@@ -99,7 +99,7 @@ PyDocuShare uses [numpy style](https://numpydoc.readthedocs.io/en/latest/format.
 
 PyDocuShare uses [unittest](https://docs.python.org/3/library/unittest.html) unit testing framework. All test cases are stored under [tests/](tests/). Execute the command below to run the unit tests:
 
-```sh
+```bash
  $ python -m unittest discover tests/ -vvv
 ```
 
@@ -114,6 +114,28 @@ You may notice that many test cases are skipped. This is because the command abo
  * **DOCUSHARE_NOT_AUTHORIZED_VERSION_HANDLE**: Version handle like Version-111111 that the user is not authorized to access.
 
 With those environmental variables, run the command above again. Now all test cases should have been executed.
+
+The bash script below is the template to set all required environmental variables Modify each value as appropriate.
+
+```bash
+# Base URL of your DocuShare site. It must end with a slash '/'.
+export DOCUSHARE_BASEURL=https://your.docushare.domain/docushare/
+
+# Your username of the DocuShare site.
+export DOCUSHARE_USERNAME=your_user_name
+
+# Valid document handle.
+export DOCUSHARE_VALID_DOCUMENT_HANDLE=Document-12345
+
+# Valid version handle.
+export DOCUSHARE_VALID_VERSION_HANDLE=Version-111111
+
+# Document handle like Document-54321 that the user is not authorized to access.
+export DOCUSHARE_NOT_AUTHORIZED_DOCUMENT_HANDLE=Document-54321
+
+# Version handle like Version-111111 that the user is not authorized to access.
+export DOCUSHARE_NOT_AUTHORIZED_VERSION_HANDLE=Version-99999
+```
 
 ### Release Procedure
 
