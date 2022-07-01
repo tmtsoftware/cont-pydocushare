@@ -53,8 +53,14 @@ class FileObject(DocuShareBaseObject):
         File name of this file.
     '''
     
-    def __init__(self, docushare, hdl, title, filename):
+    def __init__(self, docushare, hdl, title, filename):        
         super().__init__(docushare, hdl)
+        
+        if not isinstance(title, str):
+            raise TypeError('title must be str')
+        if not isinstance(filename, str):
+            raise TypeError('filename must be str')
+
         self._title     = title
         self._filename  = filename
     
@@ -130,8 +136,17 @@ class DocumentObject(FileObject):
     
     def __init__(self, docushare, hdl, title, filename, document_control_number, version_handles):
         super().__init__(docushare, hdl, title, filename)
+        
         if hdl.type != HandleType.Document:
             raise ValueError('handle type must be Document')
+        if not isinstance(document_control_number, (str, type(None))):
+            raise TypeError('document_control_number must be str or None')
+        if not isinstance(version_handles, list):
+            raise TypeError('verion_handles must be list')
+        if not all([isinstance(version_handle, Handle) for version_handle in version_handles]):
+            raise TypeError('All elements in verion_handles must be instances of Handle')
+        if not all([hdl.type == HandleType.Version for hdl in version_handles]):
+            raise TypeError('All handle types in verion_handles must be Version')
         
         self._document_control_number = document_control_number
         self._version_handles         = version_handles
@@ -148,6 +163,11 @@ class DocumentObject(FileObject):
     def version_handles(self):
         ''':py:class:`list` of :py:class:`Handle`: Version handles of this document.'''
         return self._version_handles
+
+    @property
+    def versions(self):
+        ''':py:class:`list` of :py:class:`VersionObject`: Version objects of this document.'''
+        return [self.docushare[ver_hdl] for ver_hdl in self.version_handles]
 
 class VersionObject(FileObject):
     '''Represents one Version object in DocuShare.
@@ -198,8 +218,15 @@ class CollectionObject(DocuShareBaseObject):
     
     def __init__(self, docushare, hdl, title, object_handles):
         super().__init__(docushare, hdl)
+        
         if hdl.type != HandleType.Collection:
             raise ValueError('handle type must be Collection')
+        if not isinstance(title, str):
+            raise TypeError('title must be str')
+        if not isinstance(object_handles, list):
+            raise TypeError('object_handles must be list')
+        if not all([isinstance(object_handle, Handle) for object_handle in object_handles]):
+            raise TypeError('All elements in object_handles must be instances of Handle')
         
         self._title          = title
         self._object_handles = object_handles
