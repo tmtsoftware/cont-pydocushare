@@ -1,6 +1,7 @@
 import re
 from enum import Enum
 
+from anytree import NodeMixin
 
 def handle(handle_str):
     '''Utility function to convert a handle string to a canonical instance.
@@ -121,6 +122,190 @@ class Handle:
 
     def __hash__(self):
         return hash(self.identifier)
+
+class HandleNode(Handle, NodeMixin):
+    '''This class represents a DocuShare handle in a tree structure.
+
+    Parameters
+    ----------
+    handle_type : HandleType
+        Handle type.
+    handle_number : int
+        Handle number.
+    '''
+
+    def __init__(self, handle_type, handle_number):
+        super(HandleNode, self).__init__(handle_type, handle_number)
+        self._readonly_node = True
+
+    def _pre_attach(self, parent):
+        if self._readonly_node:
+            raise RuntimeError('It is not allowed to change the handle tree structure.')
+
+    def _pre_detach(self, parent):
+        if self._readonly_node:
+            raise RuntimeError('It is not allowed to change the handle tree structure.')
+        
+    @property
+    def ancestors(self):
+        '''All parent Collection handles and their parent Collection handles.'''
+        return super().ancestors
+
+    @property
+    def anchestors(self):
+        '''All parent Collection handles and their parent Collection handles.'''
+        return super().anchestors
+
+    @property
+    def children(self):
+        '''All child handles.'''
+        return super().children
+    
+    @property
+    def depth(self):
+        '''Number of handles to the root :py:class:`CollectionHandleNode`.
+
+        Notes
+        -----
+        The root is not necessarily a root Collection of the DocuShare site.
+        '''
+        return super().depth
+
+    @property
+    def descendants(self):
+        '''All child handles and their child handles.'''
+        return super().descendants
+
+    @property
+    def height(self):
+        '''Number of handles on the longest path to a leaf :py:class:`HandleNode`.'''
+        return super().height
+
+    @property
+    def is_leaf(self):
+        '''Indicates if this handle node has no children.'''
+        return super().is_leaf
+
+    @property
+    def is_root(self):
+        '''Indicates if this handle node is tree root.
+
+        Notes
+        -----
+        This handle does not necessarily represent a root Collection/Document in the DocuShare site even if this property is True.
+        '''
+        return super().is_root
+    
+    @property
+    def leaves(self):
+        '''Tuple of all leaf handles excluding Collection handles.'''
+        return tuple([hdl_node for hdl_node in super().leaves if hdl_node.type != HandleType.Collection])
+
+    @property
+    def parent(self):
+        '''Parent Collection handle.'''
+        return super().parent
+
+    @parent.setter
+    def parent(self, parent):
+        super(HandleNode, HandleNode).parent.fset(self, parent)
+
+    @property
+    def path(self):
+        '''Path of this handle.'''
+        return super().path
+    
+    @property
+    def root(self):
+        '''Root Collection handle.
+
+        Notes
+        -----
+        It is not necessarily a root Collection of the DocuShare site.
+        '''
+        return super().root
+
+    @property
+    def separator(self):
+        ''''''
+        return super().separator
+
+    @property
+    def siblings(self):
+        '''Tuple of handles with the same parent Collection handle.'''
+        return super().siblings
+    
+class DocumentHandleNode(HandleNode):
+    '''This class represents a DocuShare Document handle in a tree structure.
+
+    Document handle is always a leaf node in the tree structure. It cannot have a child.
+
+    Parameters
+    ----------
+    handle_number : int
+        Handle number.
+    '''
+
+    def __init__(self, handle_number):
+        super(DocumentHandleNode, self).__init__(HandleType.Document, handle_number)
+
+    @property
+    def children(self):
+        '''All child handles. It is always an empty :py:class:`list`.'''
+        return []
+
+    @property
+    def descendants(self):
+        '''All child handles and their child handles.
+
+        It is always an empty :py:class:`tuple`.'''
+        return tuple()
+
+    @property
+    def height(self):
+        '''Number of handles on the longest path to a leaf :py:class:`HandleNode`.
+
+        It is always zero.'''
+        return 0
+
+    @property
+    def is_leaf(self):
+        '''Indicates if this handle node has no children.
+
+        It is always True.'''
+        return True
+
+    @property
+    def leaves(self):
+        '''Tuple of all leaf handles excluding Collection handles.
+
+        It is always a :py:class:`tuple` that includes this instance itself only.'''
+        return (self, )
+
+   
+class CollectionHandleNode(HandleNode):
+    '''This class represents a DocuShare Collection handle in a tree structure.
+
+    Parameters
+    ----------
+    handle_number : int
+        Handle number.
+    children : list
+        :py:class:`list` of :py:class:`CollectionHandleNode` and :py:class:`DocumentHandleNode`. Children of this collection.
+    '''
+
+    def __init__(self, handle_number, children = []):
+        super(CollectionHandleNode, self).__init__(HandleType.Collection, handle_number)
+
+        if not isinstance(children, list):
+            raise TypeError('children must be list')
+        if not all([isinstance(child, HandleNode) for child in children]):
+            raise TypeError('All elements in children must be an instance of HandleNode.')
+
+        for child in children:
+            child._readonly_node = False
+            child.parent = self
+            child._readonly_node = True
 
 class InvalidHandleError(ValueError):
     '''Indicates an invalid DocuShare handle.

@@ -42,6 +42,7 @@ exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
 intersphinx_mapping = {
     'python'  : ('https://docs.python.org/3.8', None),
     'requests': ('https://requests.readthedocs.io/en/latest', None),
+    'anytree' : ('https://anytree.readthedocs.io/en/latest/', None),
 }
 
 # -- Options for HTML output -------------------------------------------------
