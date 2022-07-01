@@ -124,17 +124,17 @@ class DocumentObject(FileObject):
         File name of this document.
     document_control_number : str or None
         Document conrol number of this document. This can be None if document control number is not defined.
-    versions : list
+    version_handles : list
         Version handles of this document. :py:class:`list` of :py:class:`Handle` instances.'
     '''
     
-    def __init__(self, docushare, hdl, title, filename, document_control_number, versions):
+    def __init__(self, docushare, hdl, title, filename, document_control_number, version_handles):
         super().__init__(docushare, hdl, title, filename)
         if hdl.type != HandleType.Document:
             raise ValueError('handle type must be Document')
         
         self._document_control_number = document_control_number
-        self._versions  = versions
+        self._version_handles         = version_handles
 
     @property
     def document_control_number(self):
@@ -145,9 +145,9 @@ class DocumentObject(FileObject):
         return f'handle: "{self.handle}", title: "{self.title}", filename: "{self.filename}", document_control_number: "{self.document_control_number}"'
 
     @property
-    def versions(self):
+    def version_handles(self):
         ''':py:class:`list` of :py:class:`Handle`: Version handles of this document.'''
-        return self._versions
+        return self._version_handles
 
 class VersionObject(FileObject):
     '''Represents one Version object in DocuShare.
@@ -192,17 +192,17 @@ class CollectionObject(DocuShareBaseObject):
         The DocuShare handle that represents this object. The type must be :py:enum:`HandleType.Collection`.
     title : str
         Title of this collection.
-    objects : list
+    object_handles : list
         Handles of the objects under this collection. :py:class:`list` of :py:class:`Handle` instances.'
     '''
     
-    def __init__(self, docushare, hdl, title, objects):
+    def __init__(self, docushare, hdl, title, object_handles):
         super().__init__(docushare, hdl)
         if hdl.type != HandleType.Collection:
             raise ValueError('handle type must be Collection')
         
-        self._title   = title
-        self._objects = objects
+        self._title          = title
+        self._object_handles = object_handles
 
     @property
     def title(self):
@@ -213,7 +213,7 @@ class CollectionObject(DocuShareBaseObject):
         return f'handle: "{self.handle}", title: "{self.title}"'
 
     @property
-    def objects(self):
+    def object_handles(self):
         ''':py:class:`list` of :py:class:`Handle`: Handles of the objects under this collection.'''
-        return self._objects
+        return self._object_handles
 

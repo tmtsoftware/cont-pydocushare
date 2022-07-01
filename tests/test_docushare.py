@@ -61,10 +61,10 @@ class DocuShareTest(TestCase):
         self.ds.download(self.valid_document_handle, doc_obj_path3)
         self.assertTrue(pathlib.Path(doc_obj_path3).is_file())
        
-        doc_versions = doc_obj.versions
-        self.assertIsInstance(doc_versions, list)
-        self.assertTrue(len(doc_versions) > 0)
-        self.assertTrue(all([version_handle.type == HandleType.Version for version_handle in doc_versions]))
+        doc_version_handles = doc_obj.version_handles
+        self.assertIsInstance(doc_version_handles, list)
+        self.assertTrue(len(doc_version_handles) > 0)
+        self.assertTrue(all([version_handle.type == HandleType.Version for version_handle in doc_version_handles]))
 
         ver_obj = self.ds.object(self.valid_version_handle)
         self.assertIsInstance(ver_obj, VersionObject)
@@ -104,10 +104,10 @@ class DocuShareTest(TestCase):
         self.assertIsInstance(doc_obj.document_control_number, (str, type(None)))
         self.assertEqual(doc_obj.download_url, self.base_url + 'dsweb/Get/' + self.valid_document_handle)
 
-        doc_versions = doc_obj.versions
-        self.assertIsInstance(doc_versions, list)
-        self.assertTrue(len(doc_versions) > 0)
-        self.assertTrue(all([version_handle.type == HandleType.Version for version_handle in doc_versions]))
+        doc_version_handles = doc_obj.version_handles
+        self.assertIsInstance(doc_version_handles, list)
+        self.assertTrue(len(doc_version_handles) > 0)
+        self.assertTrue(all([version_handle.type == HandleType.Version for version_handle in doc_version_handles]))
 
         ver_obj = self.ds[self.valid_version_handle]
         self.assertIsInstance(ver_obj, VersionObject)

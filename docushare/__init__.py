@@ -38,7 +38,7 @@ PosixPath('/path/to/your/current/directory/{ver.filename}')
 You can get the version information as shown below:
 
 >>> doc = ds['Document-12345']
->>> for ver_hdl in doc.versions:
+>>> for ver_hdl in doc.version_handles:
 ...     ver = ds[ver_hdl]
 ...     print(f'{ver_hdl} is version #{ver.version_number} for {doc.handle}.')
 '''

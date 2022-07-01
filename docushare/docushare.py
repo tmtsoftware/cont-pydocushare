@@ -727,7 +727,7 @@ class DocuShare:
             document_control_number = properties.get('Document Control Number', None)
 
             # Get history
-            versions = self.__load_history(hdl)
+            version_handles = self.__load_history(hdl)
             
             self.__dsobjects[hdl] = DocumentObject(
                 docushare = self,
@@ -735,7 +735,7 @@ class DocuShare:
                 title = title,
                 filename = filename,
                 document_control_number = document_control_number,
-                versions = versions
+                version_handles = version_handles
             )
             return self.__dsobjects[hdl]
         elif hdl.type == HandleType.Version:
