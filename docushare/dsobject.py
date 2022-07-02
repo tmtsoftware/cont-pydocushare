@@ -202,6 +202,13 @@ class VersionObject(FileObject):
     def __str__(self):
         return f'handle: "{self.handle}", title: "{self.title}", filename: "{self.filename}", version_number: {self.version_number}'
 
+class CollectionDownloadOption(Enum):
+    '''Represents a Collection download option.'''
+
+    CHILD_DOCUMENTS = 'Download direct child Documents in the Collection. Does not include Documents in sub Collections.'
+    ALL_DESCENDANTS_DOCUMENTS_IN_ONE_DIRECTORY = 'Dowload all documents in the Collection and all descendant Collections to one directory.'
+    ALL_DESCENDANTS_IN_TREE_STRUCTURE = 'Download all documents in Collection and all descendant Collections preserving the Collection structure.'
+        
 class CollectionObject(DocuShareBaseObject):
     '''Represents one Collection object in DocuShare.
 
@@ -321,16 +328,9 @@ class CollectionObject(DocuShareBaseObject):
         root = CollectionHandleNode(self.handle.number, children)
         return root
 
-    class DownloadOption(Enum):
-        '''Represents a Collection download option.'''
-
-        CHILD_DOCUMENTS = 'Download direct child Documents in the Collection. Does not include Documents in sub Collections.'
-        ALL_DESCENDANTS_DOCUMENTS_IN_ONE_DIRECTORY = 'Dowload all documents in the Collection and all descendant Collections to one directory.'
-        ALL_DESCENDANTS_IN_TREE_STRUCTURE = 'Download all documents in Collection and all descendant Collections preserving the Collection structure.'
-
     def download(self,
                  destination_path = None,
-                 option = DownloadOption.CHILD_DOCUMENTS,
+                 option = CollectionDownloadOption.CHILD_DOCUMENTS,
                  progress_report = True,
                  collection_title_as_directory_name = True):
         '''Downlaod the documents in this Collection.
@@ -340,7 +340,7 @@ class CollectionObject(DocuShareBaseObject):
         destination_path : path-like object or None
             This method downloads the documents in this Collection to this directory. If it is None,
             they will be downloaded to the current directory.
-        option : CollectionObject.DownloadOption
+        option : CollectionDownloadOption
             TODO: document
         progress_report : bool
             Show progress bar using `tqdm <https://tqdm.github.io/>` if it is True.
@@ -351,7 +351,7 @@ class CollectionObject(DocuShareBaseObject):
         Returns
         -------
         list
-            :py:class:`list` of downloaded files as :py:class:`Path`.
+            :py:class:`list` of downloaded files as :py:class:`pathlib.Path`.
         '''
 
         if destination_path is None:
@@ -366,19 +366,31 @@ class CollectionObject(DocuShareBaseObject):
         #   The first element in the tuple is the DocumentObject to download.
         #   The second element is the destination path.
         download_infos = []
-        if option == CollectionObject.DownloadOption.CHILD_DOCUMENTS:
+        
+        if option == CollectionDownloadOption.CHILD_DOCUMENTS:
             for obj_hdl in self.object_handles:
                 if obj_hdl.type == HandleType.Document:
                     doc_obj   = self.docushare[obj_hdl]
                     file_path = destination_path.joinpath(doc_obj.filename)
                     download_infos.append( (doc_obj, file_path) )
-        elif option == CollectionObject.DownloadOption.ALL_DESCENDANTS_DOCUMENTS_IN_ONE_DIRECTORY:
+        elif option == CollectionDownloadOption.ALL_DESCENDANTS_DOCUMENTS_IN_ONE_DIRECTORY:
             for obj_hdl in self.object_handle_tree.leaves:
                 doc_obj   = self.docushare[obj_hdl]
                 file_path = destination_path.joinpath(doc_obj.filename)
                 download_infos.append( (doc_obj, file_path) )
-        elif option == CollectionObject.DownloadOption.ALL_DESCENDANTS_IN_TREE_STRUCTURE:
-            raise NotImplementedError # TODO: implement
+        elif option == CollectionDownloadOption.ALL_DESCENDANTS_IN_TREE_STRUCTURE:
+            for doc_hdl in self.object_handle_tree.leaves:
+                file_path = destination_path
+                for col_hdl in doc_hdl.path[1:-1]:
+                    if collection_title_as_directory_name:
+                        file_path = file_path.joinpath(col_hdl.identifier)
+                    else:
+                        col_obj = self.docushare[col_hdl]
+                        file_path = file_path.joinpath(col_obj.title)
+                        
+                doc_obj = self.docushare[doc_hdl]
+                file_path = file_path.joinpath(doc_obj.filename)
+                download_infos.append( (doc_obj, file_path) )
 
         if len(download_infos) == 0:
             return []
