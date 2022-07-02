@@ -1,6 +1,7 @@
 from abc import ABC
 from enum import Enum
 from pathlib import Path
+import sys
 
 from .handle import Handle, HandleType, DocumentHandleNode, CollectionHandleNode
 
@@ -205,9 +206,11 @@ class VersionObject(FileObject):
 class CollectionDownloadOption(Enum):
     '''Represents a Collection download option.'''
 
-    CHILD_DOCUMENTS = 'Download direct child Documents in the Collection. Does not include Documents in sub Collections.'
-    ALL_DESCENDANTS_DOCUMENTS_IN_ONE_DIRECTORY = 'Dowload all documents in the Collection and all descendant Collections to one directory.'
-    ALL_DESCENDANTS_IN_TREE_STRUCTURE = 'Download all documents in Collection and all descendant Collections preserving the Collection structure.'
+    CHILD_ONLY = 'Download direct child Documents in the Collection. Does not include Documents in sub Collections.'
+    ALL_IN_ONE_DIR = 'Dowload all documents in the Collection and descendant Collections into one directory.'
+    ALL = 'Download all documents in Collection and descendant Collections preserving the Collection structure. Use Collection title as the directory name.'
+    ALL_WITH_HANDLE_AS_DIRNAME= 'Download all documents in Collection and descendant Collections preserving the Collection structure. Use Collection handle (e.g. Collection-12345) as the directory name.'
+    
         
 class CollectionObject(DocuShareBaseObject):
     '''Represents one Collection object in DocuShare.
@@ -330,9 +333,8 @@ class CollectionObject(DocuShareBaseObject):
 
     def download(self,
                  destination_path = None,
-                 option = CollectionDownloadOption.CHILD_DOCUMENTS,
-                 progress_report = True,
-                 collection_title_as_directory_name = True):
+                 option = CollectionDownloadOption.CHILD_ONLY,
+                 progress_report = True):
         '''Downlaod the documents in this Collection.
 
         Parameters
@@ -341,12 +343,9 @@ class CollectionObject(DocuShareBaseObject):
             This method downloads the documents in this Collection to this directory. If it is None,
             they will be downloaded to the current directory.
         option : CollectionDownloadOption
-            TODO: document
+            See :py:class:`CollectionDownloadOption` for more details.
         progress_report : bool
             Show progress bar using `tqdm <https://tqdm.github.io/>` if it is True.
-        collection_title_as_directory_name : bool
-            Use the Collection title as the directory name if it is True. Otherwise, the Collection handle
-            will be used as the directory name.
 
         Returns
         -------
@@ -367,22 +366,23 @@ class CollectionObject(DocuShareBaseObject):
         #   The second element is the destination path.
         download_infos = []
         
-        if option == CollectionDownloadOption.CHILD_DOCUMENTS:
+        if option == CollectionDownloadOption.CHILD_ONLY:
             for obj_hdl in self.object_handles:
                 if obj_hdl.type == HandleType.Document:
                     doc_obj   = self.docushare[obj_hdl]
                     file_path = destination_path.joinpath(doc_obj.filename)
                     download_infos.append( (doc_obj, file_path) )
-        elif option == CollectionDownloadOption.ALL_DESCENDANTS_DOCUMENTS_IN_ONE_DIRECTORY:
+        elif option == CollectionDownloadOption.ALL_IN_ONE_DIR:
             for obj_hdl in self.object_handle_tree.leaves:
                 doc_obj   = self.docushare[obj_hdl]
                 file_path = destination_path.joinpath(doc_obj.filename)
                 download_infos.append( (doc_obj, file_path) )
-        elif option == CollectionDownloadOption.ALL_DESCENDANTS_IN_TREE_STRUCTURE:
+        elif option == CollectionDownloadOption.ALL or \
+             option == CollectionDownloadOption.ALL_WITH_HANDLE_AS_DIRNAME:
             for doc_hdl in self.object_handle_tree.leaves:
                 file_path = destination_path
                 for col_hdl in doc_hdl.path[1:-1]:
-                    if collection_title_as_directory_name:
+                    if option == CollectionDownloadOption.ALL_WITH_HANDLE_AS_DIRNAME:
                         file_path = file_path.joinpath(col_hdl.identifier)
                     else:
                         col_obj = self.docushare[col_hdl]
@@ -399,14 +399,17 @@ class CollectionObject(DocuShareBaseObject):
             try:
                 from tqdm import tqdm
                 iterator = tqdm(download_infos)
+                size_for_progress_report = 1
             except:
                 iterator = download_infos
+                size_for_progress_report = sys.maxsize
         else:
             iterator = download_infos
+            size_for_progress_report = sys.maxsize
             
         for doc_obj, file_path in iterator:
             file_path.parent.mkdir(parents = True, exist_ok = True)
-            self.docushare.download(doc_obj.handle, file_path)
+            self.docushare.download(doc_obj.handle, file_path, size_for_progress_report = size_for_progress_report)
 
         return [di[1] for di in download_infos]
 

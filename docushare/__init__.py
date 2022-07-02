@@ -1,7 +1,7 @@
 '''This is the PyDocuShare module that provides Python API to interact with DocuShare.
 
 In DocuShare, each docuemnt and object can be identified by a handle like Document-00000, Version-000000,
-Collection-00000. The PyDocuShare API allows you to access the files and properties of the documents
+Collection-00000. The PyDocuShare API allows you to access the files and properties of the documents/objects
 through the handles. See more details in the examples and API reference below.
 
 Examples
