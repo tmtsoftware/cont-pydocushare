@@ -1,14 +1,13 @@
 PyDocuShare
 ===========
 
-This is the documentation of PyDocuShare, python API to interact with DocuShare.
-
-TODO: make a tutorial document
+This is the top page of documents for PyDocuShare, python API to interact with DocuShare.
 
 .. toctree::
-   :maxdepth: 1
+   :maxdepth: 2
    :caption: Contents:
 
+   getting-started
    docushare
 
 Indices and tables
