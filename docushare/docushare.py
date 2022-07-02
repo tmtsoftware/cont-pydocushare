@@ -306,7 +306,7 @@ class DocuShare:
     def login(
             self,
             username = None,
-            password = PasswordOption.USE_STORED,
+            password = PasswordOption.ASK,
             retry_count = 3,
             domain = 'DocuShare'):
         '''Login the DocuShare site.

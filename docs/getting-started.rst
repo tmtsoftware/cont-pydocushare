@@ -99,12 +99,25 @@ The :py:meth:`docushare.CollectionObject.download()` method returns the list of 
 Login DocuShare Site
 --------------------
 
-TODO: show more details about login
+User authentication is one of the key things that PyDocuShare does for you to automate your task. By default, :py:meth:`docushare.DocuShare.login()` asks the user to enter the username and password of the DocuShare site. You can pass the username and password as the arguments so that it will never prompt:
 
-Handle (Collection-xxxxx, Document-yyyyy, Version-zzzzzz)
-----------------------------------------------------------
+>>> ds.login(username = 'your_use_name', password = 'your_password')
 
-TODO: talk about what is handle
+However, it is not desirable to hard-code your password in a Python script. Therefore, it is recommended to store password in your local storage and reuse it in successive logins for task automation. To store the password and use it, call the :py:meth:`docushare.DocuShare.login()` method with `password = PasswordOption.USE_STORED` argument:
+
+>>> ds.login(username = 'your_use_name', password = PasswordOption.USE_STORED)
+
+For the really first time to run the above command, a dialog may pop-up to enter the master password of your `keyring <https://pypi.org/project/keyring/>`_ as shown below:
+
+.. image:: images/keyring_setting_master_password_Ubuntu.png
+
+**The master password of your keyring is DIFFERENT from your DocuShare password.** It is like the master password of your password manager. It is recommended to enter a very strong password, but you also need to remember this password. The master password will be asked when you call :py:meth:`docushare.DocuShare.login()` method with `password = PasswordOption.USE_STORED` argument for the first time after system reboot. But, once you enter the master password, you will not be asked to enter the master password until the system quits.
+
+After that, you may be asked to enter your password on the DocuShare site in the console, so just enter your DocuShare password. If the user authentication is successful, the password is stored in your local storage. So, you do not have to enter your password anymore until the system quits. Try run the same method again:
+
+>>> ds.login(username = 'your_use_name', password = PasswordOption.USE_STORED)
+
+This time it should use the stored DocuShare password and the :py:meth:`docushare.DocuShare.login()` method should return successfully without propmting the password.
 
 Document
 --------
