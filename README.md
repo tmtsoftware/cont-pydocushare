@@ -81,8 +81,6 @@ The above command sometimes does not work as intended due to remnant from the pr
  $ python setup.py build_sphinx
 ```
 
-TODO: upload the generated document to somewhere (readthedocs, github.io) so that anyone can see the document without sphinx.
-
 ## Restriction
 
 This API has been tested with DocuShare version 7.0.0. The implementation of this API does not use DocuShare HTTP/XML interface. It rather parses the same HTML pages as the users see in their Web browsers. Therefore, it may not work with different versions or if the DocuShare configuration is different from what the author assumes.
@@ -150,3 +148,9 @@ Follow the procedure below to release a new version.
  * Run `git push --tags`. Make sure that you have `--tags` option to upload all tags to the upstream.
  * You may regenerate [API document](#api-document) to see the new version number in the API document.
  
+### TODO
+
+Use "TODO" keyword in the inline comments in the source code and documentation to indicate things to be fixed in the future versions. The list below shows the major TODOs that are not suitable as inline comments:
+
+ * Upload the generated document to a static Web site (e.g. [readthetodcs](https://readthedocs.org/) or [GitHub Pages](https://pages.github.com/) so that anyone can access the documents without generating the documents locally.
+ * Add unit tests for Collection handles and CollectionObject.
