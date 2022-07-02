@@ -1,4 +1,5 @@
 from abc import ABC
+from enum import Enum
 from pathlib import Path
 
 from .handle import Handle, HandleType, DocumentHandleNode, CollectionHandleNode
@@ -245,15 +246,155 @@ class CollectionObject(DocuShareBaseObject):
         return self._object_handles
 
     @property
-    def tree(self):
-        '''TODO: fill out'''
+    def object_handle_tree(self):
+        '''Tree structure under this collection.
+
+        The root node of the tree structure is this collection. Each node is an instance of 
+        :py:class:`CollectionHandleNode` or :py:class:`DocumentHandleNode`. In addition to
+        the DocuShare handle information (e.g. Collection-xxxxx, Document-zzzzz), these classes
+        include the parent/child relation information using :py:class:`anytree.node.nodemixin.NodeMixin`.
+        Therefore, you can traverse, visualize and search the tree structure using
+        `anytree <https://anytree.readthedocs.io/en/latest/index.html>`_ API.
+
+        Examples
+        --------
+
+        The example below shows the tree structure under the Collection-10000.
+        
+        >>> from docushare import *
+        >>> from anytree import RenderTree
+        >>> ds = DocuShare(base_url='https://your.docushare.domain/docushare/')
+        >>> ds.login()
+        >>> collection = ds['Collection-10000']
+        >>> print(RenderTree(collection.object_handle_tree).by_attr('identifier'))
+        Collection-10000
+        ├── Collection-11000
+        │   ├── Document-11001
+        │   └── Document-11002
+        ├── Collection-12000
+        │   ├── Document-12001
+        │   └── Document-12002
+        ├── Document-10001
+        ├── Document-10002
+        └── Document-10003
+
+        In principle, each node in the tree contains only handle and parent/child information. To show more
+        information like title in the tree visualization, you need to query properties like this:
+
+        >>> for pre, fill, handle in RenderTree(collection.object_handle_tree):
+        ...     node_str = f'{pre}{handle}'
+        ...     hdl_obj = ds[handle]
+        ...     print(node_str.ljust(25), hdl_obj.title)
+        Collection-10000          (Title of Collection-10000)
+        ├── Collection-11000      (Title of Collection-11000)
+        │   ├── Document-11001    (Title of Document-11001)
+        │   └── Document-11002    (Title of Document-11001)
+        ├── Collection-12000      (Title of Collection-12000)
+        │   ├── Document-12001    (Title of Document-12001)
+        │   └── Document-12002    (Title of Document-12002)
+        ├── Document-10001        (Title of Document-10001)
+        ├── Document-10002        (Title of Document-10002)
+        └── Document-10003        (Title of Document-10003)
+
+        If you want to get all Document handles under Collection-10000 and its descendant Collections,
+        you may want to use :py:meth:`CollectionHandleNode.leaves`:
+
+        >>> for doc_hdl in collection.object_handle_tree.leaves:
+        ...     doc_obj = ds[doc_hdl]
+        ...     print(f'{doc_hdl.identifier}    {doc_obj.title}')
+        Document-11001    (Title of Document-11001)
+        Document-11002    (Title of Document-11001)
+        Document-12001    (Title of Document-12001)
+        Document-12002    (Title of Document-12002)
+        Document-10001    (Title of Document-10001)
+        Document-10002    (Title of Document-10002)
+        Document-10003    (Title of Document-10003)
+        '''
         children = []
         for obj_hdl in self._object_handles:
             if obj_hdl.type == HandleType.Document:
                 children.append(DocumentHandleNode(obj_hdl.number))
             elif obj_hdl.type == HandleType.Collection:
-                children.append(self.docushare[obj_hdl].tree)
+                children.append(self.docushare[obj_hdl].object_handle_tree)
             else:
                 assert False, 'code must not reach here'
         root = CollectionHandleNode(self.handle.number, children)
         return root
+
+    class DownloadOption(Enum):
+        '''Represents a Collection download option.'''
+
+        CHILD_DOCUMENTS = 'Download direct child Documents in the Collection. Does not include Documents in sub Collections.'
+        ALL_DESCENDANTS_DOCUMENTS_IN_ONE_DIRECTORY = 'Dowload all documents in the Collection and all descendant Collections to one directory.'
+        ALL_DESCENDANTS_IN_TREE_STRUCTURE = 'Download all documents in Collection and all descendant Collections preserving the Collection structure.'
+
+    def download(self,
+                 destination_path = None,
+                 option = DownloadOption.CHILD_DOCUMENTS,
+                 progress_report = True,
+                 collection_title_as_directory_name = True):
+        '''Downlaod the documents in this Collection.
+
+        Parameters
+        ----------
+        destination_path : path-like object or None
+            This method downloads the documents in this Collection to this directory. If it is None,
+            they will be downloaded to the current directory.
+        option : CollectionObject.DownloadOption
+            TODO: document
+        progress_report : bool
+            Show progress bar using `tqdm <https://tqdm.github.io/>` if it is True.
+        collection_title_as_directory_name : bool
+            Use the Collection title as the directory name if it is True. Otherwise, the Collection handle
+            will be used as the directory name.
+
+        Returns
+        -------
+        list
+            :py:class:`list` of downloaded files as :py:class:`Path`.
+        '''
+
+        if destination_path is None:
+            destination_path = Path.cwd()
+        else:
+            destination_path = Path(destination_path)
+
+        if destination_path.exists() and (not destination_path.is_dir()):
+            raise NotADirectoryError(f'{destination_path} is not a directory.')            
+
+        # List of tuples
+        #   The first element in the tuple is the DocumentObject to download.
+        #   The second element is the destination path.
+        download_infos = []
+        if option == CollectionObject.DownloadOption.CHILD_DOCUMENTS:
+            for obj_hdl in self.object_handles:
+                if obj_hdl.type == HandleType.Document:
+                    doc_obj   = self.docushare[obj_hdl]
+                    file_path = destination_path.joinpath(doc_obj.filename)
+                    download_infos.append( (doc_obj, file_path) )
+        elif option == CollectionObject.DownloadOption.ALL_DESCENDANTS_DOCUMENTS_IN_ONE_DIRECTORY:
+            for obj_hdl in self.object_handle_tree.leaves:
+                doc_obj   = self.docushare[obj_hdl]
+                file_path = destination_path.joinpath(doc_obj.filename)
+                download_infos.append( (doc_obj, file_path) )
+        elif option == CollectionObject.DownloadOption.ALL_DESCENDANTS_IN_TREE_STRUCTURE:
+            raise NotImplementedError # TODO: implement
+
+        if len(download_infos) == 0:
+            return []
+               
+        if progress_report:
+            try:
+                from tqdm import tqdm
+                iterator = tqdm(download_infos)
+            except:
+                iterator = download_infos
+        else:
+            iterator = download_infos
+            
+        for doc_obj, file_path in iterator:
+            file_path.parent.mkdir(parents = True, exist_ok = True)
+            self.docushare.download(doc_obj.handle, file_path)
+
+        return [di[1] for di in download_infos]
+
