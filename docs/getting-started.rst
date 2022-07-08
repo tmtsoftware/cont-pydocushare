@@ -118,7 +118,7 @@ Collection-70000          (Title of Collection-70000)
 
 See the API reference of :py:class:`docushare.CollectionObject` for more details.
 
-More Details aobut DocuShare Login
+More Details about DocuShare Login
 ----------------------------------
 
 User authentication is one of the key things that PyDocuShare does for you to automate your task. By default, :py:meth:`docushare.DocuShare.login()` asks the user to enter the username and password. If you want to fully automate your workflow without any user interaction, you may pass the username and password as the arguments:

@@ -15,8 +15,8 @@ class CleanAlsoSphinx(clean):
             shutil.rmtree(dir_to_remove_abs, ignore_errors=True)
 
 cmdclass = {'build_sphinx': BuildDoc}
-name         = 'PyDocuShare'
-version      = '0.1.0'
+name     = 'PyDocuShare'
+version  = '0.1.0'
 
 setup(
     name         = name,
