@@ -15,6 +15,7 @@
         <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
         <script src="_static/jquery.js"></script>
         <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="_static/doctools.js"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
@@ -31,7 +32,7 @@
             <a href="index.html" class="icon icon-home"> PyDocuShare
           </a>
               <div class="version">
-                0.1.0
+                0.2.0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
@@ -82,10 +83,10 @@
            <div itemprop="articleBody">
              
   <section id="getting-started">
-<span id="id1"></span><h1>Getting Started<a class="headerlink" href="#getting-started" title="Permalink to this headline"></a></h1>
+<span id="id1"></span><h1>Getting Started<a class="headerlink" href="#getting-started" title="Permalink to this heading"></a></h1>
 <p>PyDocuShare provides Python API to access Collections, Documents and their versions in a Xerox DocuShare site. You can automate your task or workflow that requires accesses to Xerox DocuShare using this API. This document gives you an idea about what can be done with this API.</p>
 <section id="what-is-handle">
-<h2>What is Handle?<a class="headerlink" href="#what-is-handle" title="Permalink to this headline"></a></h2>
+<h2>What is Handle?<a class="headerlink" href="#what-is-handle" title="Permalink to this heading"></a></h2>
 <p>In DocuShare, each docuemnt and object can be identified by a <strong>handle</strong> like Document-00000, Version-000000, Collection-00000. These handles are typically shown as a part of URL when you access your DocuShare site. For example, when you open a Collection in your DocuShare site, the URL in your Web browser should look like:</p>
 <blockquote>
 <div><p><a class="reference external" href="https://your.docushare.domain/docushare/dsweb/Get/Document-98765/xxxxx.pdf">https://your.docushare.domain/docushare/dsweb/Get/Document-98765/xxxxx.pdf</a></p>
@@ -93,7 +94,7 @@
 <p>“Document-98765” within this URL is what we call <strong>handle</strong>. This handle is essentially the key or the identifier to view the collections, documents and versions.</p>
 </section>
 <section id="download-a-document">
-<h2>Download a document<a class="headerlink" href="#download-a-document" title="Permalink to this headline"></a></h2>
+<h2>Download a document<a class="headerlink" href="#download-a-document" title="Permalink to this heading"></a></h2>
 <p>You need to login first to access your DocuShare site:</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">docushare</span> <span class="kn">import</span> <span class="o">*</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">ds</span> <span class="o">=</span> <span class="n">DocuShare</span><span class="p">(</span><span class="n">base_url</span><span class="o">=</span><span class="s1">&#39;https://your.docushare.domain/docushare/&#39;</span><span class="p">)</span>
@@ -121,7 +122,7 @@
 </div>
 </section>
 <section id="download-a-specific-version">
-<h2>Download a specific version<a class="headerlink" href="#download-a-specific-version" title="Permalink to this headline"></a></h2>
+<h2>Download a specific version<a class="headerlink" href="#download-a-specific-version" title="Permalink to this heading"></a></h2>
 <p>To download a specific version, you can also specify Version handle:</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">ver</span> <span class="o">=</span> <span class="n">ds</span><span class="p">[</span><span class="s1">&#39;Version-111111&#39;</span><span class="p">]</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Download &quot;</span><span class="si">{</span><span class="n">ver</span><span class="o">.</span><span class="n">title</span><span class="si">}</span><span class="s1">&quot; as &quot;</span><span class="si">{</span><span class="n">ver</span><span class="o">.</span><span class="n">filename</span><span class="si">}</span><span class="s1">&quot;.&#39;</span><span class="p">)</span>
@@ -131,7 +132,7 @@
 </div>
 </section>
 <section id="accessing-version-information">
-<h2>Accessing version information<a class="headerlink" href="#accessing-version-information" title="Permalink to this headline"></a></h2>
+<h2>Accessing version information<a class="headerlink" href="#accessing-version-information" title="Permalink to this heading"></a></h2>
 <p>You can get the version information as shown below:</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">doc</span> <span class="o">=</span> <span class="n">ds</span><span class="p">[</span><span class="s1">&#39;Document-98765&#39;</span><span class="p">]</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">ver_hdl</span> <span class="ow">in</span> <span class="n">doc</span><span class="o">.</span><span class="n">version_handles</span><span class="p">:</span>
@@ -141,7 +142,7 @@
 </div>
 </section>
 <section id="download-all-documents-in-a-collection">
-<h2>Download all documents in a Collection<a class="headerlink" href="#download-all-documents-in-a-collection" title="Permalink to this headline"></a></h2>
+<h2>Download all documents in a Collection<a class="headerlink" href="#download-all-documents-in-a-collection" title="Permalink to this heading"></a></h2>
 <p>The example below shows how you can download all documents in a Collection:</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">col</span> <span class="o">=</span> <span class="n">ds</span><span class="p">[</span><span class="s1">&#39;Collection-55555&#39;</span><span class="p">]</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">col</span><span class="o">.</span><span class="n">download</span><span class="p">(</span><span class="n">destination_path</span> <span class="o">=</span> <span class="s1">&#39;output_dir&#39;</span><span class="p">,</span> <span class="n">option</span> <span class="o">=</span> <span class="n">CollectionDownloadOption</span><span class="o">.</span><span class="n">ALL</span><span class="p">)</span>
@@ -171,7 +172,7 @@
 </div>
 </section>
 <section id="accessing-collection">
-<h2>Accessing Collection<a class="headerlink" href="#accessing-collection" title="Permalink to this headline"></a></h2>
+<h2>Accessing Collection<a class="headerlink" href="#accessing-collection" title="Permalink to this heading"></a></h2>
 <p>You may access more information about the Collection through an instance of <a class="reference internal" href="api/docushare.CollectionObject.html#docushare.CollectionObject" title="docushare.CollectionObject"><code class="xref py py-class docutils literal notranslate"><span class="pre">docushare.CollectionObject</span></code></a> returned by <code class="docutils literal notranslate"><span class="pre">ds['Collection-xxxxx']</span></code>. In particular, the <a class="reference internal" href="api/docushare.CollectionObject.html#docushare.CollectionObject.object_handle_tree" title="docushare.CollectionObject.object_handle_tree"><code class="xref py py-attr docutils literal notranslate"><span class="pre">docushare.CollectionObject.object_handle_tree</span></code></a> attribute lets you traverse all collections and documents under that Collection. The example code block below shows how to display the tree structure under Collection-70000:</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">anytree</span> <span class="kn">import</span> <span class="n">RenderTree</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">col</span> <span class="o">=</span> <span class="n">ds</span><span class="p">[</span><span class="s1">&#39;Collection-70000&#39;</span><span class="p">]</span>
@@ -194,7 +195,7 @@
 <p>See the API reference of <a class="reference internal" href="api/docushare.CollectionObject.html#docushare.CollectionObject" title="docushare.CollectionObject"><code class="xref py py-class docutils literal notranslate"><span class="pre">docushare.CollectionObject</span></code></a> for more details.</p>
 </section>
 <section id="more-details-about-docushare-login">
-<h2>More Details about DocuShare Login<a class="headerlink" href="#more-details-about-docushare-login" title="Permalink to this headline"></a></h2>
+<h2>More Details about DocuShare Login<a class="headerlink" href="#more-details-about-docushare-login" title="Permalink to this heading"></a></h2>
 <p>User authentication is one of the key things that PyDocuShare does for you to automate your task. By default, <a class="reference internal" href="api/docushare.DocuShare.html#docushare.DocuShare.login" title="docushare.DocuShare.login"><code class="xref py py-meth docutils literal notranslate"><span class="pre">docushare.DocuShare.login()</span></code></a> asks the user to enter the username and password. If you want to fully automate your workflow without any user interaction, you may pass the username and password as the arguments:</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">ds</span><span class="o">.</span><span class="n">login</span><span class="p">(</span><span class="n">username</span> <span class="o">=</span> <span class="s1">&#39;your_use_name&#39;</span><span class="p">,</span> <span class="n">password</span> <span class="o">=</span> <span class="s1">&#39;your_password&#39;</span><span class="p">)</span>
 </pre></div>
