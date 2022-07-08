@@ -1,6 +1,9 @@
 from distutils.command.clean import clean
 from setuptools import setup, find_packages
-from sphinx.setup_command import BuildDoc
+try:
+    from sphinx.setup_command import BuildDoc
+except:
+    pass
 
 class CleanAlsoSphinx(clean):
     def run(self):
@@ -14,9 +17,8 @@ class CleanAlsoSphinx(clean):
             print(f'Removing {dir_to_remove_abs}...')
             shutil.rmtree(dir_to_remove_abs, ignore_errors=True)
 
-cmdclass = {'build_sphinx': BuildDoc}
-name         = 'PyDocuShare'
-version      = '0.1.0'
+name     = 'PyDocuShare'
+version  = '0.1.0'
 
 setup(
     name         = name,

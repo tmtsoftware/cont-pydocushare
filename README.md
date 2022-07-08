@@ -2,65 +2,23 @@
 
 This is the git repository of PyDocuShare, python API to interact with DocuShare.
 
-## Install
+The user documentation is available at https://tmtsoftware.github.io/pydocushare/ .
 
-Clone this repository, then run the commad below to install PyDocuShare module:
+This README.md is the documentation for developers who extend, fix and/or release PyDocuShare API.
 
-```bash
- $ pip install ".[progress-bar,password-store]"
-```
+## License
 
-The command above also installs all required python modules.
+PyDocuShare uses [pyduktape](https://github.com/stefano/pyduktape) as the underlying JavaScript interpreter to perform DocuShare challenge-response authentication. Because it is distributed under the terms of GNU General Public License version 2, PyDocuShare is distributed under the same license. See [LICENSE](LICENSE) for more details.
 
-For better user experience, it is recommended to specify all extra options (`progress-bar` and `password-store`) as shown above. With `progress-bar` option, PyDocuShare shows a progress bar when downloading a large file. With `password-store` option, PyDocuShare can store passwords in a secure manner and reuse the stored passwords for the DocuShare authentication. If you do not need those extra features, you can simply omit all options as shown below:
+## Inline Documentation
 
-```bash
- $ pip install .
-```
+PyDocuShare uses [numpy style](https://numpydoc.readthedocs.io/en/latest/format.html#docstring-standard) to document the module, classes, functions, methods and attributes. Use the same style for consistency.
 
-## Unintall
+## Documentation
 
-If you want to uninsall PyDocuShare that was installed with `pip`, run the command below:
+PyDocuShare uses [Sphinx](https://www.sphinx-doc.org/) to generate the user documentation and API reference. They are published at https://tmtsoftware.github.io/pydocushare/ through [GitHug Pages](https://pages.github.com/).
 
-```bash
- $ pip uninstall pydocushare
-```
-
-## Quick Usage
-
-Run the python code below. Replace `base_url` and the document number `Document-00000` with appropriate values.
-
-```python
-from docushare import *
-ds = DocuShare(base_url='https://your.domain/docushare/')
-ds.login()
-
-doc = ds['Document-00000']
-print(f'Download "{doc.title}" as "{doc.filename}".')
-doc.download()
-```
-
-It should finally download the document in the current directory. See [API document](#api-document) for more detailed usage of the API.
-
-### login()
-
-The login() method asks username and password to login DocuShare if no argument is given. You may speicfy username or both as the argument(s):
-
-```python
-ds.login(username='your_user_name')
-```
-
-or 
-
-```python
-ds.login(username='your_user_name', password='your_password')
-```
-
-If `password` argument is not specified, PyDocuShare stores the successful password using [keyring](https://keyring.readthedocs.io/) module, and use the stored password in the future login so that you do not have to enter the password many times.
-
-## API Document
-
-To know more about PyDocuShare API, you first need to generate API document using [Sphinx](https://www.sphinx-doc.org/). Install Sphinx and required extensions with the command below:
+The source files of user documentation can be found under [docs/](docs/). If you want to generate the user documentation and API reference locally to see how your updates appear in the documentation, you need to first install Sphinx. Run the command below to install required tools including Sphinx:
 
 ```bash
  $ pip install -e ".[docs]"
@@ -72,7 +30,9 @@ Then, run the command below in the root directory of this repository:
  $ python setup.py build_sphinx
 ```
 
-This command generates the API documents under `build/docs/html`. Open [build/docs/html/index.html](build/docs/html/index.html) in your Web browser to see the API documents.
+The command above generates the user documentation and API documents under [docs/html](docs/html/). Open [docs/html/index.html](docs/html/index.html) in your Web browser to see how your updates appear in the documentation.
+
+Note that [docs/index.html](docs/index.html) is the top page of https://tmtsoftware.github.io/pydocushare/, but it simply redirects to https://tmtsoftware.github.io/pydocushare/html/index.html which is the substantial top page of PyDocuShare. The equivalent source file is [docs/index.rst](docs/index.rst).
 
 The above command sometimes does not work as intended due to remnant from the previous build. In that case, clean the build first:
 
@@ -81,23 +41,9 @@ The above command sometimes does not work as intended due to remnant from the pr
  $ python setup.py build_sphinx
 ```
 
-## Restriction
+See [Release Procedure](#release-procedure) for more details about how to release the documents at https://tmtsoftware.github.io/pydocushare/ .
 
-This API has been tested with DocuShare version 7.0.0. The implementation of this API does not use DocuShare HTTP/XML interface. It rather parses the same HTML pages as the users see in their Web browsers. Therefore, it may not work with different versions or if the DocuShare configuration is different from what the author assumes.
-
-## License
-
-PyDocuShare uses [pyduktape](https://github.com/stefano/pyduktape) as the underlying JavaScript interpreter to do DocuShare challenge-response authentication. Because it is distributed under the terms of GNU General Public License version 2, PyDocuShare is distributed under the same license. See [LICENSE](LICENSE) for more details.
-
-## Developer information
-
-The sections below provide information for developer who extend and/or fix PyDocuShare API.
-
-### Documentation
-
-PyDocuShare uses [numpy style](https://numpydoc.readthedocs.io/en/latest/format.html#docstring-standard) as the docstring style. Use the same style for consistency.
-
-### Unit Test
+## Unit Test
 
 PyDocuShare uses [unittest](https://docs.python.org/3/library/unittest.html) unit testing framework. All test cases are stored under [tests/](tests/). Execute the command below to run the unit tests:
 
@@ -139,22 +85,31 @@ export DOCUSHARE_NOT_AUTHORIZED_DOCUMENT_HANDLE=Document-54321
 export DOCUSHARE_NOT_AUTHORIZED_VERSION_HANDLE=Version-99999
 ```
 
-### Release Procedure
+## Release Procedure
 
 Follow the procedure below to release a new version.
 
- * Make sure that all your changes have been committed by `git commit -a -m "your_commit_message"`.
- * Run [all unit tests](#unit-test) and confirm that all tests were passed.
- * Generate [API document](#api-document) and make sure that no error/warning is shown during the document generation.
- * Open [setup.py](setup.py) and set the new version number to release.
- * Run `git commit -a -m "Changed version number"` to commit the change in [setup.py](setup.py).
- * Run `git tag -a vx.y.z -m "Version x.y.z"` to mark the new release.
- * Run `git push --tags`. Make sure that you have `--tags` option to upload all tags to the upstream.
- * You may regenerate [API document](#api-document) to see the new version number in the API document.
- 
-### TODO
+ 1. Pre-release procedure
+    1. Make sure that you are in the _main_ branch. If not, run `git checkout main`.
+    1. Make sure that all your local changes have been committed by `git commit -a -m "your_commit_message"`.
+    2. Run [all unit tests](#unit-test) and confirm that all tests were passed.
+    3. Generate [user documentation and API reference](#documentation) locally and check the contents.
+ 2. Version tagging
+    1. Open [setup.py](setup.py) and set the new version number to release.
+    2. Run `git commit -a -m "Changed version number"` to commit the change in [setup.py](setup.py).
+    3. Run `git tag -a vx.y.z -m "Version x.y.z"` to mark the new release.
+    4. Run `git push --tags`. Make sure that you have `--tags` option to upload all tags to the upstream.
+ 3. Releasing documentation
+    1. Run `git checkout gh-pages` to start working in the _gh-pages_ branch.
+    2. Run `git merge main` to merge all changes made for the version to release.
+    3. Re-generate [user documentation and API reference](#documentation) locally and check if the version number on the top-left corner is updated.
+    4. Run `git commit -a -m "Uploading documentation for version x.y.z."`. This command is supposed to commit all changes in the documentation under [docs/html](docs/html).
+    5. Run `git push` so that GitHub becomes aware of new documentation.
+    6. Confirm that the updated documentation is available at https://tmtsoftware.github.io/pydocushare/ . Note that it may take a while (maybe a couple of minutes) until the updated documentation is available there.
+    7. Run `git checkout main` to make sure that you are back in the _main_ branch for further development. Do not commit anything  in the _gh-pages_ branch except the new release documents.
+    
+## TODO
 
 Use "TODO" keyword in the inline comments in the source code and documentation to indicate things to be fixed in the future versions. The list below shows the major TODOs that are not suitable as inline comments:
 
- * Upload the generated document to a static Web site (e.g. [readthetodcs](https://readthedocs.org/) or [GitHub Pages](https://pages.github.com/) so that anyone can access the documents without generating the documents locally.
  * Add unit tests for Collection handles and CollectionObject.
