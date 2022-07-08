@@ -45,6 +45,15 @@ intersphinx_mapping = {
     'anytree' : ('https://anytree.readthedocs.io/en/latest/', None),
 }
 
+nitpicky = True
+nitpick_ignore = [
+    ('py:class', 'bytes-like object'),
+    ('py:class', 'path-like object')
+]
+nitpick_ignore_regex = [
+    (r'.*', 'NodeMixin'),
+]
+
 # -- Options for HTML output -------------------------------------------------
 
 # The theme to use for HTML and HTML Help pages.  See the documentation for

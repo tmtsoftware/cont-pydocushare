@@ -446,7 +446,7 @@ class DocuShare:
     
     @property
     def is_logged_in(self):
-        '''boolean: indicates if this instance successfully logged in the DocuShare site.'''
+        '''bool: indicates if this instance successfully logged in the DocuShare site.'''
         return 'AmberUser' in self.cookies.keys()
 
     def __check_if_logged_in(self):
@@ -517,7 +517,7 @@ class DocuShare:
         ----------
         hdl : Handle or str
             DocuShare handle to download as a file or a string that represents a valid DocuShare handle.
-        path : path-like object:
+        path : path-like object
             Destination file path.
         size_for_progress_report : int
             This method shows a progress bar using `tqdm <https://tqdm.github.io/>` if the file size is

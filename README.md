@@ -10,6 +10,20 @@ This README.md is the documentation for developers who extend, fix and/or releas
 
 PyDocuShare uses [pyduktape](https://github.com/stefano/pyduktape) as the underlying JavaScript interpreter to perform DocuShare challenge-response authentication. Because it is distributed under the terms of GNU General Public License version 2, PyDocuShare is distributed under the same license. See [LICENSE](LICENSE) for more details.
 
+## Editable installation
+
+If you want to test PyDocuShare under development, you may want to have the system recognize `docushare` module in your local git repository rather than installing them in one of python system paths. To do so, run the command below:
+
+```bash
+ $ pip install -e .
+```
+
+The command above adds `docusahre` module in your local git repository to the python system paths. It is called ["editable installs"](https://pip.pypa.io/en/stable/topics/local-project-installs/#editable-installs). You can undo the command above by running:
+
+```bash
+ $ pip uninstall pydocushare
+```
+
 ## Inline Documentation
 
 PyDocuShare uses [numpy style](https://numpydoc.readthedocs.io/en/latest/format.html#docstring-standard) to document the module, classes, functions, methods and attributes. Use the same style for consistency.
@@ -91,23 +105,24 @@ Follow the procedure below to release a new version.
 
  1. Pre-release procedure
     1. Make sure that you are in the _main_ branch. If not, run `git checkout main`.
-    1. Make sure that all your local changes have been committed by `git commit -a -m "your_commit_message"`.
-    2. Run [all unit tests](#unit-test) and confirm that all tests were passed.
-    3. Generate [user documentation and API reference](#documentation) locally and check the contents.
+    2. Make sure that all your local changes have been committed by `git commit -a -m "your_commit_message"`.
+    3. Run [all unit tests](#unit-test) and confirm that all tests were passed.
+    4. Generate [user documentation and API reference](#documentation) locally, make sure that there is no error or warning, and check the contents of the generated documents.
+       * If the warning is known and you think you do not have to fix it, you may want to update [`nitpick_ignore`](https://www.sphinx-doc.org/en/master/usage/configuration.html?highlight=nitpick_ignore#confval-nitpick_ignore) or [`nitpick_ignore_regex`](https://www.sphinx-doc.org/en/master/usage/configuration.html?highlight=nitpick_ignore#confval-nitpick_ignore_regex) variable in [docs/conf.py](docs/conf.py). 
  2. Version tagging
     1. Open [setup.py](setup.py) and set the new version number to release.
     2. Run `git commit -a -m "Changed version number"` to commit the change in [setup.py](setup.py).
     3. Run `git tag -a vx.y.z -m "Version x.y.z"` to mark the new release.
     4. Run `git push --tags`. Make sure that you have `--tags` option to upload all tags to the upstream.
- 3. Releasing documentation
+ 3. Release documentation
     1. Run `git checkout gh-pages` to start working in the _gh-pages_ branch.
     2. Run `git merge main` to merge all changes made for the version to release.
-    3. Re-generate [user documentation and API reference](#documentation) locally and check if the version number on the top-left corner is updated.
-    4. Run `git commit -a -m "Uploading documentation for version x.y.z."`. This command is supposed to commit all changes in the documentation under [docs/html](docs/html).
+    3. Re-generate [user documentation and API reference](#documentation) locally and check if the version number on the top-left corner of the generated HTML pages has been updated.
+    4. Run `git add -f docs/html` and `git commit -m "Uploading documentation for version x.y.z."`. These commands are supposed to commit all changes in the documentation under [docs/html](docs/html).
     5. Run `git push` so that GitHub becomes aware of new documentation.
     6. Confirm that the updated documentation is available at https://tmtsoftware.github.io/pydocushare/ . Note that it may take a while (maybe a couple of minutes) until the updated documentation is available there.
     7. Run `git checkout main` to make sure that you are back in the _main_ branch for further development. Do not commit anything  in the _gh-pages_ branch except the new release documents.
-    
+
 ## TODO
 
 Use "TODO" keyword in the inline comments in the source code and documentation to indicate things to be fixed in the future versions. The list below shows the major TODOs that are not suitable as inline comments:
