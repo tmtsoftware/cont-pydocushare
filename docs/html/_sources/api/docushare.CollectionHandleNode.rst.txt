@@ -1,0 +1,61 @@
+CollectionHandleNode
+====================
+
+.. currentmodule:: docushare
+
+.. autoclass:: CollectionHandleNode
+   :show-inheritance:
+
+   .. rubric:: Attributes Summary
+
+   .. autosummary::
+
+      ~CollectionHandleNode.ancestors
+      ~CollectionHandleNode.anchestors
+      ~CollectionHandleNode.children
+      ~CollectionHandleNode.depth
+      ~CollectionHandleNode.descendants
+      ~CollectionHandleNode.height
+      ~CollectionHandleNode.identifier
+      ~CollectionHandleNode.is_leaf
+      ~CollectionHandleNode.is_root
+      ~CollectionHandleNode.leaves
+      ~CollectionHandleNode.number
+      ~CollectionHandleNode.parent
+      ~CollectionHandleNode.path
+      ~CollectionHandleNode.root
+      ~CollectionHandleNode.separator
+      ~CollectionHandleNode.siblings
+      ~CollectionHandleNode.type
+
+   .. rubric:: Methods Summary
+
+   .. autosummary::
+
+      ~CollectionHandleNode.from_str
+      ~CollectionHandleNode.iter_path_reverse
+
+   .. rubric:: Attributes Documentation
+
+   .. autoattribute:: ancestors
+   .. autoattribute:: anchestors
+   .. autoattribute:: children
+   .. autoattribute:: depth
+   .. autoattribute:: descendants
+   .. autoattribute:: height
+   .. autoattribute:: identifier
+   .. autoattribute:: is_leaf
+   .. autoattribute:: is_root
+   .. autoattribute:: leaves
+   .. autoattribute:: number
+   .. autoattribute:: parent
+   .. autoattribute:: path
+   .. autoattribute:: root
+   .. autoattribute:: separator
+   .. autoattribute:: siblings
+   .. autoattribute:: type
+
+   .. rubric:: Methods Documentation
+
+   .. automethod:: from_str
+   .. automethod:: iter_path_reverse

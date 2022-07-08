@@ -1,0 +1,6 @@
+InvalidHandleError
+==================
+
+.. currentmodule:: docushare
+
+.. autoexception:: InvalidHandleError

@@ -1,0 +1,41 @@
+DocumentObject
+==============
+
+.. currentmodule:: docushare
+
+.. autoclass:: DocumentObject
+   :show-inheritance:
+
+   .. rubric:: Attributes Summary
+
+   .. autosummary::
+
+      ~DocumentObject.document_control_number
+      ~DocumentObject.docushare
+      ~DocumentObject.download_url
+      ~DocumentObject.filename
+      ~DocumentObject.handle
+      ~DocumentObject.title
+      ~DocumentObject.version_handles
+      ~DocumentObject.versions
+
+   .. rubric:: Methods Summary
+
+   .. autosummary::
+
+      ~DocumentObject.download
+
+   .. rubric:: Attributes Documentation
+
+   .. autoattribute:: document_control_number
+   .. autoattribute:: docushare
+   .. autoattribute:: download_url
+   .. autoattribute:: filename
+   .. autoattribute:: handle
+   .. autoattribute:: title
+   .. autoattribute:: version_handles
+   .. autoattribute:: versions
+
+   .. rubric:: Methods Documentation
+
+   .. automethod:: download

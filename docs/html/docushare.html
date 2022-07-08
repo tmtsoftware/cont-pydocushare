@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PyDocuShare API Reference &mdash; PyDocuShare  documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="_static/graphviz.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="handle" href="api/docushare.handle.html" />
+    <link rel="prev" title="Getting Started" href="getting-started.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="index.html" class="icon icon-home"> PyDocuShare
+          </a>
+              <div class="version">
+                0.1.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="getting-started.html">Getting Started</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">PyDocuShare API Reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#functions">Functions</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="api/docushare.handle.html">handle</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/docushare.join_url.html">join_url</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#classes">Classes</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="api/docushare.DocuShare.html">DocuShare</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/docushare.Resource.html">Resource</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/docushare.PasswordOption.html">PasswordOption</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/docushare.DocuShareSystemError.html">DocuShareSystemError</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/docushare.DocuShareNotFoundError.html">DocuShareNotFoundError</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/docushare.DocuShareNotAuthorizedError.html">DocuShareNotAuthorizedError</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/docushare.DocuShareBaseObject.html">DocuShareBaseObject</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/docushare.FileObject.html">FileObject</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/docushare.DocumentObject.html">DocumentObject</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/docushare.VersionObject.html">VersionObject</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/docushare.CollectionObject.html">CollectionObject</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/docushare.CollectionDownloadOption.html">CollectionDownloadOption</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/docushare.Handle.html">Handle</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/docushare.HandleNode.html">HandleNode</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/docushare.CollectionHandleNode.html">CollectionHandleNode</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/docushare.DocumentHandleNode.html">DocumentHandleNode</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/docushare.HandleType.html">HandleType</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/docushare.InvalidHandleError.html">InvalidHandleError</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/docushare.DocuShareParseError.html">DocuShareParseError</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">PyDocuShare</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+      <li>PyDocuShare API Reference</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/docushare.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-docushare">
+<span id="pydocushare-api-reference"></span><h1>PyDocuShare API Reference<a class="headerlink" href="#module-docushare" title="Permalink to this headline"></a></h1>
+<p>This is the top page of PyDocuShare API Reference</p>
+<p>The tables below or the left pane include the links to API documents of individual classes and functions.</p>
+<p>It is recommended to see <a class="reference internal" href="getting-started.html#getting-started"><span class="std std-ref">Getting Started</span></a> for typical usage of this API.</p>
+<section id="functions">
+<h2>Functions<a class="headerlink" href="#functions" title="Permalink to this headline"></a></h2>
+<table class="autosummary longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="api/docushare.handle.html#docushare.handle" title="docushare.handle"><code class="xref py py-obj docutils literal notranslate"><span class="pre">handle</span></code></a>(handle_str)</p></td>
+<td><p>Utility function to convert a handle string to a canonical instance.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="api/docushare.join_url.html#docushare.join_url" title="docushare.join_url"><code class="xref py py-obj docutils literal notranslate"><span class="pre">join_url</span></code></a>(*args)</p></td>
+<td><p>Construct a full URL by combining a base URL with other URLs.</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="classes">
+<h2>Classes<a class="headerlink" href="#classes" title="Permalink to this headline"></a></h2>
+<table class="autosummary longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="api/docushare.DocuShare.html#docushare.DocuShare" title="docushare.DocuShare"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DocuShare</span></code></a>(base_url)</p></td>
+<td><p>This class represents a session to access a DocuShare site.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="api/docushare.Resource.html#docushare.Resource" title="docushare.Resource"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Resource</span></code></a>(value)</p></td>
+<td><p>This enum represents one DocuShare resource.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="api/docushare.PasswordOption.html#docushare.PasswordOption" title="docushare.PasswordOption"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PasswordOption</span></code></a>(value)</p></td>
+<td><p>Option for password prompting.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="api/docushare.DocuShareSystemError.html#docushare.DocuShareSystemError" title="docushare.DocuShareSystemError"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DocuShareSystemError</span></code></a>(error_code, ...)</p></td>
+<td><p>Raised if the DocuShare site encounters a system error.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="api/docushare.DocuShareNotFoundError.html#docushare.DocuShareNotFoundError" title="docushare.DocuShareNotFoundError"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DocuShareNotFoundError</span></code></a>(docushare, url)</p></td>
+<td><p>Raised if the object does not exist in the DocuShare site.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="api/docushare.DocuShareNotAuthorizedError.html#docushare.DocuShareNotAuthorizedError" title="docushare.DocuShareNotAuthorizedError"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DocuShareNotAuthorizedError</span></code></a>(docushare, url)</p></td>
+<td><p>Raised if it is not authorized to access a DocuShare URL.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="api/docushare.DocuShareBaseObject.html#docushare.DocuShareBaseObject" title="docushare.DocuShareBaseObject"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DocuShareBaseObject</span></code></a>(docushare, hdl)</p></td>
+<td><p>Represents one object in DocuShare.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="api/docushare.FileObject.html#docushare.FileObject" title="docushare.FileObject"><code class="xref py py-obj docutils literal notranslate"><span class="pre">FileObject</span></code></a>(docushare, hdl, title, filename)</p></td>
+<td><p>Represents one file object in DocuShare.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="api/docushare.DocumentObject.html#docushare.DocumentObject" title="docushare.DocumentObject"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DocumentObject</span></code></a>(docushare, hdl, title, ...)</p></td>
+<td><p>Represents one Document object in DocuShare.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="api/docushare.VersionObject.html#docushare.VersionObject" title="docushare.VersionObject"><code class="xref py py-obj docutils literal notranslate"><span class="pre">VersionObject</span></code></a>(docushare, hdl, title, ...)</p></td>
+<td><p>Represents one Version object in DocuShare.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="api/docushare.CollectionObject.html#docushare.CollectionObject" title="docushare.CollectionObject"><code class="xref py py-obj docutils literal notranslate"><span class="pre">CollectionObject</span></code></a>(docushare, hdl, title, ...)</p></td>
+<td><p>Represents one Collection object in DocuShare.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="api/docushare.CollectionDownloadOption.html#docushare.CollectionDownloadOption" title="docushare.CollectionDownloadOption"><code class="xref py py-obj docutils literal notranslate"><span class="pre">CollectionDownloadOption</span></code></a>(value)</p></td>
+<td><p>Represents a Collection download option.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="api/docushare.Handle.html#docushare.Handle" title="docushare.Handle"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Handle</span></code></a>(handle_type, handle_number)</p></td>
+<td><p>This class represents a DocuShare handle.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="api/docushare.HandleNode.html#docushare.HandleNode" title="docushare.HandleNode"><code class="xref py py-obj docutils literal notranslate"><span class="pre">HandleNode</span></code></a>(handle_type, handle_number)</p></td>
+<td><p>This class represents a DocuShare handle in a tree structure.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="api/docushare.CollectionHandleNode.html#docushare.CollectionHandleNode" title="docushare.CollectionHandleNode"><code class="xref py py-obj docutils literal notranslate"><span class="pre">CollectionHandleNode</span></code></a>(handle_number[, children])</p></td>
+<td><p>This class represents a DocuShare Collection handle in a tree structure.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="api/docushare.DocumentHandleNode.html#docushare.DocumentHandleNode" title="docushare.DocumentHandleNode"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DocumentHandleNode</span></code></a>(handle_number)</p></td>
+<td><p>This class represents a DocuShare Document handle in a tree structure.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="api/docushare.HandleType.html#docushare.HandleType" title="docushare.HandleType"><code class="xref py py-obj docutils literal notranslate"><span class="pre">HandleType</span></code></a>(value)</p></td>
+<td><p>Represents a DocuShare handle type.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="api/docushare.InvalidHandleError.html#docushare.InvalidHandleError" title="docushare.InvalidHandleError"><code class="xref py py-obj docutils literal notranslate"><span class="pre">InvalidHandleError</span></code></a>(invalid_handle_str)</p></td>
+<td><p>Indicates an invalid DocuShare handle.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="api/docushare.DocuShareParseError.html#docushare.DocuShareParseError" title="docushare.DocuShareParseError"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DocuShareParseError</span></code></a>(docushare, url, cause)</p></td>
+<td><p>Raised if parsing one of DocuShare web page fails.</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="getting-started.html" class="btn btn-neutral float-left" title="Getting Started" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="api/docushare.handle.html" class="btn btn-neutral float-right" title="handle" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022 TMT International Observatory.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

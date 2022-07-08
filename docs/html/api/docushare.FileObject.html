@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FileObject &mdash; PyDocuShare  documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/graphviz.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="DocumentObject" href="docushare.DocumentObject.html" />
+    <link rel="prev" title="DocuShareBaseObject" href="docushare.DocuShareBaseObject.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../index.html" class="icon icon-home"> PyDocuShare
+          </a>
+              <div class="version">
+                0.1.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../getting-started.html">Getting Started</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../docushare.html">PyDocuShare API Reference</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../docushare.html#functions">Functions</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../docushare.html#classes">Classes</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="docushare.DocuShare.html">DocuShare</a></li>
+<li class="toctree-l3"><a class="reference internal" href="docushare.Resource.html">Resource</a></li>
+<li class="toctree-l3"><a class="reference internal" href="docushare.PasswordOption.html">PasswordOption</a></li>
+<li class="toctree-l3"><a class="reference internal" href="docushare.DocuShareSystemError.html">DocuShareSystemError</a></li>
+<li class="toctree-l3"><a class="reference internal" href="docushare.DocuShareNotFoundError.html">DocuShareNotFoundError</a></li>
+<li class="toctree-l3"><a class="reference internal" href="docushare.DocuShareNotAuthorizedError.html">DocuShareNotAuthorizedError</a></li>
+<li class="toctree-l3"><a class="reference internal" href="docushare.DocuShareBaseObject.html">DocuShareBaseObject</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">FileObject</a></li>
+<li class="toctree-l3"><a class="reference internal" href="docushare.DocumentObject.html">DocumentObject</a></li>
+<li class="toctree-l3"><a class="reference internal" href="docushare.VersionObject.html">VersionObject</a></li>
+<li class="toctree-l3"><a class="reference internal" href="docushare.CollectionObject.html">CollectionObject</a></li>
+<li class="toctree-l3"><a class="reference internal" href="docushare.CollectionDownloadOption.html">CollectionDownloadOption</a></li>
+<li class="toctree-l3"><a class="reference internal" href="docushare.Handle.html">Handle</a></li>
+<li class="toctree-l3"><a class="reference internal" href="docushare.HandleNode.html">HandleNode</a></li>
+<li class="toctree-l3"><a class="reference internal" href="docushare.CollectionHandleNode.html">CollectionHandleNode</a></li>
+<li class="toctree-l3"><a class="reference internal" href="docushare.DocumentHandleNode.html">DocumentHandleNode</a></li>
+<li class="toctree-l3"><a class="reference internal" href="docushare.HandleType.html">HandleType</a></li>
+<li class="toctree-l3"><a class="reference internal" href="docushare.InvalidHandleError.html">InvalidHandleError</a></li>
+<li class="toctree-l3"><a class="reference internal" href="docushare.DocuShareParseError.html">DocuShareParseError</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">PyDocuShare</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../docushare.html">PyDocuShare API Reference</a> &raquo;</li>
+      <li>FileObject</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/api/docushare.FileObject.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="fileobject">
+<h1>FileObject<a class="headerlink" href="#fileobject" title="Permalink to this headline"></a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="docushare.FileObject">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">docushare.</span></span><span class="sig-name descname"><span class="pre">FileObject</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">docushare</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hdl</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">title</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filename</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#docushare.FileObject" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="docushare.DocuShareBaseObject.html#docushare.DocuShareBaseObject" title="docushare.dsobject.DocuShareBaseObject"><code class="xref py py-class docutils literal notranslate"><span class="pre">docushare.dsobject.DocuShareBaseObject</span></code></a></p>
+<p>Represents one file object in DocuShare.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>docushare</strong> (<a class="reference internal" href="docushare.DocuShare.html#docushare.DocuShare" title="docushare.DocuShare"><em>DocuShare</em></a>) – The DocuShare site that this object belongs to.</p></li>
+<li><p><strong>hdl</strong> (<a class="reference internal" href="docushare.Handle.html#docushare.Handle" title="docushare.Handle"><em>Handle</em></a>) – The DocuShare handle that represents this object.</p></li>
+<li><p><strong>title</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – Title of this file.</p></li>
+<li><p><strong>filename</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – File name of this file.</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Attributes Summary</p>
+<table class="autosummary longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#docushare.FileObject.docushare" title="docushare.FileObject.docushare"><code class="xref py py-obj docutils literal notranslate"><span class="pre">docushare</span></code></a></p></td>
+<td><p>The DocuShare site that this object belongs to.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#docushare.FileObject.download_url" title="docushare.FileObject.download_url"><code class="xref py py-obj docutils literal notranslate"><span class="pre">download_url</span></code></a></p></td>
+<td><p>URL to download this document.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#docushare.FileObject.filename" title="docushare.FileObject.filename"><code class="xref py py-obj docutils literal notranslate"><span class="pre">filename</span></code></a></p></td>
+<td><p>File name of this document.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#docushare.FileObject.handle" title="docushare.FileObject.handle"><code class="xref py py-obj docutils literal notranslate"><span class="pre">handle</span></code></a></p></td>
+<td><p>The DocuShare handle that represents this object.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#docushare.FileObject.title" title="docushare.FileObject.title"><code class="xref py py-obj docutils literal notranslate"><span class="pre">title</span></code></a></p></td>
+<td><p>Title of this document.</p></td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Methods Summary</p>
+<table class="autosummary longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#docushare.FileObject.download" title="docushare.FileObject.download"><code class="xref py py-obj docutils literal notranslate"><span class="pre">download</span></code></a>([path, size_for_progress_report])</p></td>
+<td><p>Download this document from the DocuShare site to the local storage.</p></td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Attributes Documentation</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="docushare.FileObject.docushare">
+<span class="sig-name descname"><span class="pre">docushare</span></span><a class="headerlink" href="#docushare.FileObject.docushare" title="Permalink to this definition"></a></dt>
+<dd><p>The DocuShare site that this object belongs to.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="docushare.DocuShare.html#docushare.DocuShare" title="docushare.DocuShare">DocuShare</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="docushare.FileObject.download_url">
+<span class="sig-name descname"><span class="pre">download_url</span></span><a class="headerlink" href="#docushare.FileObject.download_url" title="Permalink to this definition"></a></dt>
+<dd><p>URL to download this document.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#str" title="(in Python v3.8)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="docushare.FileObject.filename">
+<span class="sig-name descname"><span class="pre">filename</span></span><a class="headerlink" href="#docushare.FileObject.filename" title="Permalink to this definition"></a></dt>
+<dd><p>File name of this document.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#str" title="(in Python v3.8)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="docushare.FileObject.handle">
+<span class="sig-name descname"><span class="pre">handle</span></span><a class="headerlink" href="#docushare.FileObject.handle" title="Permalink to this definition"></a></dt>
+<dd><p>The DocuShare handle that represents this object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="docushare.Handle.html#docushare.Handle" title="docushare.Handle">Handle</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="docushare.FileObject.title">
+<span class="sig-name descname"><span class="pre">title</span></span><a class="headerlink" href="#docushare.FileObject.title" title="Permalink to this definition"></a></dt>
+<dd><p>Title of this document.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#str" title="(in Python v3.8)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<p class="rubric">Methods Documentation</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="docushare.FileObject.download">
+<span class="sig-name descname"><span class="pre">download</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">size_for_progress_report</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1000000</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#docushare.FileObject.download" title="Permalink to this definition"></a></dt>
+<dd><p>Download this document from the DocuShare site to the local storage.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>path</strong> (<em>path-like object</em><em> or </em><em>None</em>) – If it is None, this method downloads the document as a file in the current directory
+and the file name is determined as suggested by the DocuShare site.
+If it is a directory path, the document is downloaded as a file in the given directory
+and the file name is determined as suggested by the DocuShare site.
+If the given path is not a directory or does not exist, the document is downloaded
+as a file to the given path.</p></li>
+<li><p><strong>size_for_progress_report</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – This method shows a progress bar using <cite>tqdm &lt;https://tqdm.github.io/&gt;</cite> if the file size is
+more than the specified size in bytes.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Path to the downloaded file.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>path-like object</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="docushare.DocuShareBaseObject.html" class="btn btn-neutral float-left" title="DocuShareBaseObject" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="docushare.DocumentObject.html" class="btn btn-neutral float-right" title="DocumentObject" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022 TMT International Observatory.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

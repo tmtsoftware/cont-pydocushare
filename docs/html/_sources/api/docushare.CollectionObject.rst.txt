@@ -1,0 +1,35 @@
+CollectionObject
+================
+
+.. currentmodule:: docushare
+
+.. autoclass:: CollectionObject
+   :show-inheritance:
+
+   .. rubric:: Attributes Summary
+
+   .. autosummary::
+
+      ~CollectionObject.docushare
+      ~CollectionObject.handle
+      ~CollectionObject.object_handle_tree
+      ~CollectionObject.object_handles
+      ~CollectionObject.title
+
+   .. rubric:: Methods Summary
+
+   .. autosummary::
+
+      ~CollectionObject.download
+
+   .. rubric:: Attributes Documentation
+
+   .. autoattribute:: docushare
+   .. autoattribute:: handle
+   .. autoattribute:: object_handle_tree
+   .. autoattribute:: object_handles
+   .. autoattribute:: title
+
+   .. rubric:: Methods Documentation
+
+   .. automethod:: download

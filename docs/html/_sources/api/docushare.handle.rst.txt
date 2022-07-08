@@ -1,0 +1,6 @@
+handle
+======
+
+.. currentmodule:: docushare
+
+.. autofunction:: handle

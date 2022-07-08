@@ -1,0 +1,6 @@
+HandleType
+==========
+
+.. currentmodule:: docushare
+
+.. autoenum:: HandleType

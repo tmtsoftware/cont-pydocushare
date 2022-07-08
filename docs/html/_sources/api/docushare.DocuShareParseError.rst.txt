@@ -1,0 +1,6 @@
+DocuShareParseError
+===================
+
+.. currentmodule:: docushare
+
+.. autoexception:: DocuShareParseError

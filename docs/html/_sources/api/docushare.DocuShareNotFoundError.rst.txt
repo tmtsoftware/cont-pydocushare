@@ -1,0 +1,6 @@
+DocuShareNotFoundError
+======================
+
+.. currentmodule:: docushare
+
+.. autoexception:: DocuShareNotFoundError

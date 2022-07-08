@@ -1,0 +1,6 @@
+DocuShareNotAuthorizedError
+===========================
+
+.. currentmodule:: docushare
+
+.. autoexception:: DocuShareNotAuthorizedError

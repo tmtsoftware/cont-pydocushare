@@ -1,0 +1,19 @@
+DocuShareBaseObject
+===================
+
+.. currentmodule:: docushare
+
+.. autoclass:: DocuShareBaseObject
+   :show-inheritance:
+
+   .. rubric:: Attributes Summary
+
+   .. autosummary::
+
+      ~DocuShareBaseObject.docushare
+      ~DocuShareBaseObject.handle
+
+   .. rubric:: Attributes Documentation
+
+   .. autoattribute:: docushare
+   .. autoattribute:: handle

@@ -1,0 +1,6 @@
+DocuShareSystemError
+====================
+
+.. currentmodule:: docushare
+
+.. autoexception:: DocuShareSystemError

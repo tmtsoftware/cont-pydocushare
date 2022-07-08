@@ -1,0 +1,6 @@
+join_url
+========
+
+.. currentmodule:: docushare
+
+.. autofunction:: join_url

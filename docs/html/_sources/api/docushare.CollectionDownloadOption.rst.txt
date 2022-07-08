@@ -1,0 +1,6 @@
+CollectionDownloadOption
+========================
+
+.. currentmodule:: docushare
+
+.. autoenum:: CollectionDownloadOption

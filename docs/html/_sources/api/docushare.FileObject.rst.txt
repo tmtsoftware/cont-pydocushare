@@ -1,0 +1,35 @@
+FileObject
+==========
+
+.. currentmodule:: docushare
+
+.. autoclass:: FileObject
+   :show-inheritance:
+
+   .. rubric:: Attributes Summary
+
+   .. autosummary::
+
+      ~FileObject.docushare
+      ~FileObject.download_url
+      ~FileObject.filename
+      ~FileObject.handle
+      ~FileObject.title
+
+   .. rubric:: Methods Summary
+
+   .. autosummary::
+
+      ~FileObject.download
+
+   .. rubric:: Attributes Documentation
+
+   .. autoattribute:: docushare
+   .. autoattribute:: download_url
+   .. autoattribute:: filename
+   .. autoattribute:: handle
+   .. autoattribute:: title
+
+   .. rubric:: Methods Documentation
+
+   .. automethod:: download

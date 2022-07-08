@@ -1,0 +1,37 @@
+VersionObject
+=============
+
+.. currentmodule:: docushare
+
+.. autoclass:: VersionObject
+   :show-inheritance:
+
+   .. rubric:: Attributes Summary
+
+   .. autosummary::
+
+      ~VersionObject.docushare
+      ~VersionObject.download_url
+      ~VersionObject.filename
+      ~VersionObject.handle
+      ~VersionObject.title
+      ~VersionObject.version_number
+
+   .. rubric:: Methods Summary
+
+   .. autosummary::
+
+      ~VersionObject.download
+
+   .. rubric:: Attributes Documentation
+
+   .. autoattribute:: docushare
+   .. autoattribute:: download_url
+   .. autoattribute:: filename
+   .. autoattribute:: handle
+   .. autoattribute:: title
+   .. autoattribute:: version_number
+
+   .. rubric:: Methods Documentation
+
+   .. automethod:: download

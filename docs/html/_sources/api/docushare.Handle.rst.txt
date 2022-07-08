@@ -1,0 +1,31 @@
+Handle
+======
+
+.. currentmodule:: docushare
+
+.. autoclass:: Handle
+   :show-inheritance:
+
+   .. rubric:: Attributes Summary
+
+   .. autosummary::
+
+      ~Handle.identifier
+      ~Handle.number
+      ~Handle.type
+
+   .. rubric:: Methods Summary
+
+   .. autosummary::
+
+      ~Handle.from_str
+
+   .. rubric:: Attributes Documentation
+
+   .. autoattribute:: identifier
+   .. autoattribute:: number
+   .. autoattribute:: type
+
+   .. rubric:: Methods Documentation
+
+   .. automethod:: from_str

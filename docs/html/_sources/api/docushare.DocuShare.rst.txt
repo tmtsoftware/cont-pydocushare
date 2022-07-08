@@ -1,0 +1,45 @@
+DocuShare
+=========
+
+.. currentmodule:: docushare
+
+.. autoclass:: DocuShare
+   :show-inheritance:
+
+   .. rubric:: Attributes Summary
+
+   .. autosummary::
+
+      ~DocuShare.cookies
+      ~DocuShare.is_logged_in
+      ~DocuShare.logger
+      ~DocuShare.username
+
+   .. rubric:: Methods Summary
+
+   .. autosummary::
+
+      ~DocuShare.close
+      ~DocuShare.download
+      ~DocuShare.http_get
+      ~DocuShare.http_post
+      ~DocuShare.login
+      ~DocuShare.object
+      ~DocuShare.url
+
+   .. rubric:: Attributes Documentation
+
+   .. autoattribute:: cookies
+   .. autoattribute:: is_logged_in
+   .. autoattribute:: logger
+   .. autoattribute:: username
+
+   .. rubric:: Methods Documentation
+
+   .. automethod:: close
+   .. automethod:: download
+   .. automethod:: http_get
+   .. automethod:: http_post
+   .. automethod:: login
+   .. automethod:: object
+   .. automethod:: url

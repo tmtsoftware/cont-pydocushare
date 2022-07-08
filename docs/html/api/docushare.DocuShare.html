@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DocuShare &mdash; PyDocuShare  documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/graphviz.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Resource" href="docushare.Resource.html" />
+    <link rel="prev" title="join_url" href="docushare.join_url.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../index.html" class="icon icon-home"> PyDocuShare
+          </a>
+              <div class="version">
+                0.1.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../getting-started.html">Getting Started</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../docushare.html">PyDocuShare API Reference</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../docushare.html#functions">Functions</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../docushare.html#classes">Classes</a><ul class="current">
+<li class="toctree-l3 current"><a class="current reference internal" href="#">DocuShare</a></li>
+<li class="toctree-l3"><a class="reference internal" href="docushare.Resource.html">Resource</a></li>
+<li class="toctree-l3"><a class="reference internal" href="docushare.PasswordOption.html">PasswordOption</a></li>
+<li class="toctree-l3"><a class="reference internal" href="docushare.DocuShareSystemError.html">DocuShareSystemError</a></li>
+<li class="toctree-l3"><a class="reference internal" href="docushare.DocuShareNotFoundError.html">DocuShareNotFoundError</a></li>
+<li class="toctree-l3"><a class="reference internal" href="docushare.DocuShareNotAuthorizedError.html">DocuShareNotAuthorizedError</a></li>
+<li class="toctree-l3"><a class="reference internal" href="docushare.DocuShareBaseObject.html">DocuShareBaseObject</a></li>
+<li class="toctree-l3"><a class="reference internal" href="docushare.FileObject.html">FileObject</a></li>
+<li class="toctree-l3"><a class="reference internal" href="docushare.DocumentObject.html">DocumentObject</a></li>
+<li class="toctree-l3"><a class="reference internal" href="docushare.VersionObject.html">VersionObject</a></li>
+<li class="toctree-l3"><a class="reference internal" href="docushare.CollectionObject.html">CollectionObject</a></li>
+<li class="toctree-l3"><a class="reference internal" href="docushare.CollectionDownloadOption.html">CollectionDownloadOption</a></li>
+<li class="toctree-l3"><a class="reference internal" href="docushare.Handle.html">Handle</a></li>
+<li class="toctree-l3"><a class="reference internal" href="docushare.HandleNode.html">HandleNode</a></li>
+<li class="toctree-l3"><a class="reference internal" href="docushare.CollectionHandleNode.html">CollectionHandleNode</a></li>
+<li class="toctree-l3"><a class="reference internal" href="docushare.DocumentHandleNode.html">DocumentHandleNode</a></li>
+<li class="toctree-l3"><a class="reference internal" href="docushare.HandleType.html">HandleType</a></li>
+<li class="toctree-l3"><a class="reference internal" href="docushare.InvalidHandleError.html">InvalidHandleError</a></li>
+<li class="toctree-l3"><a class="reference internal" href="docushare.DocuShareParseError.html">DocuShareParseError</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">PyDocuShare</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../docushare.html">PyDocuShare API Reference</a> &raquo;</li>
+      <li>DocuShare</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/api/docushare.DocuShare.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="docushare">
+<h1>DocuShare<a class="headerlink" href="#docushare" title="Permalink to this headline"></a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="docushare.DocuShare">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">docushare.</span></span><span class="sig-name descname"><span class="pre">DocuShare</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">base_url</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#docushare.DocuShare" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#docushare.DocuShare.object" title="docushare.DocuShare.object"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>This class represents a session to access a DocuShare site.</p>
+<p>An instance of this class stores login session so that the user does not have to enter the authentication
+information many times. It also caches some metadata so that it does not have to access the DocuShare
+multiple times to get the same information.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>base_url</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – Base URL of DocuShare. Both ‘http’ and ‘https’ schemes are supported.
+For example, <a class="reference external" href="https://your.docushare.domain/docushare/">https://your.docushare.domain/docushare/</a>.</p>
+</dd>
+</dl>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>This class is not thread-safe. Use an appropriate mechanism if you want to use an instance of this class
+in multiple threads.</p>
+</div>
+<p class="rubric">Attributes Summary</p>
+<table class="autosummary longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#docushare.DocuShare.cookies" title="docushare.DocuShare.cookies"><code class="xref py py-obj docutils literal notranslate"><span class="pre">cookies</span></code></a></p></td>
+<td><p>Cookies of the current session.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#docushare.DocuShare.is_logged_in" title="docushare.DocuShare.is_logged_in"><code class="xref py py-obj docutils literal notranslate"><span class="pre">is_logged_in</span></code></a></p></td>
+<td><p>indicates if this instance successfully logged in the DocuShare site.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#docushare.DocuShare.logger" title="docushare.DocuShare.logger"><code class="xref py py-obj docutils literal notranslate"><span class="pre">logger</span></code></a></p></td>
+<td><p>Logger of this instance</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#docushare.DocuShare.username" title="docushare.DocuShare.username"><code class="xref py py-obj docutils literal notranslate"><span class="pre">username</span></code></a></p></td>
+<td><p>Currently logged in DocuShare username, or None if login has not been done yet.</p></td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Methods Summary</p>
+<table class="autosummary longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#docushare.DocuShare.close" title="docushare.DocuShare.close"><code class="xref py py-obj docutils literal notranslate"><span class="pre">close</span></code></a>()</p></td>
+<td><p>Close the session with the DocuShare site.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#docushare.DocuShare.download" title="docushare.DocuShare.download"><code class="xref py py-obj docutils literal notranslate"><span class="pre">download</span></code></a>(hdl, path[, size_for_progress_report])</p></td>
+<td><p>Download the given handle (Document or Version) as a file.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#docushare.DocuShare.http_get" title="docushare.DocuShare.http_get"><code class="xref py py-obj docutils literal notranslate"><span class="pre">http_get</span></code></a>(url)</p></td>
+<td><p>Access the given URL with HTTP GET method using the current DocuShare session.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#docushare.DocuShare.http_post" title="docushare.DocuShare.http_post"><code class="xref py py-obj docutils literal notranslate"><span class="pre">http_post</span></code></a>(url[, data])</p></td>
+<td><p>Access the given URL with HTTP POST method using the current DocuShare session.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#docushare.DocuShare.login" title="docushare.DocuShare.login"><code class="xref py py-obj docutils literal notranslate"><span class="pre">login</span></code></a>([username, password, retry_count, domain])</p></td>
+<td><p>Login the DocuShare site.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#docushare.DocuShare.object" title="docushare.DocuShare.object"><code class="xref py py-obj docutils literal notranslate"><span class="pre">object</span></code></a>(hdl)</p></td>
+<td><p>Get an instance that represents a DocuShare object.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#docushare.DocuShare.url" title="docushare.DocuShare.url"><code class="xref py py-obj docutils literal notranslate"><span class="pre">url</span></code></a>([resource, hdl])</p></td>
+<td><p></p></td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Attributes Documentation</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="docushare.DocuShare.cookies">
+<span class="sig-name descname"><span class="pre">cookies</span></span><a class="headerlink" href="#docushare.DocuShare.cookies" title="Permalink to this definition"></a></dt>
+<dd><p>Cookies of the current session.</p>
+<p>See more details in <a class="reference external" href="https://requests.readthedocs.io/en/latest/api/#requests.Session.cookies" title="(in Requests v2.28.1)"><code class="xref py py-attr docutils literal notranslate"><span class="pre">requests.Session.cookies</span></code></a>.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="docushare.DocuShare.is_logged_in">
+<span class="sig-name descname"><span class="pre">is_logged_in</span></span><a class="headerlink" href="#docushare.DocuShare.is_logged_in" title="Permalink to this definition"></a></dt>
+<dd><p>indicates if this instance successfully logged in the DocuShare site.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>boolean</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="docushare.DocuShare.logger">
+<span class="sig-name descname"><span class="pre">logger</span></span><a class="headerlink" href="#docushare.DocuShare.logger" title="Permalink to this definition"></a></dt>
+<dd><p>Logger of this instance</p>
+<p>It may be useful to change logging settings like log level.</p>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">logging</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ds</span> <span class="o">=</span> <span class="n">DocuShare</span><span class="p">(</span><span class="n">base_url</span><span class="o">=</span><span class="s1">&#39;https://your.domain/docushare/&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ds</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">setLevel</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">DEBUG</span><span class="p">)</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.8/library/logging.html#logging.Logger" title="(in Python v3.8)">logging.Logger</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="docushare.DocuShare.username">
+<span class="sig-name descname"><span class="pre">username</span></span><a class="headerlink" href="#docushare.DocuShare.username" title="Permalink to this definition"></a></dt>
+<dd><p>Currently logged in DocuShare username, or None if login has not been done yet.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#str" title="(in Python v3.8)">str</a> or None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<p class="rubric">Methods Documentation</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="docushare.DocuShare.close">
+<span class="sig-name descname"><span class="pre">close</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#docushare.DocuShare.close" title="Permalink to this definition"></a></dt>
+<dd><p>Close the session with the DocuShare site.</p>
+<p>You need to run <a class="reference internal" href="#docushare.DocuShare.login" title="docushare.DocuShare.login"><code class="xref py py-meth docutils literal notranslate"><span class="pre">login()</span></code></a> again to access any resources on the DocuShare site again.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="docushare.DocuShare.download">
+<span class="sig-name descname"><span class="pre">download</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">hdl</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">size_for_progress_report</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1000000</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#docushare.DocuShare.download" title="Permalink to this definition"></a></dt>
+<dd><p>Download the given handle (Document or Version) as a file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>hdl</strong> (<a class="reference internal" href="docushare.Handle.html#docushare.Handle" title="docushare.Handle"><em>Handle</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – DocuShare handle to download as a file or a string that represents a valid DocuShare handle.</p></li>
+<li><p><strong>path</strong> (<em>path-like object:</em>) – Destination file path.</p></li>
+<li><p><strong>size_for_progress_report</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – This method shows a progress bar using <cite>tqdm &lt;https://tqdm.github.io/&gt;</cite> if the file size is
+more than the specified size in bytes.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><a class="reference internal" href="docushare.DocuShareNotFoundError.html#docushare.DocuShareNotFoundError" title="docushare.DocuShareNotFoundError"><strong>DocuShareNotFoundError</strong></a> – If the given handle does not exist.</p></li>
+<li><p><a class="reference internal" href="docushare.DocuShareNotAuthorizedError.html#docushare.DocuShareNotAuthorizedError" title="docushare.DocuShareNotAuthorizedError"><strong>DocuShareNotAuthorizedError</strong></a> – If the user is not authorized to access the URL.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="docushare.DocuShare.http_get">
+<span class="sig-name descname"><span class="pre">http_get</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">url</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#docushare.DocuShare.http_get" title="Permalink to this definition"></a></dt>
+<dd><p>Access the given URL with HTTP GET method using the current DocuShare session.</p>
+<p>This method may be useful to access the resource that PyDocuShare does not directly support
+(e.g. Wiki, Calendar).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>url</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – URL to access.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>HTTP response.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://requests.readthedocs.io/en/latest/api/#requests.Response" title="(in Requests v2.28.1)">requests.Response</a></p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><a class="reference external" href="https://requests.readthedocs.io/en/latest/api/#requests.HTTPError" title="(in Requests v2.28.1)"><strong>requests.HTTPError</strong></a> – If HTTP error status code was returned.</p></li>
+<li><p><a class="reference internal" href="docushare.DocuShareSystemError.html#docushare.DocuShareSystemError" title="docushare.DocuShareSystemError"><strong>DocuShareSystemError</strong></a> – If the DocuShare site encounters a system error.</p></li>
+<li><p><a class="reference internal" href="docushare.DocuShareNotAuthorizedError.html#docushare.DocuShareNotAuthorizedError" title="docushare.DocuShareNotAuthorizedError"><strong>DocuShareNotAuthorizedError</strong></a> – If the user is not authorized to access the URL.</p></li>
+<li><p><a class="reference internal" href="docushare.DocuShareParseError.html#docushare.DocuShareParseError" title="docushare.DocuShareParseError"><strong>DocuShareParseError</strong></a> – If this method fails to parse the DocuShare system error page.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="docushare.DocuShare.http_post">
+<span class="sig-name descname"><span class="pre">http_post</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">url</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#docushare.DocuShare.http_post" title="Permalink to this definition"></a></dt>
+<dd><p>Access the given URL with HTTP POST method using the current DocuShare session.</p>
+<p>This method may be useful to access the resource that PyDocuShare does not directly support
+(e.g. uploading documents).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>url</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – URL to access.</p></li>
+<li><p><strong>data</strong> – See <a class="reference external" href="https://requests.readthedocs.io/en/latest/api/#requests.Session.post" title="(in Requests v2.28.1)"><code class="xref py py-meth docutils literal notranslate"><span class="pre">requests.Session.post()</span></code></a> for more details.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>HTTP response.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://requests.readthedocs.io/en/latest/api/#requests.Response" title="(in Requests v2.28.1)">requests.Response</a></p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><a class="reference external" href="https://requests.readthedocs.io/en/latest/api/#requests.HTTPError" title="(in Requests v2.28.1)"><strong>requests.HTTPError</strong></a> – If HTTP error status code was returned.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="docushare.DocuShare.login">
+<span class="sig-name descname"><span class="pre">login</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">username</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">password</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">PasswordOption.ASK</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">retry_count</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">domain</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'DocuShare'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#docushare.DocuShare.login" title="Permalink to this definition"></a></dt>
+<dd><p>Login the DocuShare site.</p>
+<p>This must be executed, at least, once before accessing any other resources in DocuShare.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>username</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a><em> or </em><em>None</em>) – Username for Docushare. Specify None to prompt the user to enter the username.</p></li>
+<li><p><strong>password</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a><em> or </em><a class="reference internal" href="docushare.PasswordOption.html#docushare.PasswordOption" title="docushare.PasswordOption"><em>PasswordOption</em></a>) – Password for the DocuShare user.
+If a string is given, it is considered as the password and this method never prompts the user.
+If an <a class="reference internal" href="docushare.PasswordOption.html#docushare.PasswordOption" title="docushare.PasswordOption"><code class="xref py py-class docutils literal notranslate"><span class="pre">PasswordOption</span></code></a> enum is given, this method behaves as described in each enum
+value.</p></li>
+<li><p><strong>retry_count</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – The user will have a chance to enter the credentials this amount of time.</p></li>
+<li><p><strong>domain</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – Domain to specify when logging in DocuShare. Typically, it is ‘DocuShare’.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><a class="reference internal" href="docushare.DocuShareParseError.html#docushare.DocuShareParseError" title="docushare.DocuShareParseError"><strong>DocuShareParseError</strong></a> – If this method fails to parse the DocuShare login page.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="docushare.DocuShare.object">
+<span class="sig-name descname"><span class="pre">object</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">hdl</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#docushare.DocuShare.object" title="Permalink to this definition"></a></dt>
+<dd><p>Get an instance that represents a DocuShare object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>hdl</strong> (<a class="reference internal" href="docushare.Handle.html#docushare.Handle" title="docushare.Handle"><em>Handle</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – DocuShare handle for which you want to get an instance that represents a DocuShare object.
+It can be a string that represents a DocuShare handle like “Document-xxxxx”.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>An instance through which you can get individual property values, file, etc.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="docushare.DocuShareBaseObject.html#docushare.DocuShareBaseObject" title="docushare.DocuShareBaseObject">DocuShareBaseObject</a></p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><a class="reference internal" href="docushare.DocuShareNotFoundError.html#docushare.DocuShareNotFoundError" title="docushare.DocuShareNotFoundError"><strong>DocuShareNotFoundError</strong></a> – If the given handle does not exist.</p></li>
+<li><p><a class="reference internal" href="docushare.DocuShareNotAuthorizedError.html#docushare.DocuShareNotAuthorizedError" title="docushare.DocuShareNotAuthorizedError"><strong>DocuShareNotAuthorizedError</strong></a> – If the user is not authorized to access the URL.</p></li>
+<li><p><a class="reference internal" href="docushare.DocuShareParseError.html#docushare.DocuShareParseError" title="docushare.DocuShareParseError"><strong>DocuShareParseError</strong></a> – If this method fails to parse one of DocuShare pages related to the given handle.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="docushare.DocuShare.url">
+<span class="sig-name descname"><span class="pre">url</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">resource</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hdl</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#docushare.DocuShare.url" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="docushare.join_url.html" class="btn btn-neutral float-left" title="join_url" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="docushare.Resource.html" class="btn btn-neutral float-right" title="Resource" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022 TMT International Observatory.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

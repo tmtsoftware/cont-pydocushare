@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>HandleNode &mdash; PyDocuShare  documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/graphviz.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="CollectionHandleNode" href="docushare.CollectionHandleNode.html" />
+    <link rel="prev" title="Handle" href="docushare.Handle.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../index.html" class="icon icon-home"> PyDocuShare
+          </a>
+              <div class="version">
+                0.1.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../getting-started.html">Getting Started</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../docushare.html">PyDocuShare API Reference</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../docushare.html#functions">Functions</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../docushare.html#classes">Classes</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="docushare.DocuShare.html">DocuShare</a></li>
+<li class="toctree-l3"><a class="reference internal" href="docushare.Resource.html">Resource</a></li>
+<li class="toctree-l3"><a class="reference internal" href="docushare.PasswordOption.html">PasswordOption</a></li>
+<li class="toctree-l3"><a class="reference internal" href="docushare.DocuShareSystemError.html">DocuShareSystemError</a></li>
+<li class="toctree-l3"><a class="reference internal" href="docushare.DocuShareNotFoundError.html">DocuShareNotFoundError</a></li>
+<li class="toctree-l3"><a class="reference internal" href="docushare.DocuShareNotAuthorizedError.html">DocuShareNotAuthorizedError</a></li>
+<li class="toctree-l3"><a class="reference internal" href="docushare.DocuShareBaseObject.html">DocuShareBaseObject</a></li>
+<li class="toctree-l3"><a class="reference internal" href="docushare.FileObject.html">FileObject</a></li>
+<li class="toctree-l3"><a class="reference internal" href="docushare.DocumentObject.html">DocumentObject</a></li>
+<li class="toctree-l3"><a class="reference internal" href="docushare.VersionObject.html">VersionObject</a></li>
+<li class="toctree-l3"><a class="reference internal" href="docushare.CollectionObject.html">CollectionObject</a></li>
+<li class="toctree-l3"><a class="reference internal" href="docushare.CollectionDownloadOption.html">CollectionDownloadOption</a></li>
+<li class="toctree-l3"><a class="reference internal" href="docushare.Handle.html">Handle</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">HandleNode</a></li>
+<li class="toctree-l3"><a class="reference internal" href="docushare.CollectionHandleNode.html">CollectionHandleNode</a></li>
+<li class="toctree-l3"><a class="reference internal" href="docushare.DocumentHandleNode.html">DocumentHandleNode</a></li>
+<li class="toctree-l3"><a class="reference internal" href="docushare.HandleType.html">HandleType</a></li>
+<li class="toctree-l3"><a class="reference internal" href="docushare.InvalidHandleError.html">InvalidHandleError</a></li>
+<li class="toctree-l3"><a class="reference internal" href="docushare.DocuShareParseError.html">DocuShareParseError</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">PyDocuShare</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../docushare.html">PyDocuShare API Reference</a> &raquo;</li>
+      <li>HandleNode</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/api/docushare.HandleNode.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="handlenode">
+<h1>HandleNode<a class="headerlink" href="#handlenode" title="Permalink to this headline"></a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="docushare.HandleNode">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">docushare.</span></span><span class="sig-name descname"><span class="pre">HandleNode</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">handle_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">handle_number</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#docushare.HandleNode" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="docushare.Handle.html#docushare.Handle" title="docushare.handle.Handle"><code class="xref py py-class docutils literal notranslate"><span class="pre">docushare.handle.Handle</span></code></a>, <a class="reference external" href="https://anytree.readthedocs.io/en/latest/api/anytree.node.html#anytree.node.nodemixin.NodeMixin" title="(in anytree v2.8.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">anytree.node.nodemixin.NodeMixin</span></code></a></p>
+<p>This class represents a DocuShare handle in a tree structure.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>handle_type</strong> (<a class="reference internal" href="docushare.HandleType.html#docushare.HandleType" title="docushare.HandleType"><em>HandleType</em></a>) – Handle type.</p></li>
+<li><p><strong>handle_number</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – Handle number.</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Attributes Summary</p>
+<table class="autosummary longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#docushare.HandleNode.ancestors" title="docushare.HandleNode.ancestors"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ancestors</span></code></a></p></td>
+<td><p>All parent Collection handles and their parent Collection handles.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#docushare.HandleNode.anchestors" title="docushare.HandleNode.anchestors"><code class="xref py py-obj docutils literal notranslate"><span class="pre">anchestors</span></code></a></p></td>
+<td><p>All parent Collection handles and their parent Collection handles.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#docushare.HandleNode.children" title="docushare.HandleNode.children"><code class="xref py py-obj docutils literal notranslate"><span class="pre">children</span></code></a></p></td>
+<td><p>All child handles.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#docushare.HandleNode.depth" title="docushare.HandleNode.depth"><code class="xref py py-obj docutils literal notranslate"><span class="pre">depth</span></code></a></p></td>
+<td><p>Number of handles to the root <a class="reference internal" href="docushare.CollectionHandleNode.html#docushare.CollectionHandleNode" title="docushare.CollectionHandleNode"><code class="xref py py-class docutils literal notranslate"><span class="pre">CollectionHandleNode</span></code></a>.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#docushare.HandleNode.descendants" title="docushare.HandleNode.descendants"><code class="xref py py-obj docutils literal notranslate"><span class="pre">descendants</span></code></a></p></td>
+<td><p>All child handles and their child handles.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#docushare.HandleNode.height" title="docushare.HandleNode.height"><code class="xref py py-obj docutils literal notranslate"><span class="pre">height</span></code></a></p></td>
+<td><p>Number of handles on the longest path to a leaf <a class="reference internal" href="#docushare.HandleNode" title="docushare.HandleNode"><code class="xref py py-class docutils literal notranslate"><span class="pre">HandleNode</span></code></a>.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#docushare.HandleNode.identifier" title="docushare.HandleNode.identifier"><code class="xref py py-obj docutils literal notranslate"><span class="pre">identifier</span></code></a></p></td>
+<td><p>String representation of this handle like &quot;Document-20202&quot;.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#docushare.HandleNode.is_leaf" title="docushare.HandleNode.is_leaf"><code class="xref py py-obj docutils literal notranslate"><span class="pre">is_leaf</span></code></a></p></td>
+<td><p>Indicates if this handle node has no children.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#docushare.HandleNode.is_root" title="docushare.HandleNode.is_root"><code class="xref py py-obj docutils literal notranslate"><span class="pre">is_root</span></code></a></p></td>
+<td><p>Indicates if this handle node is tree root.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#docushare.HandleNode.leaves" title="docushare.HandleNode.leaves"><code class="xref py py-obj docutils literal notranslate"><span class="pre">leaves</span></code></a></p></td>
+<td><p>Tuple of all leaf handles excluding Collection handles.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#docushare.HandleNode.number" title="docushare.HandleNode.number"><code class="xref py py-obj docutils literal notranslate"><span class="pre">number</span></code></a></p></td>
+<td><p>Handle number.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#docushare.HandleNode.parent" title="docushare.HandleNode.parent"><code class="xref py py-obj docutils literal notranslate"><span class="pre">parent</span></code></a></p></td>
+<td><p>Parent Collection handle.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#docushare.HandleNode.path" title="docushare.HandleNode.path"><code class="xref py py-obj docutils literal notranslate"><span class="pre">path</span></code></a></p></td>
+<td><p>Path of this handle.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#docushare.HandleNode.root" title="docushare.HandleNode.root"><code class="xref py py-obj docutils literal notranslate"><span class="pre">root</span></code></a></p></td>
+<td><p>Root Collection handle.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#docushare.HandleNode.separator" title="docushare.HandleNode.separator"><code class="xref py py-obj docutils literal notranslate"><span class="pre">separator</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#docushare.HandleNode.siblings" title="docushare.HandleNode.siblings"><code class="xref py py-obj docutils literal notranslate"><span class="pre">siblings</span></code></a></p></td>
+<td><p>Tuple of handles with the same parent Collection handle.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#docushare.HandleNode.type" title="docushare.HandleNode.type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">type</span></code></a></p></td>
+<td><p>Handle type.</p></td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Methods Summary</p>
+<table class="autosummary longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#docushare.HandleNode.from_str" title="docushare.HandleNode.from_str"><code class="xref py py-obj docutils literal notranslate"><span class="pre">from_str</span></code></a>(handle_str)</p></td>
+<td><p>Parse the given string as a DocuShare handle and return Handle instance.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#docushare.HandleNode.iter_path_reverse" title="docushare.HandleNode.iter_path_reverse"><code class="xref py py-obj docutils literal notranslate"><span class="pre">iter_path_reverse</span></code></a>()</p></td>
+<td><p>Iterate up the tree from the current node.</p></td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Attributes Documentation</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="docushare.HandleNode.ancestors">
+<span class="sig-name descname"><span class="pre">ancestors</span></span><a class="headerlink" href="#docushare.HandleNode.ancestors" title="Permalink to this definition"></a></dt>
+<dd><p>All parent Collection handles and their parent Collection handles.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="docushare.HandleNode.anchestors">
+<span class="sig-name descname"><span class="pre">anchestors</span></span><a class="headerlink" href="#docushare.HandleNode.anchestors" title="Permalink to this definition"></a></dt>
+<dd><p>All parent Collection handles and their parent Collection handles.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="docushare.HandleNode.children">
+<span class="sig-name descname"><span class="pre">children</span></span><a class="headerlink" href="#docushare.HandleNode.children" title="Permalink to this definition"></a></dt>
+<dd><p>All child handles.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="docushare.HandleNode.depth">
+<span class="sig-name descname"><span class="pre">depth</span></span><a class="headerlink" href="#docushare.HandleNode.depth" title="Permalink to this definition"></a></dt>
+<dd><p>Number of handles to the root <a class="reference internal" href="docushare.CollectionHandleNode.html#docushare.CollectionHandleNode" title="docushare.CollectionHandleNode"><code class="xref py py-class docutils literal notranslate"><span class="pre">CollectionHandleNode</span></code></a>.</p>
+<p class="rubric">Notes</p>
+<p>The root is not necessarily a root Collection of the DocuShare site.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="docushare.HandleNode.descendants">
+<span class="sig-name descname"><span class="pre">descendants</span></span><a class="headerlink" href="#docushare.HandleNode.descendants" title="Permalink to this definition"></a></dt>
+<dd><p>All child handles and their child handles.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="docushare.HandleNode.height">
+<span class="sig-name descname"><span class="pre">height</span></span><a class="headerlink" href="#docushare.HandleNode.height" title="Permalink to this definition"></a></dt>
+<dd><p>Number of handles on the longest path to a leaf <a class="reference internal" href="#docushare.HandleNode" title="docushare.HandleNode"><code class="xref py py-class docutils literal notranslate"><span class="pre">HandleNode</span></code></a>.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="docushare.HandleNode.identifier">
+<span class="sig-name descname"><span class="pre">identifier</span></span><a class="headerlink" href="#docushare.HandleNode.identifier" title="Permalink to this definition"></a></dt>
+<dd><p>String representation of this handle like “Document-20202”.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#str" title="(in Python v3.8)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="docushare.HandleNode.is_leaf">
+<span class="sig-name descname"><span class="pre">is_leaf</span></span><a class="headerlink" href="#docushare.HandleNode.is_leaf" title="Permalink to this definition"></a></dt>
+<dd><p>Indicates if this handle node has no children.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="docushare.HandleNode.is_root">
+<span class="sig-name descname"><span class="pre">is_root</span></span><a class="headerlink" href="#docushare.HandleNode.is_root" title="Permalink to this definition"></a></dt>
+<dd><p>Indicates if this handle node is tree root.</p>
+<p class="rubric">Notes</p>
+<p>This handle does not necessarily represent a root Collection/Document in the DocuShare site even if this property is True.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="docushare.HandleNode.leaves">
+<span class="sig-name descname"><span class="pre">leaves</span></span><a class="headerlink" href="#docushare.HandleNode.leaves" title="Permalink to this definition"></a></dt>
+<dd><p>Tuple of all leaf handles excluding Collection handles.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="docushare.HandleNode.number">
+<span class="sig-name descname"><span class="pre">number</span></span><a class="headerlink" href="#docushare.HandleNode.number" title="Permalink to this definition"></a></dt>
+<dd><p>Handle number.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.8/library/functions.html#int" title="(in Python v3.8)">int</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="docushare.HandleNode.parent">
+<span class="sig-name descname"><span class="pre">parent</span></span><a class="headerlink" href="#docushare.HandleNode.parent" title="Permalink to this definition"></a></dt>
+<dd><p>Parent Collection handle.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="docushare.HandleNode.path">
+<span class="sig-name descname"><span class="pre">path</span></span><a class="headerlink" href="#docushare.HandleNode.path" title="Permalink to this definition"></a></dt>
+<dd><p>Path of this handle.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="docushare.HandleNode.root">
+<span class="sig-name descname"><span class="pre">root</span></span><a class="headerlink" href="#docushare.HandleNode.root" title="Permalink to this definition"></a></dt>
+<dd><p>Root Collection handle.</p>
+<p class="rubric">Notes</p>
+<p>It is not necessarily a root Collection of the DocuShare site.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="docushare.HandleNode.separator">
+<span class="sig-name descname"><span class="pre">separator</span></span><a class="headerlink" href="#docushare.HandleNode.separator" title="Permalink to this definition"></a></dt>
+<dd><p>The <code class="xref any docutils literal notranslate"><span class="pre">NodeMixin</span></code> class extends any Python class to a tree node.</p>
+<p>The only tree relevant information is the <cite>parent</cite> attribute.
+If <cite>None</cite> the <code class="xref any docutils literal notranslate"><span class="pre">NodeMixin</span></code> is root node.
+If set to another node, the <code class="xref any docutils literal notranslate"><span class="pre">NodeMixin</span></code> becomes the child of it.</p>
+<p>The <cite>children</cite> attribute can be used likewise.
+If <cite>None</cite> the <code class="xref any docutils literal notranslate"><span class="pre">NodeMixin</span></code> has no children.
+The <cite>children</cite> attribute can be set to any iterable of <code class="xref any docutils literal notranslate"><span class="pre">NodeMixin</span></code> instances.
+These instances become children of the node.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">anytree</span> <span class="kn">import</span> <span class="n">NodeMixin</span><span class="p">,</span> <span class="n">RenderTree</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">MyBaseClass</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>  <span class="c1"># Just an example of a base class</span>
+<span class="gp">... </span>    <span class="n">foo</span> <span class="o">=</span> <span class="mi">4</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">MyClass</span><span class="p">(</span><span class="n">MyBaseClass</span><span class="p">,</span> <span class="n">NodeMixin</span><span class="p">):</span>  <span class="c1"># Add Node feature</span>
+<span class="gp">... </span>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">length</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">children</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="gp">... </span>        <span class="nb">super</span><span class="p">(</span><span class="n">MyClass</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+<span class="gp">... </span>        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
+<span class="gp">... </span>        <span class="bp">self</span><span class="o">.</span><span class="n">length</span> <span class="o">=</span> <span class="n">length</span>
+<span class="gp">... </span>        <span class="bp">self</span><span class="o">.</span><span class="n">width</span> <span class="o">=</span> <span class="n">width</span>
+<span class="gp">... </span>        <span class="bp">self</span><span class="o">.</span><span class="n">parent</span> <span class="o">=</span> <span class="n">parent</span>
+<span class="gp">... </span>        <span class="k">if</span> <span class="n">children</span><span class="p">:</span>
+<span class="gp">... </span>            <span class="bp">self</span><span class="o">.</span><span class="n">children</span> <span class="o">=</span> <span class="n">children</span>
+</pre></div>
+</div>
+<p>Construction via <cite>parent</cite>:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">my0</span> <span class="o">=</span> <span class="n">MyClass</span><span class="p">(</span><span class="s1">&#39;my0&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">my1</span> <span class="o">=</span> <span class="n">MyClass</span><span class="p">(</span><span class="s1">&#39;my1&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="n">my0</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">my2</span> <span class="o">=</span> <span class="n">MyClass</span><span class="p">(</span><span class="s1">&#39;my2&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="n">my0</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">pre</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">RenderTree</span><span class="p">(</span><span class="n">my0</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="n">treestr</span> <span class="o">=</span> <span class="sa">u</span><span class="s2">&quot;</span><span class="si">%s%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">pre</span><span class="p">,</span> <span class="n">node</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+<span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="n">treestr</span><span class="o">.</span><span class="n">ljust</span><span class="p">(</span><span class="mi">8</span><span class="p">),</span> <span class="n">node</span><span class="o">.</span><span class="n">length</span><span class="p">,</span> <span class="n">node</span><span class="o">.</span><span class="n">width</span><span class="p">)</span>
+<span class="go">my0      0 0</span>
+<span class="go">├── my1  1 0</span>
+<span class="go">└── my2  0 2</span>
+</pre></div>
+</div>
+<p>Construction via <cite>children</cite>:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">my0</span> <span class="o">=</span> <span class="n">MyClass</span><span class="p">(</span><span class="s1">&#39;my0&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">children</span><span class="o">=</span><span class="p">[</span>
+<span class="gp">... </span>    <span class="n">MyClass</span><span class="p">(</span><span class="s1">&#39;my1&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
+<span class="gp">... </span>    <span class="n">MyClass</span><span class="p">(</span><span class="s1">&#39;my2&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span>
+<span class="gp">... </span><span class="p">]</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">pre</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">RenderTree</span><span class="p">(</span><span class="n">my0</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="n">treestr</span> <span class="o">=</span> <span class="sa">u</span><span class="s2">&quot;</span><span class="si">%s%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">pre</span><span class="p">,</span> <span class="n">node</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+<span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="n">treestr</span><span class="o">.</span><span class="n">ljust</span><span class="p">(</span><span class="mi">8</span><span class="p">),</span> <span class="n">node</span><span class="o">.</span><span class="n">length</span><span class="p">,</span> <span class="n">node</span><span class="o">.</span><span class="n">width</span><span class="p">)</span>
+<span class="go">my0      0 0</span>
+<span class="go">├── my1  1 0</span>
+<span class="go">└── my2  0 2</span>
+</pre></div>
+</div>
+<p>Both approaches can be mixed:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">my0</span> <span class="o">=</span> <span class="n">MyClass</span><span class="p">(</span><span class="s1">&#39;my0&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">children</span><span class="o">=</span><span class="p">[</span>
+<span class="gp">... </span>    <span class="n">MyClass</span><span class="p">(</span><span class="s1">&#39;my1&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
+<span class="gp">... </span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">my2</span> <span class="o">=</span> <span class="n">MyClass</span><span class="p">(</span><span class="s1">&#39;my2&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="n">my0</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">pre</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">RenderTree</span><span class="p">(</span><span class="n">my0</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="n">treestr</span> <span class="o">=</span> <span class="sa">u</span><span class="s2">&quot;</span><span class="si">%s%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">pre</span><span class="p">,</span> <span class="n">node</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+<span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="n">treestr</span><span class="o">.</span><span class="n">ljust</span><span class="p">(</span><span class="mi">8</span><span class="p">),</span> <span class="n">node</span><span class="o">.</span><span class="n">length</span><span class="p">,</span> <span class="n">node</span><span class="o">.</span><span class="n">width</span><span class="p">)</span>
+<span class="go">my0      0 0</span>
+<span class="go">├── my1  1 0</span>
+<span class="go">└── my2  0 2</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="docushare.HandleNode.siblings">
+<span class="sig-name descname"><span class="pre">siblings</span></span><a class="headerlink" href="#docushare.HandleNode.siblings" title="Permalink to this definition"></a></dt>
+<dd><p>Tuple of handles with the same parent Collection handle.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="docushare.HandleNode.type">
+<span class="sig-name descname"><span class="pre">type</span></span><a class="headerlink" href="#docushare.HandleNode.type" title="Permalink to this definition"></a></dt>
+<dd><p>Handle type.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="docushare.HandleType.html#docushare.HandleType" title="docushare.HandleType">HandleType</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<p class="rubric">Methods Documentation</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="docushare.HandleNode.from_str">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_str</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">handle_str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#docushare.HandleNode.from_str" title="Permalink to this definition"></a></dt>
+<dd><p>Parse the given string as a DocuShare handle and return Handle instance.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>handle_str</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a><em> or </em><em>bytes-like object</em>) – A string that represents a DocuShare handle like ‘Document-20202’.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A canonical instance that represents the given handle.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="docushare.Handle.html#docushare.Handle" title="docushare.Handle">Handle</a></p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><a class="reference internal" href="docushare.InvalidHandleError.html#docushare.InvalidHandleError" title="docushare.InvalidHandleError"><strong>InvalidHandleError</strong></a> – If the given string is not a valid DocuShare handle.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="docushare.HandleNode.iter_path_reverse">
+<span class="sig-name descname"><span class="pre">iter_path_reverse</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#docushare.HandleNode.iter_path_reverse" title="Permalink to this definition"></a></dt>
+<dd><p>Iterate up the tree from the current node.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">anytree</span> <span class="kn">import</span> <span class="n">Node</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">udo</span> <span class="o">=</span> <span class="n">Node</span><span class="p">(</span><span class="s2">&quot;Udo&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">marc</span> <span class="o">=</span> <span class="n">Node</span><span class="p">(</span><span class="s2">&quot;Marc&quot;</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="n">udo</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">lian</span> <span class="o">=</span> <span class="n">Node</span><span class="p">(</span><span class="s2">&quot;Lian&quot;</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="n">marc</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">udo</span><span class="o">.</span><span class="n">iter_path_reverse</span><span class="p">():</span>
+<span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="n">node</span><span class="p">)</span>
+<span class="go">Node(&#39;/Udo&#39;)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">marc</span><span class="o">.</span><span class="n">iter_path_reverse</span><span class="p">():</span>
+<span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="n">node</span><span class="p">)</span>
+<span class="go">Node(&#39;/Udo/Marc&#39;)</span>
+<span class="go">Node(&#39;/Udo&#39;)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">lian</span><span class="o">.</span><span class="n">iter_path_reverse</span><span class="p">():</span>
+<span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="n">node</span><span class="p">)</span>
+<span class="go">Node(&#39;/Udo/Marc/Lian&#39;)</span>
+<span class="go">Node(&#39;/Udo/Marc&#39;)</span>
+<span class="go">Node(&#39;/Udo&#39;)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="docushare.Handle.html" class="btn btn-neutral float-left" title="Handle" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="docushare.CollectionHandleNode.html" class="btn btn-neutral float-right" title="CollectionHandleNode" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022 TMT International Observatory.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

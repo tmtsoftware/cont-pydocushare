@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Getting Started &mdash; PyDocuShare  documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="_static/graphviz.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="PyDocuShare API Reference" href="docushare.html" />
+    <link rel="prev" title="PyDocuShare" href="index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="index.html" class="icon icon-home"> PyDocuShare
+          </a>
+              <div class="version">
+                0.1.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Getting Started</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#what-is-handle">What is Handle?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#download-a-document">Download a document</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#download-a-specific-version">Download a specific version</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#accessing-version-information">Accessing version information</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#download-all-documents-in-a-collection">Download all documents in a Collection</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#accessing-collection">Accessing Collection</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#more-details-aobut-docushare-login">More Details aobut DocuShare Login</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="docushare.html">PyDocuShare API Reference</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">PyDocuShare</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+      <li>Getting Started</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/getting-started.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="getting-started">
+<span id="id1"></span><h1>Getting Started<a class="headerlink" href="#getting-started" title="Permalink to this headline"></a></h1>
+<p>PyDocuShare provides Python API to access Collections, Documents and their versions in a Xerox DocuShare site. You can automate your task or workflow that requires accesses to Xerox DocuShare using this API. This document gives you an idea about what can be done with this API.</p>
+<section id="what-is-handle">
+<h2>What is Handle?<a class="headerlink" href="#what-is-handle" title="Permalink to this headline"></a></h2>
+<p>In DocuShare, each docuemnt and object can be identified by a <strong>handle</strong> like Document-00000, Version-000000, Collection-00000. These handles are typically shown as a part of URL when you access your DocuShare site. For example, when you open a Collection in your DocuShare site, the URL in your Web browser should look like:</p>
+<blockquote>
+<div><p><a class="reference external" href="https://your.docushare.domain/docushare/dsweb/Get/Document-98765/xxxxx.pdf">https://your.docushare.domain/docushare/dsweb/Get/Document-98765/xxxxx.pdf</a></p>
+</div></blockquote>
+<p>“Document-98765” within this URL is what we call <strong>handle</strong>. This handle is essentially the key or the identifier to view the collections, documents and versions.</p>
+</section>
+<section id="download-a-document">
+<h2>Download a document<a class="headerlink" href="#download-a-document" title="Permalink to this headline"></a></h2>
+<p>You need to login first to access your DocuShare site:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">docushare</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ds</span> <span class="o">=</span> <span class="n">DocuShare</span><span class="p">(</span><span class="n">base_url</span><span class="o">=</span><span class="s1">&#39;https://your.docushare.domain/docushare/&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ds</span><span class="o">.</span><span class="n">login</span><span class="p">()</span>
+<span class="go">_</span>
+<span class="go">Enter your username for https://your.docushare.domain/docushare/</span>
+<span class="go">Username: your_user_name</span>
+<span class="go">_</span>
+<span class="go">Enter password of &quot;your_user_name&quot; for https://your.docushare.domain/docushare/</span>
+<span class="go">Password:</span>
+<span class="go">_</span>
+</pre></div>
+</div>
+<p>After successful login, you can access your DocuShare resources through the <a class="reference internal" href="api/docushare.DocuShare.html#docushare.DocuShare" title="docushare.DocuShare"><code class="xref py py-class docutils literal notranslate"><span class="pre">docushare.DocuShare</span></code></a> instance in the <code class="docutils literal notranslate"><span class="pre">ds</span></code> variable. The example below downloads Document-98765:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">doc</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">object</span><span class="p">(</span><span class="s1">&#39;Document-98765&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Download &quot;</span><span class="si">{</span><span class="n">doc</span><span class="o">.</span><span class="n">title</span><span class="si">}</span><span class="s1">&quot; as &quot;</span><span class="si">{</span><span class="n">doc</span><span class="o">.</span><span class="n">filename</span><span class="si">}</span><span class="s1">&quot;.&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">doc</span><span class="o">.</span><span class="n">download</span><span class="p">()</span>
+<span class="go">PosixPath(&#39;/path/to/your/current/directory/{doc.filename}&#39;)</span>
+</pre></div>
+</div>
+<p>Now the Document-98765 should have been downloaded to your local storage in the shown path.</p>
+<p><code class="docutils literal notranslate"><span class="pre">ds.object(handle)</span></code> may be replaced by <code class="docutils literal notranslate"><span class="pre">ds[handle]</span></code> as shown below:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">doc</span> <span class="o">=</span> <span class="n">ds</span><span class="p">[</span><span class="s1">&#39;Document-98765&#39;</span><span class="p">]</span>
+</pre></div>
+</div>
+</section>
+<section id="download-a-specific-version">
+<h2>Download a specific version<a class="headerlink" href="#download-a-specific-version" title="Permalink to this headline"></a></h2>
+<p>To download a specific version, you can also specify Version handle:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">ver</span> <span class="o">=</span> <span class="n">ds</span><span class="p">[</span><span class="s1">&#39;Version-111111&#39;</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Download &quot;</span><span class="si">{</span><span class="n">ver</span><span class="o">.</span><span class="n">title</span><span class="si">}</span><span class="s1">&quot; as &quot;</span><span class="si">{</span><span class="n">ver</span><span class="o">.</span><span class="n">filename</span><span class="si">}</span><span class="s1">&quot;.&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ver</span><span class="o">.</span><span class="n">download</span><span class="p">()</span>
+<span class="go">PosixPath(&#39;/path/to/your/current/directory/{ver.filename}&#39;)</span>
+</pre></div>
+</div>
+</section>
+<section id="accessing-version-information">
+<h2>Accessing version information<a class="headerlink" href="#accessing-version-information" title="Permalink to this headline"></a></h2>
+<p>You can get the version information as shown below:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">doc</span> <span class="o">=</span> <span class="n">ds</span><span class="p">[</span><span class="s1">&#39;Document-98765&#39;</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">ver_hdl</span> <span class="ow">in</span> <span class="n">doc</span><span class="o">.</span><span class="n">version_handles</span><span class="p">:</span>
+<span class="gp">... </span>    <span class="n">ver</span> <span class="o">=</span> <span class="n">ds</span><span class="p">[</span><span class="n">ver_hdl</span><span class="p">]</span>
+<span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">ver_hdl</span><span class="si">}</span><span class="s1"> is version #</span><span class="si">{</span><span class="n">ver</span><span class="o">.</span><span class="n">version_number</span><span class="si">}</span><span class="s1"> for </span><span class="si">{</span><span class="n">doc</span><span class="o">.</span><span class="n">handle</span><span class="si">}</span><span class="s1">.&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="download-all-documents-in-a-collection">
+<h2>Download all documents in a Collection<a class="headerlink" href="#download-all-documents-in-a-collection" title="Permalink to this headline"></a></h2>
+<p>The example below shows how you can download all documents in a Collection:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">col</span> <span class="o">=</span> <span class="n">ds</span><span class="p">[</span><span class="s1">&#39;Collection-55555&#39;</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">col</span><span class="o">.</span><span class="n">download</span><span class="p">(</span><span class="n">destination_path</span> <span class="o">=</span> <span class="s1">&#39;output_dir&#39;</span><span class="p">,</span> <span class="n">option</span> <span class="o">=</span> <span class="n">CollectionDownloadOption</span><span class="o">.</span><span class="n">ALL</span><span class="p">)</span>
+<span class="go">[PosixPath(&#39;output_dir/dir1/document11.pdf&#39;), PosixPath(&#39;output_dir/dir1/document12.pdf&#39;), PosixPath(&#39;output_dir/dir2/document21.pdf&#39;), PosixPath(&#39;output_dir/dir2/document22.pdf&#39;), PosixPath(&#39;output_dir/document01.pdf&#39;)]</span>
+</pre></div>
+</div>
+<p>The <a class="reference internal" href="api/docushare.CollectionObject.html#docushare.CollectionObject.download" title="docushare.CollectionObject.download"><code class="xref py py-meth docutils literal notranslate"><span class="pre">docushare.CollectionObject.download()</span></code></a> method returns the list of successfully downloaded files. It may take some time until the method actually starts downloading if there is a lot of documents in the Collection. It is likely because it takes time to get the properties of each document from your DocuShare site. You may change the log level of PyDocuShare API to <code class="docutils literal notranslate"><span class="pre">INFO</span></code> so that you can see what is going on behind the scenes:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">logging</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ds</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">setLevel</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">col</span> <span class="o">=</span> <span class="n">ds</span><span class="p">[</span><span class="s1">&#39;Collection-66666&#39;</span><span class="p">]</span>
+<span class="go">2022-07-02 14:05:30,998: INFO - HTTP GET  https://your.docushare.domain/docushare/dsweb/Services/Collection-66666</span>
+<span class="go">2022-07-02 14:05:30,299: INFO - HTTP GET  https://your.docushare.domain/docushare/dsweb/View/Collection-66666</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">downloaded_paths</span> <span class="o">=</span> <span class="n">col</span><span class="o">.</span><span class="n">download</span><span class="p">(</span><span class="n">destination_path</span> <span class="o">=</span> <span class="s1">&#39;output_dir&#39;</span><span class="p">,</span> <span class="n">option</span> <span class="o">=</span> <span class="n">CollectionDownloadOption</span><span class="o">.</span><span class="n">ALL</span><span class="p">,</span> <span class="n">progress_report</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span>
+<span class="go">2022-07-02 14:05:33,327: INFO - HTTP GET  https://docushare.tmt.org/docushare/dsweb/Services/Collection-77777</span>
+<span class="go">2022-07-02 14:05:33,650: INFO - HTTP GET  https://docushare.tmt.org/docushare/dsweb/View/Collection-77777</span>
+<span class="go">2022-07-02 14:05:33,654: INFO - HTTP GET  https://your.docushare.domain/docushare/dsweb/Services/Document-10001</span>
+<span class="go">2022-07-02 14:05:33,886: INFO - HTTP GET  https://your.docushare.domain/docushare/dsweb/ServicesLib/Document-10001/History</span>
+<span class="go">2022-07-02 14:05:34,133: INFO - HTTP GET  https://your.docushare.domain/docushare/dsweb/Services/Document-10002</span>
+<span class="go">2022-07-02 14:05:34,313: INFO - HTTP GET  https://your.docushare.domain/docushare/dsweb/ServicesLib/Document-10002/History</span>
+<span class="go">2022-07-02 14:05:34,317: INFO - HTTP GET  https://your.docushare.domain/docushare/dsweb/Get/Document-10001</span>
+<span class="go">2022-07-02 14:05:34,372: INFO - Started downloading: https://your.docushare.domain/docushare/dsweb/Get/Document-10001 =&gt; output_dir/dir1/document1.pdf</span>
+<span class="go">2022-07-02 14:05:34,511: INFO - Completed downloading: https://your.docushare.domain/docushare/dsweb/Get/Document-10001 =&gt; output_dir/dir1/document1.pdf</span>
+<span class="go">2022-07-02 14:05:34,511: INFO - HTTP GET  https://your.docushare.domain/docushare/dsweb/Get/Document-10002</span>
+<span class="go">2022-07-02 14:05:34,543: INFO - Started downloading: https://your.docushare.domain/docushare/dsweb/Get/Document-10002 =&gt; output_dir/document2.pdf</span>
+<span class="go">2022-07-02 14:05:34,892: INFO - Completed downloading: https://your.docushare.domain/docushare/dsweb/Get/Document-10002 =&gt; output_dir/document2.pdf</span>
+</pre></div>
+</div>
+</section>
+<section id="accessing-collection">
+<h2>Accessing Collection<a class="headerlink" href="#accessing-collection" title="Permalink to this headline"></a></h2>
+<p>You may access more information about the Collection through an instance of <a class="reference internal" href="api/docushare.CollectionObject.html#docushare.CollectionObject" title="docushare.CollectionObject"><code class="xref py py-class docutils literal notranslate"><span class="pre">docushare.CollectionObject</span></code></a> returned by <code class="docutils literal notranslate"><span class="pre">ds['Collection-xxxxx']</span></code>. In particular, the <a class="reference internal" href="api/docushare.CollectionObject.html#docushare.CollectionObject.object_handle_tree" title="docushare.CollectionObject.object_handle_tree"><code class="xref py py-attr docutils literal notranslate"><span class="pre">docushare.CollectionObject.object_handle_tree</span></code></a> attribute lets you traverse all collections and documents under that Collection. The example code block below shows how to display the tree structure under Collection-70000:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">anytree</span> <span class="kn">import</span> <span class="n">RenderTree</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">col</span> <span class="o">=</span> <span class="n">ds</span><span class="p">[</span><span class="s1">&#39;Collection-70000&#39;</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">pre</span><span class="p">,</span> <span class="n">fill</span><span class="p">,</span> <span class="n">handle</span> <span class="ow">in</span> <span class="n">RenderTree</span><span class="p">(</span><span class="n">col</span><span class="o">.</span><span class="n">object_handle_tree</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="n">node_str</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">pre</span><span class="si">}{</span><span class="n">handle</span><span class="si">}</span><span class="s1">&#39;</span>
+<span class="gp">... </span>    <span class="n">hdl_obj</span> <span class="o">=</span> <span class="n">ds</span><span class="p">[</span><span class="n">handle</span><span class="p">]</span>
+<span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="n">node_str</span><span class="o">.</span><span class="n">ljust</span><span class="p">(</span><span class="mi">25</span><span class="p">),</span> <span class="n">hdl_obj</span><span class="o">.</span><span class="n">title</span><span class="p">)</span>
+<span class="go">Collection-70000          (Title of Collection-70000)</span>
+<span class="go">├── Collection-70000      (Title of Collection-70000)</span>
+<span class="go">│   ├── Document-70001    (Title of Document-70001)</span>
+<span class="go">│   └── Document-70002    (Title of Document-70001)</span>
+<span class="go">├── Collection-72000      (Title of Collection-72000)</span>
+<span class="go">│   ├── Document-72001    (Title of Document-72001)</span>
+<span class="go">│   └── Document-72002    (Title of Document-72002)</span>
+<span class="go">├── Document-70001        (Title of Document-70001)</span>
+<span class="go">├── Document-70002        (Title of Document-70002)</span>
+<span class="go">└── Document-70003        (Title of Document-70003)</span>
+</pre></div>
+</div>
+<p>See the API reference of <a class="reference internal" href="api/docushare.CollectionObject.html#docushare.CollectionObject" title="docushare.CollectionObject"><code class="xref py py-class docutils literal notranslate"><span class="pre">docushare.CollectionObject</span></code></a> for more details.</p>
+</section>
+<section id="more-details-aobut-docushare-login">
+<h2>More Details aobut DocuShare Login<a class="headerlink" href="#more-details-aobut-docushare-login" title="Permalink to this headline"></a></h2>
+<p>User authentication is one of the key things that PyDocuShare does for you to automate your task. By default, <a class="reference internal" href="api/docushare.DocuShare.html#docushare.DocuShare.login" title="docushare.DocuShare.login"><code class="xref py py-meth docutils literal notranslate"><span class="pre">docushare.DocuShare.login()</span></code></a> asks the user to enter the username and password. If you want to fully automate your workflow without any user interaction, you may pass the username and password as the arguments:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">ds</span><span class="o">.</span><span class="n">login</span><span class="p">(</span><span class="n">username</span> <span class="o">=</span> <span class="s1">&#39;your_use_name&#39;</span><span class="p">,</span> <span class="n">password</span> <span class="o">=</span> <span class="s1">&#39;your_password&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>However, it is not desirable to hard-code your password in a Python script. If you commit that script to Git by mistake, it can turn to be a SERIOUS SECURITY INCIDENT! It is highly recommended to store password somewhere else in a secure way and reuse it in successive logins for task automation. PyDocuShare provides a convenient option that automatically saves the password in a user directory in a secure way and reuses it next time. Call the <a class="reference internal" href="api/docushare.DocuShare.html#docushare.DocuShare.login" title="docushare.DocuShare.login"><code class="xref py py-meth docutils literal notranslate"><span class="pre">docushare.DocuShare.login()</span></code></a> method with <code class="docutils literal notranslate"><span class="pre">password</span> <span class="pre">=</span> <span class="pre">PasswordOption.USE_STORED</span></code> argument to enable that feature:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">ds</span><span class="o">.</span><span class="n">login</span><span class="p">(</span><span class="n">username</span> <span class="o">=</span> <span class="s1">&#39;your_use_name&#39;</span><span class="p">,</span> <span class="n">password</span> <span class="o">=</span> <span class="n">PasswordOption</span><span class="o">.</span><span class="n">USE_STORED</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>For the really first time, a dialog may pop-up and ask you to set the master password of your <a class="reference external" href="https://pypi.org/project/keyring/">keyring</a> as shown below:</p>
+<img alt="_images/keyring_setting_master_password_Ubuntu.png" src="_images/keyring_setting_master_password_Ubuntu.png" />
+<p><strong>The master password of your keyring is DIFFERENT from your DocuShare password.</strong> It is like the master password of your password manager. You should set a very strong password, but you also need to remember this password. It is recommended to set the same password as your DocuShare password so that you will have less chance to forget. You will be asked to enter the master password when you call <a class="reference internal" href="api/docushare.DocuShare.html#docushare.DocuShare.login" title="docushare.DocuShare.login"><code class="xref py py-meth docutils literal notranslate"><span class="pre">docushare.DocuShare.login()</span></code></a> method with <code class="docutils literal notranslate"><span class="pre">password</span> <span class="pre">=</span> <span class="pre">PasswordOption.USE_STORED</span></code> argument for the first time after system reboot. But, once you enter the master password, you will not be asked to enter it until the system quits.</p>
+<p>After that, you may be asked to enter your password on the DocuShare site in the console if it is your first time. If so, just enter your DocuShare password. If the user authentication is successful, the password is stored in your user directory. This storage is persistent, so you do not have to enter the DocuShare password forever until you change it.</p>
+<p>Let’s confirm that the password was stored correctly. Run the same method again and again:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">ds</span><span class="o">.</span><span class="n">login</span><span class="p">(</span><span class="n">username</span> <span class="o">=</span> <span class="s1">&#39;your_use_name&#39;</span><span class="p">,</span> <span class="n">password</span> <span class="o">=</span> <span class="n">PasswordOption</span><span class="o">.</span><span class="n">USE_STORED</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Now this method should not ask the user to enter the password, which means that PyDocuShare uses the stored DocuShare password for user authentication. As you as you call the <a class="reference internal" href="api/docushare.DocuShare.html#docushare.DocuShare.login" title="docushare.DocuShare.login"><code class="xref py py-meth docutils literal notranslate"><span class="pre">docushare.DocuShare.login()</span></code></a> method with the same arguments, all you need to enter is the master password (not DocuShare password) only once after every system boot.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="index.html" class="btn btn-neutral float-left" title="PyDocuShare" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="docushare.html" class="btn btn-neutral float-right" title="PyDocuShare API Reference" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022 TMT International Observatory.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

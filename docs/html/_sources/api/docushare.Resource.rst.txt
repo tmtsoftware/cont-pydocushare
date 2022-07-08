@@ -1,0 +1,6 @@
+Resource
+========
+
+.. currentmodule:: docushare
+
+.. autoenum:: Resource

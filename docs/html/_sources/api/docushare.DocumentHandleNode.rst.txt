@@ -1,0 +1,61 @@
+DocumentHandleNode
+==================
+
+.. currentmodule:: docushare
+
+.. autoclass:: DocumentHandleNode
+   :show-inheritance:
+
+   .. rubric:: Attributes Summary
+
+   .. autosummary::
+
+      ~DocumentHandleNode.ancestors
+      ~DocumentHandleNode.anchestors
+      ~DocumentHandleNode.children
+      ~DocumentHandleNode.depth
+      ~DocumentHandleNode.descendants
+      ~DocumentHandleNode.height
+      ~DocumentHandleNode.identifier
+      ~DocumentHandleNode.is_leaf
+      ~DocumentHandleNode.is_root
+      ~DocumentHandleNode.leaves
+      ~DocumentHandleNode.number
+      ~DocumentHandleNode.parent
+      ~DocumentHandleNode.path
+      ~DocumentHandleNode.root
+      ~DocumentHandleNode.separator
+      ~DocumentHandleNode.siblings
+      ~DocumentHandleNode.type
+
+   .. rubric:: Methods Summary
+
+   .. autosummary::
+
+      ~DocumentHandleNode.from_str
+      ~DocumentHandleNode.iter_path_reverse
+
+   .. rubric:: Attributes Documentation
+
+   .. autoattribute:: ancestors
+   .. autoattribute:: anchestors
+   .. autoattribute:: children
+   .. autoattribute:: depth
+   .. autoattribute:: descendants
+   .. autoattribute:: height
+   .. autoattribute:: identifier
+   .. autoattribute:: is_leaf
+   .. autoattribute:: is_root
+   .. autoattribute:: leaves
+   .. autoattribute:: number
+   .. autoattribute:: parent
+   .. autoattribute:: path
+   .. autoattribute:: root
+   .. autoattribute:: separator
+   .. autoattribute:: siblings
+   .. autoattribute:: type
+
+   .. rubric:: Methods Documentation
+
+   .. automethod:: from_str
+   .. automethod:: iter_path_reverse
