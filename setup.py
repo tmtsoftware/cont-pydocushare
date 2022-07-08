@@ -8,7 +8,7 @@ class CleanAlsoSphinx(clean):
         
         import shutil
         from pathlib import Path
-        dirs_to_remove = ['build/docs/', 'docs/api/']
+        dirs_to_remove = ['docs/doctrees/', 'docs/html/', 'docs/api/']
         for dir_to_remove in dirs_to_remove:
             dir_to_remove_abs = Path(dir_to_remove).resolve()
             print(f'Removing {dir_to_remove_abs}...')
@@ -25,7 +25,7 @@ setup(
     url          = 'https://github.com/tnakamot/pydocushare',
     author       = 'Takashi Nakamoto',
     author_email = 'tnakamoto@tmt.org',
-    license      = 'Apache',
+    license      = 'GPLv2',
     packages     = ['docushare'],
     python_requires  = '>=3.8',
     install_requires = [
@@ -54,7 +54,7 @@ setup(
             'version'   : ('setup.py', version),
             'copyright' : ('setup.py', '2022 TMT International Observatory'),
             'source_dir': ('setup.py', 'docs'),
-            'build_dir' : ('setup.py', 'build/docs'),
+            'build_dir' : ('setup.py', 'docs'),
             'builder'   : ('setup.py', 'html'),
         }
     },
