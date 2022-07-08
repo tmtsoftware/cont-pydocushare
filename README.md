@@ -85,6 +85,10 @@ The above command sometimes does not work as intended due to remnant from the pr
 
 This API has been tested with DocuShare version 7.0.0. The implementation of this API does not use DocuShare HTTP/XML interface. It rather parses the same HTML pages as the users see in their Web browsers. Therefore, it may not work with different versions or if the DocuShare configuration is different from what the author assumes.
 
+## License
+
+PyDocuShare uses [pyduktape](https://github.com/stefano/pyduktape) as the underlying JavaScript interpreter to do DocuShare challenge-response authentication. Because it is distributed under the terms of GNU General Public License version 2, PyDocuShare is distributed under the same license. See [LICENSE](LICENSE) for more details.
+
 ## Developer information
 
 The sections below provide information for developer who extend and/or fix PyDocuShare API.
