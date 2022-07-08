@@ -91,10 +91,10 @@ Follow the procedure below to release a new version.
 
  1. Pre-release procedure
     1. Make sure that you are in the _main_ branch. If not, run `git checkout main`.
-    1. Make sure that all your local changes have been committed by `git commit -a -m "your_commit_message"`.
-    2. Run [all unit tests](#unit-test) and confirm that all tests were passed.
-    3. Generate [user documentation and API reference](#documentation) locally, make sure that there is no error or warning, and check the contents of the generated documents.
-       * It is currently known that "WARNING: 'any' reference target not found: NodeMixin" is shown multiple times. This is deems to be a problem in [anytree documentation](https://anytree.readthedocs.io/en/latest/). You can ignore those warning.
+    2. Make sure that all your local changes have been committed by `git commit -a -m "your_commit_message"`.
+    3. Run [all unit tests](#unit-test) and confirm that all tests were passed.
+    4. Generate [user documentation and API reference](#documentation) locally, make sure that there is no error or warning, and check the contents of the generated documents.
+       * If the warning is known and you think you do not have to fix it, you may want to update [`nitpick_ignore`](https://www.sphinx-doc.org/en/master/usage/configuration.html?highlight=nitpick_ignore#confval-nitpick_ignore) or [`nitpick_ignore_regex`](https://www.sphinx-doc.org/en/master/usage/configuration.html?highlight=nitpick_ignore#confval-nitpick_ignore_regex) variable in [docs/conf.py](docs/conf.py). 
  2. Version tagging
     1. Open [setup.py](setup.py) and set the new version number to release.
     2. Run `git commit -a -m "Changed version number"` to commit the change in [setup.py](setup.py).

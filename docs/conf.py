@@ -50,6 +50,9 @@ nitpick_ignore = [
     ('py:class', 'bytes-like object'),
     ('py:class', 'path-like object')
 ]
+nitpick_ignore_regex = [
+    (r'.*', 'NodeMixin'),
+]
 
 # -- Options for HTML output -------------------------------------------------
 
