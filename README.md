@@ -10,6 +10,20 @@ This README.md is the documentation for developers who extend, fix and/or releas
 
 PyDocuShare uses [pyduktape](https://github.com/stefano/pyduktape) as the underlying JavaScript interpreter to perform DocuShare challenge-response authentication. Because it is distributed under the terms of GNU General Public License version 2, PyDocuShare is distributed under the same license. See [LICENSE](LICENSE) for more details.
 
+## Editable installation
+
+If you want to test PyDocuShare under development, you may want to have the system recognize `docushare` module in your local git repository rather than installing them in one of python system paths. To do so, run the command below:
+
+```bash
+ $ pip install -e .
+```
+
+The command above adds `docusahre` module in your local git repository to the python system paths. It is called ["editable installs"](https://pip.pypa.io/en/stable/topics/local-project-installs/#editable-installs). You can undo the command above by running:
+
+```bash
+ $ pip uninstall pydocushare
+```
+
 ## Inline Documentation
 
 PyDocuShare uses [numpy style](https://numpydoc.readthedocs.io/en/latest/format.html#docstring-standard) to document the module, classes, functions, methods and attributes. Use the same style for consistency.
