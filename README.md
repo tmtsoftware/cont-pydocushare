@@ -89,17 +89,25 @@ export DOCUSHARE_NOT_AUTHORIZED_VERSION_HANDLE=Version-99999
 
 Follow the procedure below to release a new version.
 
- * Make sure that all your changes have been committed by `git commit -a -m "your_commit_message"`.
- * Run [all unit tests](#unit-test) and confirm that all tests were passed.
- * Generate [API document](#api-document) and make sure that no error/warning is shown during the document generation.
- * Open [setup.py](setup.py) and set the new version number to release.
- * Run `git commit -a -m "Changed version number"` to commit the change in [setup.py](setup.py).
- * Run `git tag -a vx.y.z -m "Version x.y.z"` to mark the new release.
- * Run `git push --tags`. Make sure that you have `--tags` option to upload all tags to the upstream.
- * You may regenerate [API document](#api-document) to see the new version number in the API document.
- 
-(TODO: add the document release procedure)
- 
+ 1. Pre-release procedure
+    1. Make sure that you are in the _main_ branch. If not, run `git checkout main`.
+    1. Make sure that all your local changes have been committed by `git commit -a -m "your_commit_message"`.
+    2. Run [all unit tests](#unit-test) and confirm that all tests were passed.
+    3. Generate [user documentation and API reference](#documentation) locally and check the contents.
+ 2. Version tagging
+    1. Open [setup.py](setup.py) and set the new version number to release.
+    2. Run `git commit -a -m "Changed version number"` to commit the change in [setup.py](setup.py).
+    3. Run `git tag -a vx.y.z -m "Version x.y.z"` to mark the new release.
+    4. Run `git push --tags`. Make sure that you have `--tags` option to upload all tags to the upstream.
+ 3. Releasing documentation
+    1. Run `git checkout gh-pages` to start working in the _gh-pages_ branch.
+    2. Run `git merge main` to merge all changes made for the version to release.
+    3. Re-generate [user documentation and API reference](#documentation) locally and check if the version number on the top-left corner is updated.
+    4. Run `git commit -a -m "Uploading documentation for version x.y.z."`. This command is supposed to commit all changes in the documentation under [docs/html](docs/html).
+    5. Run `git push` so that GitHub becomes aware of new documentation.
+    6. Confirm that the updated documentation is available at https://tmtsoftware.github.io/pydocushare/ . Note that it may take a while (maybe a couple of minutes) until the updated documentation is available there.
+    7. Run `git checkout main` to make sure that you are back in the _main_ branch for further development. Do not commit anything  in the _gh-pages_ branch except the new release documents.
+    
 ## TODO
 
 Use "TODO" keyword in the inline comments in the source code and documentation to indicate things to be fixed in the future versions. The list below shows the major TODOs that are not suitable as inline comments:
