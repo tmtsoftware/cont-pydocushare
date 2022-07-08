@@ -18,7 +18,7 @@ class CleanAlsoSphinx(clean):
             shutil.rmtree(dir_to_remove_abs, ignore_errors=True)
 
 name     = 'PyDocuShare'
-version  = '0.1.0'
+version  = '0.2.0'
 
 setup(
     name         = name,
