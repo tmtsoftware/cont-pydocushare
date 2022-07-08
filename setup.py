@@ -24,7 +24,7 @@ setup(
     name         = name,
     version      = version,
     description  = 'Python API to interact with DocuShare',
-    url          = 'https://github.com/tnakamot/pydocushare',
+    url          = 'https://github.com/tmtsoftware/pydocushare',
     author       = 'Takashi Nakamoto',
     author_email = 'tnakamoto@tmt.org',
     license      = 'GPLv2',
