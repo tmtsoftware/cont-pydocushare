@@ -81,8 +81,8 @@ The :py:meth:`docushare.CollectionObject.download()` method returns the list of 
 2022-07-02 14:05:30,998: INFO - HTTP GET  https://your.docushare.domain/docushare/dsweb/Services/Collection-66666
 2022-07-02 14:05:30,299: INFO - HTTP GET  https://your.docushare.domain/docushare/dsweb/View/Collection-66666
 >>> downloaded_paths = col.download(destination_path = 'output_dir', option = CollectionDownloadOption.ALL, progress_report = False)
-2022-07-02 14:05:33,327: INFO - HTTP GET  https://docushare.tmt.org/docushare/dsweb/Services/Collection-77777
-2022-07-02 14:05:33,650: INFO - HTTP GET  https://docushare.tmt.org/docushare/dsweb/View/Collection-77777
+2022-07-02 14:05:33,327: INFO - HTTP GET  https://your.docushare.domain/docushare/dsweb/Services/Collection-77777
+2022-07-02 14:05:33,650: INFO - HTTP GET  https://your.docushare.domain/docushare/dsweb/View/Collection-77777
 2022-07-02 14:05:33,654: INFO - HTTP GET  https://your.docushare.domain/docushare/dsweb/Services/Document-10001
 2022-07-02 14:05:33,886: INFO - HTTP GET  https://your.docushare.domain/docushare/dsweb/ServicesLib/Document-10001/History
 2022-07-02 14:05:34,133: INFO - HTTP GET  https://your.docushare.domain/docushare/dsweb/Services/Document-10002
