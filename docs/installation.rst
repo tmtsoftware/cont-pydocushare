@@ -16,7 +16,7 @@ Run the commands below to install PyDocuShare module into your user directory:
 
 The last command above also installs all required python modules.
 
-For better user experience, it is recommended to specify all extra options (``progress-bar`` and @`password-store``) as shown above. With ``progress-bar`` option, PyDocuShare shows a progress bar when downloading a large file. With ``password-store`` option, PyDocuShare can store passwords in a secure manner and reuse the stored passwords for the DocuShare authentication. If you do not need those extra features, you can simply omit all options as shown below:
+For better user experience, it is recommended to specify all extra options (``progress-bar`` and ``password-store``) as shown above. With ``progress-bar`` option, PyDocuShare shows a progress bar when downloading a large file. With ``password-store`` option, PyDocuShare can store passwords in a secure manner and reuse the stored passwords for the DocuShare authentication. If you do not need those extra features, you can simply omit all options as shown below:
 
 
 .. code-block:: bash
