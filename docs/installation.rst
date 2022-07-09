@@ -12,6 +12,8 @@ Run the commands below to install PyDocuShare (``docushare`` module) into your u
                 
                 $ git clone https://github.com/tmtsoftware/pydocushare.git
                 $ cd pydocushare
+                $ latest_release=$(git describe --tags `git rev-list --tags --max-count=1`)
+                $ git checkout $latest_release
                 $ pip install ".[progress-bar,password-store]"
 
 The last command above also installs all required python modules.
