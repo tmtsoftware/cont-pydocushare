@@ -18,6 +18,9 @@ sys.path.insert(0, os.path.abspath('..'))
 
 # Project information is in ../setup.py
 
+from setuptools_scm import get_version
+version = get_version('..')
+
 # -- General configuration ---------------------------------------------------
 
 # Add any Sphinx extension module names here, as strings. They can be

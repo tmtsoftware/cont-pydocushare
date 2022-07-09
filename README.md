@@ -32,13 +32,7 @@ PyDocuShare uses [numpy style](https://numpydoc.readthedocs.io/en/latest/format.
 
 PyDocuShare uses [Sphinx](https://www.sphinx-doc.org/) to generate the user documentation and API reference. They are published at https://tmtsoftware.github.io/pydocushare/ through [GitHug Pages](https://pages.github.com/).
 
-The source files of user documentation can be found under [docs/](docs/). If you want to generate the user documentation and API reference locally to see how your updates appear in the documentation, you need to first install Sphinx. Run the command below to install required tools including Sphinx:
-
-```bash
- $ pip install -e ".[docs]"
-```
-
-Then, run the command below in the root directory of this repository:
+The source files of user documentation can be found under [docs/](docs/). If you want to generate the user documentation and API reference locally to see how your updates appear in the documentation, run the command below in the root directory of this repository:
 
 ```bash
  $ python setup.py build_sphinx
