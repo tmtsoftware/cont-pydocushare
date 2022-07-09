@@ -32,13 +32,7 @@ PyDocuShare uses [numpy style](https://numpydoc.readthedocs.io/en/latest/format.
 
 PyDocuShare uses [Sphinx](https://www.sphinx-doc.org/) to generate the user documentation and API reference. They are published at https://tmtsoftware.github.io/pydocushare/ through [GitHug Pages](https://pages.github.com/).
 
-The source files of user documentation can be found under [docs/](docs/). If you want to generate the user documentation and API reference locally to see how your updates appear in the documentation, you need to first install Sphinx. Run the command below to install required tools including Sphinx:
-
-```bash
- $ pip install -e ".[docs]"
-```
-
-Then, run the command below in the root directory of this repository:
+The source files of user documentation can be found under [docs/](docs/). If you want to generate the user documentation and API reference locally to see how your updates appear in the documentation, run the command below in the root directory of this repository:
 
 ```bash
  $ python setup.py build_sphinx
@@ -77,7 +71,7 @@ You may notice that many test cases are skipped. This is because the command abo
 
 With those environmental variables, run the command above again. Now all test cases should have been executed.
 
-The bash script below is the template to set all required environmental variables Modify each value as appropriate.
+The bash script below is the template to set all required environmental variables. Modify each value as appropriate.
 
 ```bash
 # Base URL of your DocuShare site. It must end with a slash '/'.
@@ -110,12 +104,12 @@ Follow the procedure below to release a new version.
     4. Generate [user documentation and API reference](#documentation) locally, make sure that there is no error or warning, and check the contents of the generated documents.
        * If the warning is known and you think you do not have to fix it, you may want to update [`nitpick_ignore`](https://www.sphinx-doc.org/en/master/usage/configuration.html?highlight=nitpick_ignore#confval-nitpick_ignore) or [`nitpick_ignore_regex`](https://www.sphinx-doc.org/en/master/usage/configuration.html?highlight=nitpick_ignore#confval-nitpick_ignore_regex) variable in [docs/conf.py](docs/conf.py). 
  2. Version tagging
-    1. Open [setup.py](setup.py) and set the new version number to release.
-    2. Run `git commit -a -m "Changed version number"` to commit the change in [setup.py](setup.py).
-    3. Run `git tag -a vx.y.z -m "Version x.y.z"` to mark the new release.
-    4. Run `git push --tags`. Make sure that you have `--tags` option to upload all tags to the upstream.
+    1. Run `git tag` to see what is the latest version.
+    2. Run `git tag -a vx.y.z -m "Version x.y.z"` to mark the new release.
+       * PyDocuShare uses [setuptools-scm](https://pypi.org/project/setuptools-scm/) to automatically determine the version number from the git tags.
+    3. Run `git push --tags`. Make sure that you have `--tags` option to upload all tags to the upstream.
  3. Release documentation
-    1. Run `git checkout gh-pages` to start working in the _gh-pages_ branch.
+    1. Run `git checkout gh-pages` to start working on the _gh-pages_ branch.
     2. Run `git merge main` to merge all changes made for the version to release.
     3. Re-generate [user documentation and API reference](#documentation) locally and check if the version number on the top-left corner of the generated HTML pages has been updated.
     4. Run `git add -f docs/html` and `git commit -m "Uploading documentation for version x.y.z."`. These commands are supposed to commit all changes in the documentation under [docs/html](docs/html).
@@ -128,3 +122,5 @@ Follow the procedure below to release a new version.
 Use "TODO" keyword in the inline comments in the source code and documentation to indicate things to be fixed in the future versions. The list below shows the major TODOs that are not suitable as inline comments:
 
  * Add unit tests for Collection handles and CollectionObject.
+ * Add methods to upload files.
+ * Upload the releases to [PyPI](https://pypi.org/).
