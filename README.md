@@ -77,7 +77,7 @@ You may notice that many test cases are skipped. This is because the command abo
 
 With those environmental variables, run the command above again. Now all test cases should have been executed.
 
-The bash script below is the template to set all required environmental variables Modify each value as appropriate.
+The bash script below is the template to set all required environmental variables. Modify each value as appropriate.
 
 ```bash
 # Base URL of your DocuShare site. It must end with a slash '/'.
