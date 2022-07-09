@@ -104,12 +104,12 @@ Follow the procedure below to release a new version.
     4. Generate [user documentation and API reference](#documentation) locally, make sure that there is no error or warning, and check the contents of the generated documents.
        * If the warning is known and you think you do not have to fix it, you may want to update [`nitpick_ignore`](https://www.sphinx-doc.org/en/master/usage/configuration.html?highlight=nitpick_ignore#confval-nitpick_ignore) or [`nitpick_ignore_regex`](https://www.sphinx-doc.org/en/master/usage/configuration.html?highlight=nitpick_ignore#confval-nitpick_ignore_regex) variable in [docs/conf.py](docs/conf.py). 
  2. Version tagging
-    1. Open [setup.py](setup.py) and set the new version number to release.
-    2. Run `git commit -a -m "Changed version number"` to commit the change in [setup.py](setup.py).
-    3. Run `git tag -a vx.y.z -m "Version x.y.z"` to mark the new release.
-    4. Run `git push --tags`. Make sure that you have `--tags` option to upload all tags to the upstream.
+    1. Run `git tag` to see what is the latest version.
+    2. Run `git tag -a vx.y.z -m "Version x.y.z"` to mark the new release.
+       * PyDocuShare uses [setuptools-scm](https://pypi.org/project/setuptools-scm/) to automatically determine the version number from the git tags.
+    3. Run `git push --tags`. Make sure that you have `--tags` option to upload all tags to the upstream.
  3. Release documentation
-    1. Run `git checkout gh-pages` to start working in the _gh-pages_ branch.
+    1. Run `git checkout gh-pages` to start working on the _gh-pages_ branch.
     2. Run `git merge main` to merge all changes made for the version to release.
     3. Re-generate [user documentation and API reference](#documentation) locally and check if the version number on the top-left corner of the generated HTML pages has been updated.
     4. Run `git add -f docs/html` and `git commit -m "Uploading documentation for version x.y.z."`. These commands are supposed to commit all changes in the documentation under [docs/html](docs/html).
