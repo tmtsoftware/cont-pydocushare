@@ -6,24 +6,18 @@ Install/Uninstall PyDocuShare
 Install
 -------
 
-Run the commands below to install PyDocuShare (``docushare`` module) into your user directory:
+Run the commands below to install PyDocuShare (``docushare`` module):
 
 .. code-block:: bash
                 
-                $ git clone https://github.com/tmtsoftware/pydocushare.git
-                $ cd pydocushare
-                $ latest_release=$(git describe --tags `git rev-list --tags --max-count=1`)
-                $ git checkout $latest_release
-                $ pip install ".[progress-bar,password-store]"
-
-The last command above also installs all required python modules.
+                $ pip install -i https://test.pypi.org/simple/ PyDocuShare[progress-bar,password-store]
 
 For better user experience, it is recommended to specify all extra options (``progress-bar`` and ``password-store``) as shown above. With ``progress-bar`` option, PyDocuShare shows a progress bar when downloading a large file or multiple files. With ``password-store`` option, PyDocuShare can store passwords in a secure manner and reuse the stored passwords for the DocuShare authentication. If you do not need those extra features, you can simply omit all options as shown below:
 
 
 .. code-block:: bash
                 
-                $ pip install .
+                $ pip install -i https://test.pypi.org/simple/ PyDocuShare
 
 Uninstall
 ---------
@@ -32,5 +26,5 @@ If you want to uninsall PyDocuShare that was installed with ``pip``, run the com
 
 .. code-block:: bash
                 
-                $ pip uninstall pydocushare
+                $ pip uninstall PyDocuShare
 

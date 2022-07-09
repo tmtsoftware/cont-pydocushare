@@ -32,7 +32,7 @@
             <a href="index.html" class="icon icon-home"> PyDocuShare
           </a>
               <div class="version">
-                0.2.1
+                0.2.2
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
@@ -81,24 +81,19 @@
 <span id="installation"></span><h1>Install/Uninstall PyDocuShare<a class="headerlink" href="#install-uninstall-pydocushare" title="Permalink to this heading"></a></h1>
 <section id="install">
 <h2>Install<a class="headerlink" href="#install" title="Permalink to this heading"></a></h2>
-<p>Run the commands below to install PyDocuShare (<code class="docutils literal notranslate"><span class="pre">docushare</span></code> module) into your user directory:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ git clone https://github.com/tmtsoftware/pydocushare.git
-$ <span class="nb">cd</span> pydocushare
-$ <span class="nv">latest_release</span><span class="o">=</span><span class="k">$(</span>git describe --tags <span class="sb">`</span>git rev-list --tags --max-count<span class="o">=</span><span class="m">1</span><span class="sb">`</span><span class="k">)</span>
-$ git checkout <span class="nv">$latest_release</span>
-$ pip install <span class="s2">&quot;.[progress-bar,password-store]&quot;</span>
+<p>Run the commands below to install PyDocuShare (<code class="docutils literal notranslate"><span class="pre">docushare</span></code> module):</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ pip install -i https://test.pypi.org/simple/ PyDocuShare<span class="o">[</span>progress-bar,password-store<span class="o">]</span>
 </pre></div>
 </div>
-<p>The last command above also installs all required python modules.</p>
 <p>For better user experience, it is recommended to specify all extra options (<code class="docutils literal notranslate"><span class="pre">progress-bar</span></code> and <code class="docutils literal notranslate"><span class="pre">password-store</span></code>) as shown above. With <code class="docutils literal notranslate"><span class="pre">progress-bar</span></code> option, PyDocuShare shows a progress bar when downloading a large file or multiple files. With <code class="docutils literal notranslate"><span class="pre">password-store</span></code> option, PyDocuShare can store passwords in a secure manner and reuse the stored passwords for the DocuShare authentication. If you do not need those extra features, you can simply omit all options as shown below:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ pip install .
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ pip install -i https://test.pypi.org/simple/ PyDocuShare
 </pre></div>
 </div>
 </section>
 <section id="uninstall">
 <h2>Uninstall<a class="headerlink" href="#uninstall" title="Permalink to this heading"></a></h2>
 <p>If you want to uninsall PyDocuShare that was installed with <code class="docutils literal notranslate"><span class="pre">pip</span></code>, run the command below:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ pip uninstall pydocushare
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ pip uninstall PyDocuShare
 </pre></div>
 </div>
 </section>
