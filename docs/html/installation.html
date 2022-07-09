@@ -84,6 +84,8 @@
 <p>Run the commands below to install PyDocuShare (<code class="docutils literal notranslate"><span class="pre">docushare</span></code> module) into your user directory:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ git clone https://github.com/tmtsoftware/pydocushare.git
 $ <span class="nb">cd</span> pydocushare
+$ <span class="nv">latest_release</span><span class="o">=</span><span class="k">$(</span>git describe --tags <span class="sb">`</span>git rev-list --tags --max-count<span class="o">=</span><span class="m">1</span><span class="sb">`</span><span class="k">)</span>
+$ git checkout <span class="nv">$latest_release</span>
 $ pip install <span class="s2">&quot;.[progress-bar,password-store]&quot;</span>
 </pre></div>
 </div>
