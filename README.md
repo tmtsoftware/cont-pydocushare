@@ -111,7 +111,7 @@ Follow the procedure below to release a new version.
  3. Release documentation
     1. Run `git checkout gh-pages` to start working on the _gh-pages_ branch.
     2. Run `git merge main` to merge all changes made for the version to release.
-    3. Re-generate [user documentation and API reference](#documentation) locally and check if the version number on the top-left corner of the generated HTML pages has been updated.
+    3. Re-generate user documentation and API reference by running `python setup.py clean` and `python setup.py build_sphinx --version x.y.z`.
     4. Run `git add -f docs/html` and `git commit -m "Uploading documentation for version x.y.z."`. These commands are supposed to commit all changes in the documentation under [docs/html](docs/html).
     5. Run `git push` so that GitHub becomes aware of new documentation.
     6. Confirm that the updated documentation is available at https://tmtsoftware.github.io/pydocushare/ . Note that it may take a while (maybe a couple of minutes) until the updated documentation is available there.
