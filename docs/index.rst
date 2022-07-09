@@ -1,7 +1,7 @@
 PyDocuShare
 ===========
 
-This is the top page of PyDocuShare, python API to interact with your Xerox DocuShare site. It is distributed under `GNU General Public License version 2 <https://www.gnu.org/licenses/old-licenses/gpl-2.0.html>`_
+This is the top page of PyDocuShare, python API to interact with your Xerox DocuShare site. It is distributed under `GNU General Public License version 2 <https://www.gnu.org/licenses/old-licenses/gpl-2.0.html>`_. The source code is available at `GitHub <https://github.com/tmtsoftware/pydocushare>`_.
 
 .. image:: images/example_collection.png
            
