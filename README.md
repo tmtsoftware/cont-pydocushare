@@ -108,7 +108,12 @@ Follow the procedure below to release a new version.
     2. Run `git tag -a vx.y.z -m "Version x.y.z"` to mark the new release.
        * PyDocuShare uses [setuptools-scm](https://pypi.org/project/setuptools-scm/) to automatically determine the version number from the git tags.
     3. Run `git push --tags`. Make sure that you have `--tags` option to upload all tags to the upstream.
- 3. Release documentation
+ 3. Release at https://test.pypi.org/
+    1. Install `wheel` and `twine` python packages if not yet. `pip install wheel twine`.
+    2. Run `python setup.py sdist` and `python setup.py bdist_wheel`.
+    3. Run `twine upload --repository-url https://test.pypi.org/legacy/ dist/*`.
+    4. Confirm that the version is available at https://test.pypi.org/project/PyDocuShare/ .
+ 4. Release documentation
     1. Run `git checkout gh-pages` to start working on the _gh-pages_ branch.
     2. Run `git merge main` to merge all changes made for the version to release.
     3. Re-generate user documentation and API reference by running `python setup.py clean` and `python setup.py build_sphinx --version x.y.z`.
@@ -116,6 +121,7 @@ Follow the procedure below to release a new version.
     5. Run `git push` so that GitHub becomes aware of new documentation.
     6. Confirm that the updated documentation is available at https://tmtsoftware.github.io/pydocushare/ . Note that it may take a while (maybe a couple of minutes) until the updated documentation is available there.
     7. Run `git checkout main` to make sure that you are back in the _main_ branch for further development. Do not commit anything  in the _gh-pages_ branch except the new release documents.
+
 
 ## TODO
 
