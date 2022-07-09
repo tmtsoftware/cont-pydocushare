@@ -128,3 +128,4 @@ Follow the procedure below to release a new version.
 Use "TODO" keyword in the inline comments in the source code and documentation to indicate things to be fixed in the future versions. The list below shows the major TODOs that are not suitable as inline comments:
 
  * Add unit tests for Collection handles and CollectionObject.
+ * Upload the releases to [PyPI](https://pypi.org/).
