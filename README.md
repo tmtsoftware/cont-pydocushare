@@ -131,3 +131,4 @@ Use "TODO" keyword in the inline comments in the source code and documentation t
  * Add unit tests for Collection handles and CollectionObject.
  * Add methods to upload files.
  * Upload the releases to [PyPI](https://pypi.org/).
+ * Document more about the proper set-up of keyring.
