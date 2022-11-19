@@ -4,7 +4,7 @@ import logging
 import subprocess
 from enum import Enum
 from pathlib import Path
-from urllib.parse import urlparse
+from urllib.parse import urlparse, urlencode
 
 import requests
 
@@ -30,6 +30,7 @@ class Resource(Enum):
     History    = 'HTTP GET : version history of a document'
     Get        = 'HTTP GET : get a document file'
     View       = 'HTTP GET : view a collection'
+    ViewAll    = 'HTTP GET : view all items in a collection'
 
 class PasswordOption(Enum):
     '''Option for password prompting.'''
@@ -300,6 +301,19 @@ class DocuShare:
             if hdl.type != HandleType.Collection:
                 raise ValueError('handle type must be Collection')
             return join_url(self.url(Resource.DSWEB), 'View/', hdl.identifier)
+        elif resource == Resource.ViewAll:
+            if not isinstance(hdl, Handle):
+                raise TypeError('hdl must be an instance of Handle')
+            if hdl.type != HandleType.Collection:
+                raise ValueError('handle type must be Collection')
+            cmd_url = join_url(self.url(Resource.DSWEB), 'ProcessMultipleCommand')
+            params = urlencode({
+                'goRangeButton': 'showAll',
+                'container'    : hdl.identifier,
+                'application'  : 'Paging',
+                'collection'   : hdl.identifier,
+            })
+            return f'{cmd_url}?{params}'
         else:
             assert False, 'code must not reach here'
    
@@ -665,11 +679,17 @@ class DocuShare:
         '''
         self.__check_if_logged_in()
         hdl = handle(hdl)
-        url = self.url(Resource.View, hdl)
-        http_response = self.http_get(url)
+
+        # Tips: Need to access a normal View/ resource first before obtaining View All
+        #       page of the collection.
+        view_url  = self.url(Resource.View, hdl)
+        view_http_response = self.http_get(view_url)
+        
+        view_all_url = self.url(Resource.ViewAll, hdl)
+        view_all_http_response = self.http_get(view_all_url)
         
         try:
-            object_handles = parse_collection_page(http_response.text)
+            object_handles = parse_collection_page(view_all_http_response.text)
         except Exception as err:
             raise DocuShareParseError(self, url, err)
             
