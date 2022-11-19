@@ -2,7 +2,7 @@
 
 This is the git repository of PyDocuShare, python API to interact with DocuShare.
 
-The user documentation is available at https://tmtsoftware.github.io/pydocushare/ .
+The user documentation is available at https://tmtsoftware.github.io/cont-pydocushare/ .
 
 This README.md is the documentation for developers who extend, fix and/or release PyDocuShare API.
 
@@ -30,7 +30,7 @@ PyDocuShare uses [numpy style](https://numpydoc.readthedocs.io/en/latest/format.
 
 ## Documentation
 
-PyDocuShare uses [Sphinx](https://www.sphinx-doc.org/) to generate the user documentation and API reference. They are published at https://tmtsoftware.github.io/pydocushare/ through [GitHug Pages](https://pages.github.com/).
+PyDocuShare uses [Sphinx](https://www.sphinx-doc.org/) to generate the user documentation and API reference. They are published at https://tmtsoftware.github.io/cont-pydocushare/ through [GitHug Pages](https://pages.github.com/).
 
 The source files of user documentation can be found under [docs/](docs/). If you want to generate the user documentation and API reference locally to see how your updates appear in the documentation, run the command below in the root directory of this repository:
 
@@ -40,7 +40,7 @@ The source files of user documentation can be found under [docs/](docs/). If you
 
 The command above generates the user documentation and API documents under [docs/html](docs/html/). Open [docs/html/index.html](docs/html/index.html) in your Web browser to see how your updates appear in the documentation.
 
-Note that [docs/index.html](docs/index.html) is the top page of https://tmtsoftware.github.io/pydocushare/, but it simply redirects to https://tmtsoftware.github.io/pydocushare/html/index.html which is the substantial top page of PyDocuShare. The equivalent source file is [docs/index.rst](docs/index.rst).
+Note that [docs/index.html](docs/index.html) is the top page of https://tmtsoftware.github.io/cont-pydocushare/, but it simply redirects to https://tmtsoftware.github.io/cont-pydocushare/html/index.html which is the substantial top page of PyDocuShare. The equivalent source file is [docs/index.rst](docs/index.rst).
 
 The above command sometimes does not work as intended due to remnant from the previous build. In that case, clean the build first:
 
@@ -49,7 +49,7 @@ The above command sometimes does not work as intended due to remnant from the pr
  $ python setup.py build_sphinx
 ```
 
-See [Release Procedure](#release-procedure) for more details about how to release the documents at https://tmtsoftware.github.io/pydocushare/ .
+See [Release Procedure](#release-procedure) for more details about how to release the documents at https://tmtsoftware.github.io/cont-pydocushare/ .
 
 ## Unit Test
 
@@ -120,7 +120,7 @@ Follow the procedure below to release a new version.
     3. Re-generate user documentation and API reference by running `python setup.py clean` and `python setup.py build_sphinx --version x.y.z`.
     4. Run `git add -f docs/html` and `git commit -m "Uploading documentation for version x.y.z."`. These commands are supposed to commit all changes in the documentation under [docs/html](docs/html).
     5. Run `git push` so that GitHub becomes aware of new documentation.
-    6. Confirm that the updated documentation is available at https://tmtsoftware.github.io/pydocushare/ . Note that it may take a while (maybe a couple of minutes) until the updated documentation is available there.
+    6. Confirm that the updated documentation is available at https://tmtsoftware.github.io/cont-pydocushare/ . Note that it may take a while (maybe a couple of minutes) until the updated documentation is available there.
     7. Run `git checkout main` to make sure that you are back in the _main_ branch for further development. Do not commit anything  in the _gh-pages_ branch except the new release documents.
 
 
@@ -131,3 +131,4 @@ Use "TODO" keyword in the inline comments in the source code and documentation t
  * Add unit tests for Collection handles and CollectionObject.
  * Add methods to upload files.
  * Upload the releases to [PyPI](https://pypi.org/).
+ * Document more about the proper set-up of keyring.
