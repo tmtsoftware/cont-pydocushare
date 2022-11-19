@@ -545,6 +545,9 @@ class DocuShare:
             If the user is not authorized to access the URL.
         '''
 
+        if not isinstance(hdl, Handle):
+            hdl = handle(hdl)
+
         path = Path(path)
         self.__check_if_logged_in()
         url = self.url(Resource.Get, handle(hdl))
