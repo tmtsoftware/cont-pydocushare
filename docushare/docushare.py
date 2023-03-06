@@ -549,7 +549,6 @@ class DocuShare:
             hdl = handle(hdl)
 
         path = Path(path)
-        self.__check_if_logged_in()
         url = self.url(Resource.Get, handle(hdl))
         http_response = self.http_get(url)
 
@@ -616,7 +615,6 @@ class DocuShare:
         DocuShareParseError
             If this method fails to parse the DocuShare property page.
         '''
-        self.__check_if_logged_in()
         hdl = handle(hdl)
         url = self.url(Resource.Services, hdl)
         http_response = self.http_get(url)
@@ -647,7 +645,6 @@ class DocuShare:
         DocuShareParseError
             If this method fails to parse the DocuShare history page.
         '''
-        self.__check_if_logged_in()
         hdl = handle(hdl)
         url = self.url(Resource.History, hdl)
         http_response = self.http_get(url)
@@ -680,7 +677,6 @@ class DocuShare:
         DocuShareParseError
             If this method fails to parse the DocuShare collection page.
         '''
-        self.__check_if_logged_in()
         hdl = handle(hdl)
 
         # Tips: Need to access a normal View/ resource first before obtaining View All
@@ -722,8 +718,6 @@ class DocuShare:
             If this method fails to parse one of DocuShare pages related to the given handle.
         '''
 
-        self.__check_if_logged_in()
-        
         hdl = handle(hdl)
         if hdl in self.__dsobjects:
             return self.__dsobjects[hdl]
