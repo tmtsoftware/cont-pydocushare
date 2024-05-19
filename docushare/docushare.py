@@ -556,6 +556,7 @@ class DocuShare:
             raise DocuShareNotFoundError(self, url)
 
         # Get the file size.
+        file_size = 0
         if 'Content-Length' in http_response.headers:
             file_size = int(http_response.headers['Content-Length'])
             self.__logger.debug(f'Content-Length is {file_size} for {url}.')
